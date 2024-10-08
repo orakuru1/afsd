@@ -1,0 +1,10 @@
+diff a/My project/Assets/Script/Test.cs b/My project/Assets/Script/Test.cs	(rejected hunks)
+@@ -7,7 +7,7 @@
+     // Start is called before the first frame update
+     void Start()
+     {
+-        
++        ///bbbbbb
+     }
+ 
+     // Update is called once per frame
