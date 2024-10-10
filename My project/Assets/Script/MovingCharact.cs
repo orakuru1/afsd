@@ -5,6 +5,11 @@ using UnityEngine;
 public class MovingCharact : MonoBehaviour
 {
     Rigidbody rb;
+    bool MovuFlagForward = false;
+    bool MovuFlagRight = false;
+    bool MovuFlagLeft = false;
+    bool MovuFlagBack = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,6 +20,34 @@ public class MovingCharact : MonoBehaviour
 
     void FixedUpdate()
     {
+        //wキー(前方移動)
+        if(MovuFlagForward)
+        {
+            Vector3 normal = new Vector3(0f,0f,7f);
+            rb.AddForce(normal);
+            MovuFlagForward = false;
+        }
+        // Sキー（後方移動）
+        if(MovuFlagBack)
+        {
+            Vector3 normal = new Vector3(0f,0f,-7f);
+            rb.AddForce(normal);
+            MovuFlagBack = false;
+        }
+        // Dキー（右移動）
+        if(MovuFlagRight)
+        {
+            Vector3 normal = new Vector3(7f,0f,0f);
+            rb.AddForce(normal);
+            MovuFlagRight = false;
+        }
+        // Aキー（左移動）
+        if(MovuFlagLeft)
+        {
+            Vector3 normal = new Vector3(-7f,0f,0f);
+            rb.AddForce(normal);
+            MovuFlagLeft = false;
+        }
 
     }
 
@@ -24,28 +57,24 @@ public class MovingCharact : MonoBehaviour
         //wキー(前方移動)
         if(Input.GetKey(KeyCode.W))
         {
-            Vector3 normal = new Vector3(0f,0f,1f);
-            rb.AddForce(normal);
+            MovuFlagForward = true;
         }
         // Sキー（後方移動）
         if (Input.GetKey(KeyCode.S))
         {
-            Vector3 normal = new Vector3(0f,0f,-1f);
-            rb.AddForce(normal);
+            MovuFlagBack = true;
         }
  
         // Dキー（右移動）
         if (Input.GetKey(KeyCode.D))
         {
-            Vector3 normal = new Vector3(1f,0f,0f);
-            rb.AddForce(normal);
+            MovuFlagRight = true;
         }
  
         // Aキー（左移動）
         if (Input.GetKey(KeyCode.A))
         {
-            Vector3 normal = new Vector3(-1f,0f,0f);
-            rb.AddForce(normal);
+            MovuFlagLeft = true;
         }
     }
 }
