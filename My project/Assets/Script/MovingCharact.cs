@@ -8,7 +8,14 @@ public class MovingCharact : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // フレームレートを400psに設定する
+        Application.targetFrameRate = 400;
         rb = GetComponent<Rigidbody>(); //rigidbodyを取得
+    }
+
+    void FixedUpdate()
+    {
+
     }
 
     // Update is called once per frame
