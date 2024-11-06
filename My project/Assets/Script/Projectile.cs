@@ -25,7 +25,6 @@ public class Projectile : MonoBehaviour
         // 敵に当たった場合の処理
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("pppp");
             // Enemyスクリプトを取得し、ダメージを与える
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
