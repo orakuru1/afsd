@@ -21,7 +21,7 @@ public class chara : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         //wキー（前方移動）
+        //wキー（前方移動）
         if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
         {
             v = Time.deltaTime * sprintspeed;
