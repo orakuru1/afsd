@@ -14,8 +14,8 @@ public class EnemyTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // BattleDataに敵の情報を設定
-            BattleData.Instance.SetEnemyData(this.gameObject, enemyName, enemyHealth);
-            
+            BattleData.Instance.SetEnemyData(enemyName, enemyHealth);
+            //Debug.Log(BattleData.Instance.enemyPrefab);
             // 戦闘シーンに遷移
             SceneManager.LoadScene(battleSceneName);
         }

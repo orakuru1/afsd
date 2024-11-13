@@ -6,7 +6,7 @@ public class BattleData : MonoBehaviour
 {
     public static BattleData Instance { get; private set; }
 
-    public GameObject enemyPrefab; // 戦闘シーンに持っていく敵のPrefab
+    //public GameObject enemyPrefab; // 戦闘シーンに持っていく敵のPrefab
     public string enemyName;       // 敵の名前などの情報
     public int enemyHealth;        // 敵の体力
 
@@ -23,9 +23,8 @@ public class BattleData : MonoBehaviour
             Destroy(gameObject); // すでに存在する場合は削除
         }
     }
-    public void SetEnemyData(GameObject enemy, string name, int health)
+    public void SetEnemyData(string name, int health)
     {
-        enemyPrefab = enemy;
         enemyName = name;
         enemyHealth = health;
     }
