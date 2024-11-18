@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    private EnemyCounter enemyCounter;
     public int health = 50;
     public void TakeDamage(int damage)
     {
         Debug.Log("aaaa");
         health -= damage;
+        Debug.Log(health);
         if (health <= 0)
         {
+            Debug.Log("やられました");
             Die();
         }
     }
@@ -22,7 +25,20 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        // EnemyCounterオブジェクトを探して参照
+        enemyCounter = FindObjectOfType<EnemyCounter>();
+        if (enemyCounter != null)
+        {
+            enemyCounter.OnEnemySpawn();
+        }
+    }
+    
+    void OnDestroy()
+    {
+        if (enemyCounter != null)
+        {
+            enemyCounter.OnEnemyDestroyed();
+        }
     }
 
     // Update is called once per frame

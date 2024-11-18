@@ -17,16 +17,19 @@ public class ShootProjectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (Input.GetButtonDown("Fire1") && Time.time >= nextFireTime)
         {
             Shoot();
             nextFireTime = Time.time + fireRate;
-        }
+        }  
         
     }
+
     void Shoot()
     {
         // 弾丸を発射位置に生成し、向きを設定
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
     }
+
 }

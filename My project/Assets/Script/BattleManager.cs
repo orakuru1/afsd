@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class BattleManager : MonoBehaviour
         SetupBattle();
     }
 
-    void SetupBattle()   //現在てきのオブジェクト情報持ってこれず
+    void SetupBattle()  
     {
         // BattleDataから敵の情報を取得して設定
         if (BattleData.Instance.enemyName != null)
@@ -33,6 +34,15 @@ public class BattleManager : MonoBehaviour
             enemyHealthSlider.value = BattleData.Instance.enemyHealth;
             */
         }
+    }
+
+    public void EndBattle()
+    {
+        // BattleDataの情報をリセット（必要に応じて）
+        BattleData.Instance.SetEnemyData( "", 0);
+
+        // フィールドシーンに戻る
+        SceneManager.LoadScene("SampleScene");
     }
 
     // Update is called once per frame
