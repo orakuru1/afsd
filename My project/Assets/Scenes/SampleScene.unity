@@ -703,8 +703,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9eec18ed65f05d418f5294661a2af6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 7782331532614720700, guid: de39c635ede63ec4ab622d0fee002a0c,
-    type: 3}
   enemyName: 
   enemyHealth: 0
 --- !u!4 &815543237
@@ -831,7 +829,7 @@ PrefabInstance:
     - target: {fileID: 7782331532614720641, guid: de39c635ede63ec4ab622d0fee002a0c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.9139595
+      value: 2.71
       objectReference: {fileID: 0}
     - target: {fileID: 7782331532614720641, guid: de39c635ede63ec4ab622d0fee002a0c,
         type: 3}
@@ -841,7 +839,7 @@ PrefabInstance:
     - target: {fileID: 7782331532614720641, guid: de39c635ede63ec4ab622d0fee002a0c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.80711055
+      value: -0.13
       objectReference: {fileID: 0}
     - target: {fileID: 7782331532614720641, guid: de39c635ede63ec4ab622d0fee002a0c,
         type: 3}
@@ -1046,6 +1044,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7027590390033066177, guid: 0c54461b6549e98478b0da9eb7dccb5e,
+        type: 3}
+      propertyPath: health
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 5536574764762001959, guid: 0c54461b6549e98478b0da9eb7dccb5e,
         type: 3}
       propertyPath: m_RootOrder

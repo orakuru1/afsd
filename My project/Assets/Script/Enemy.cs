@@ -8,7 +8,6 @@ public class Enemy : MonoBehaviour
     public int health = 50;
     public void TakeDamage(int damage)
     {
-        Debug.Log("aaaa");
         health -= damage;
         Debug.Log(health);
         if (health <= 0)
@@ -20,7 +19,7 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         // 敵が死亡する処理（例: エフェクトやスコアの増加など）
-        Destroy(gameObject);
+        Destroy(this.gameObject);
     }
     // Start is called before the first frame update
     void Start()

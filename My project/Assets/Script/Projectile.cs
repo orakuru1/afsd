@@ -7,7 +7,7 @@ public class Projectile : MonoBehaviour
     public float speed = 20f; // 弾丸の速度
     public int damage = 10; // 弾丸のダメージ量
     public float lifetime = 2f; // 弾丸が自動で消えるまでの時間
-    // Start is called before the first frame update
+    private BattleManager battleManager;   
     void Start()
     {
         // 一定時間後に弾丸を削除
@@ -29,7 +29,9 @@ public class Projectile : MonoBehaviour
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.TakeDamage(damage);
+                battleManager = FindObjectOfType<BattleManager>();
+                battleManager.PlayerAttack();
+                //enemy.TakeDamage(damage);
             }
             // 弾丸を削除
             Destroy(gameObject);

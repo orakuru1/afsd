@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5536574764762001963}
   - component: {fileID: 5536574764762001958}
   - component: {fileID: 5536574764762001957}
+  - component: {fileID: -7027590390033066177}
   m_Layer: 0
   m_Name: Charactar
   m_TagString: Player
@@ -146,6 +147,19 @@ MonoBehaviour:
     type: 3}
   firePoint: {fileID: 5536574765874874694}
   fireRate: 0.5
+--- !u!114 &-7027590390033066177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5536574764762001964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f3ac4d1415e0124f9eb7a202294fd69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
 --- !u!1 &5536574765874874695
 GameObject:
   m_ObjectHideFlags: 0

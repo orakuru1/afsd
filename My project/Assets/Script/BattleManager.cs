@@ -10,11 +10,118 @@ public class BattleManager : MonoBehaviour
     public Text enemyNameText;        // 敵の名前を表示するUI
     public Slider enemyHealthSlider;  // 敵の体力を表示するUI
 
-    private GameObject enemyInstance;
+    public Text battleLog;           // バトルログを表示するUI
+    public Player player;            // プレイヤーのスクリプト
+    public Enemy enemy;              // 敵のスクリプト
+    private bool isPlayerTurn = true; // プレイヤーのターンかどうか
+
+    //private Enemy enemy2;
+    List<GameObject> II = new List<GameObject>(); //InstanceInformation
     
     void Start()
     {
         SetupBattle();
+        StartBattle();
+    }
+
+    public void ClearBattleLog()
+    {
+        battleLog.text = ""; // 空文字列でテキストをクリア
+    }
+
+    public void AddLog(string message)
+    {
+        battleLog.text += "\n" + message; // メッセージを追加
+    }
+
+    void StartBattle()
+    {
+        battleLog.text = "戦闘開始！";
+        isPlayerTurn = true;
+        UpdateBattleState();
+    }
+
+    void UpdateBattleState()
+    {
+        if (player.health <= 0)
+        {
+            EndBattle2(false); // プレイヤーの敗北
+        }
+        else if (enemy.health <= 0)
+        {
+            EndBattle2(true); // プレイヤーの勝利
+        }
+        else
+        {
+            if (isPlayerTurn)
+            {
+                battleLog.text += "\nプレイヤーのターン！";
+                EnablePlayerActions(true);
+            }
+            else
+            {
+                battleLog.text += "\n敵のターン！";
+                EnablePlayerActions(false);
+                Invoke("EnemyTurn", 2); // 2秒後に敵のターンを実行
+                
+            }
+        }
+    }
+
+    public void PlayerAttack()
+    {
+        if (!isPlayerTurn) return;
+
+        int damage = Random.Range(5, 15);
+        ClearBattleLog();
+        battleLog.text += $"\nプレイヤーが敵に{damage}のダメージ！";
+        //enemy.TakeDamage(damage);
+
+        Enemy enemy3 = II[0].GetComponent<Enemy>();
+        enemy3.TakeDamage(damage);
+
+        isPlayerTurn = false;
+        UpdateBattleState();
+/*
+        enemy2 = FindObjectOfType<Enemy>();  ///違うやつが探されそう
+        if (enemy != null)
+        {
+            battleManager = FindObjectOfType<BattleManager>();
+            battleManager.PlayerAttack();
+            //enemy.TakeDamage(damage);
+        }
+*/
+    }
+
+    void EnemyTurn()        //敵のターンが発動できない
+    {
+        int damage = Random.Range(5, 15);
+        ClearBattleLog();
+        battleLog.text += $"\n敵がプレイヤーに{damage}のダメージ！";
+        player.TakeDamage(damage);
+
+        isPlayerTurn = true;
+        UpdateBattleState();
+    }
+
+    void EnablePlayerActions(bool enable)
+    {
+        // プレイヤーの行動UI（ボタンなど）を有効化または無効化
+        // ここでは例として簡単に設定
+        Button attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
+        attackButton.interactable = enable;
+    }
+
+    void EndBattle2(bool isPlayerWin)
+    {
+        if (isPlayerWin)
+        {
+            battleLog.text += "\nプレイヤーの勝利！";
+        }
+        else
+        {
+            battleLog.text += "\nプレイヤーの敗北...";
+        }
     }
 
     void SetupBattle()  
@@ -24,7 +131,7 @@ public class BattleManager : MonoBehaviour
         {
             // 敵のPrefabを生成
             GameObject prefab = (GameObject)Resources.Load (BattleData.Instance.enemyName);
-            enemyInstance = Instantiate(prefab, enemySpawnPoint.position, Quaternion.identity);
+            II.Add(Instantiate(prefab, enemySpawnPoint.position, Quaternion.identity));
             //Debug.Log(BattleData.Instance.enemyPrefab);
 
             /*
