@@ -12,7 +12,7 @@ public class chara : MonoBehaviour
     float angleSpeed = 150;
     float v;
     float h;
-    // Start is called before the first frame update
+    //Start is called before the first frame update
     void Start()
     {
        rb = this.GetComponent<Rigidbody>();
@@ -79,11 +79,11 @@ public class chara : MonoBehaviour
         }
 
         //左右キーで方向転換
-        if(Input.GetKey(KeyCode.D))
+        if(Input.GetKey(KeyCode.RightArrow))
         {
             h = Time.deltaTime * angleSpeed;
         }
-        else if(Input.GetKey(KeyCode.A))
+        else if(Input.GetKey(KeyCode.LeftArrow))
         {
             h = -Time.deltaTime * angleSpeed;
         }

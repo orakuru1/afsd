@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GAMESCENE : MonoBehaviour
 {
     private bool firstPush = false; //スタート
-   // private bool retrunPush = false; //戻る
+    private bool retrunPush = false; //戻る
     // Start is called before the first frame update
     //スタートボタンを押されたら呼ばれる
     public void PressStart()
@@ -21,6 +21,19 @@ public class GAMESCENE : MonoBehaviour
         }
     }
 
+     public void PressRetrun() //ゲーム画面からスタート画面へ
+    {
+        Debug.Log("Press Retrun");
+
+        if(!retrunPush){
+            Debug.Log("Next Scene!");
+
+            SceneManager.LoadScene("title");
+            retrunPush = true;
+        }
+    }
+
+
    
 
         
@@ -32,11 +45,10 @@ public class GAMESCENE : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if(!retrunPush && Input.GetKey(KeyCode.S)){
+       /* if(!retrunPush && Input.GetKey(KeyCode.S)){
             Debug.Log("Next Scene!");
             SceneManager.LoadScene("title");
             retrunPush = true;
-        }*/
-    
+        }*/    
     }
 }
