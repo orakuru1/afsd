@@ -658,7 +658,7 @@ MonoBehaviour:
   enemyNameText: {fileID: 0}
   enemyHealthSlider: {fileID: 0}
   battleLog: {fileID: 1306730089}
-  player: {fileID: -7027590390033066177, guid: 0c54461b6549e98478b0da9eb7dccb5e, type: 3}
+  player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
   enemy: {fileID: 7782331532614720644, guid: de39c635ede63ec4ab622d0fee002a0c, type: 3}
 --- !u!4 &1148973463
 Transform:
@@ -687,7 +687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eefca78f00b558148b687c0fb43a3833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Charactar
+  Name: RPGHeroHP
   Health: 100
   SpawnPoint: {fileID: 1225514948}
 --- !u!114 &1148973465

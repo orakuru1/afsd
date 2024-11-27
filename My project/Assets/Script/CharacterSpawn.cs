@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class CharacterSpawn : MonoBehaviour
 {
-    public string Name = "Charactar"; // 名前
+    public string Name = "RPGHeroHP"; // 名前
     public int Health = 100; // 体力
     public Transform SpawnPoint; // 生成する位置
     private GameObject Instance;
