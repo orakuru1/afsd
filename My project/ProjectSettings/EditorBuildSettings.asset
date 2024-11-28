@@ -9,12 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/title.unity
     guid: fc93afaaf789b884789c6251ef4545ab
   - enabled: 1
-    path: Assets/Scenes/GAMEMAPP.unity
-    guid: d34542001d444ea4480dc09c0091a100
-  - enabled: 1
     path: Assets/Scenes/BattleScene.unity
     guid: 4b79d921668afd04cb898f30e00e87ba
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/GAMEMAPP.unity
+    guid: d34542001d444ea4480dc09c0091a100
   m_configObjects: {}

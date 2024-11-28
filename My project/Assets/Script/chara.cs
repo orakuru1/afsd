@@ -48,6 +48,7 @@ public class chara : MonoBehaviour
         {
             v = 0;
         }
+       
 
         //移動の実行
         if(!inJumping)
@@ -79,7 +80,7 @@ public class chara : MonoBehaviour
         }
 
         //左右キーで方向転換
-        if(Input.GetKey(KeyCode.RightArrow))
+       if(Input.GetKey(KeyCode.RightArrow))
         {
             h = Time.deltaTime * angleSpeed;
         }
