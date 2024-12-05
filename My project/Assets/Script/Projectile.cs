@@ -30,7 +30,7 @@ public class Projectile : MonoBehaviour
             if (enemy != null)
             {
                 battleManager = FindObjectOfType<BattleManager>();
-                battleManager.PlayerAttack();
+                battleManager.PlayerAttack(15);
                 //enemy.TakeDamage(damage);
             }
             // 弾丸を削除

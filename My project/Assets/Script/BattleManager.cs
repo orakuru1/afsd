@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class BattleManager : MonoBehaviour
 {
     public Transform enemySpawnPoint; // 敵を生成する位置
+    public Transform enemySpawnPoint2; // 敵を生成する位置
+    public Transform enemySpawnPoint3; // 敵を生成する位置
     public Text enemyNameText;        // 敵の名前を表示するUI
     public Slider enemyHealthSlider;  // 敵の体力を表示するUI
 
@@ -15,6 +17,12 @@ public class BattleManager : MonoBehaviour
     public Enemy enemy;              // 敵のスクリプト
     private bool isPlayerTurn = true; // プレイヤーのターンかどうか
 
+    public GameObject hpBarPrefab; // HPバーのPrefab
+    public Transform hpBarParent; // HPバーの親（Canvas）
+
+    private Enemy enemy3;
+    private Enemy enemy4;
+
     //private Enemy enemy2;
     List<GameObject> II = new List<GameObject>(); //InstanceInformation
     
@@ -22,6 +30,34 @@ public class BattleManager : MonoBehaviour
     {
         SetupBattle();
         StartBattle();
+
+        // プレイヤーを探してHPバーを生成
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            CreateHealthBarFor(player);
+        }
+        else{
+            Debug.Log("いません！");
+        }
+
+        // 敵を探してHPバーを生成（複数の敵に対応）
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies)
+        {
+            CreateHealthBarFor(enemy);
+        }
+
+    }
+
+    void CreateHealthBarFor(GameObject character)
+    {
+        // HPバーを生成して親に設定
+        GameObject hpBar = Instantiate(hpBarPrefab, hpBarParent);
+
+        // キャラクターの位置に応じたHPバーを管理するスクリプトを設定
+        HealthBarManager healthBarManager = character.AddComponent<HealthBarManager>();
+        healthBarManager.hpBarInstance = hpBar;
     }
 
     public void ClearBattleLog()
@@ -68,17 +104,14 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void PlayerAttack()
+    public void PlayerAttack(int damage)
     {
         if (!isPlayerTurn) return;
 
-        int damage = Random.Range(5, 15);
+        //int damage = Random.Range(5, 15);
         ClearBattleLog();
         battleLog.text += $"\nプレイヤーが敵に{damage}のダメージ！";
         //enemy.TakeDamage(damage);
-
-        Enemy enemy3 = II[0].GetComponent<Enemy>();
-        enemy3.TakeDamage(damage);
 
         isPlayerTurn = false;
         UpdateBattleState();
@@ -132,6 +165,11 @@ public class BattleManager : MonoBehaviour
             // 敵のPrefabを生成
             GameObject prefab = (GameObject)Resources.Load (BattleData.Instance.enemyName);
             II.Add(Instantiate(prefab, enemySpawnPoint.position, Quaternion.identity));
+            II.Add(Instantiate(prefab, enemySpawnPoint2.position, Quaternion.identity));
+            II.Add(Instantiate(prefab, enemySpawnPoint3.position, Quaternion.identity));
+
+            enemy3 = II[0].GetComponent<Enemy>(); //生成された敵オブジェクトのscript<Enemy>を習得
+            enemy4 = II[1].GetComponent<Enemy>();
             //Debug.Log(BattleData.Instance.enemyPrefab);
 
             /*

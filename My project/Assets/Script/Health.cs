@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Health : MonoBehaviour
 {
-    public int health = 200;
-
-    public float maxHealth = 200;
+    public float maxHealth = 100f;
     public float currentHealth;
 
     private HealthBarManager healthBarManager;
 
-    public void TakeDamage(int damage)
+    // Start is called before the first frame update
+    void Start()
     {
-        health -= damage;
-        if (health < 0) health = 0;
+        currentHealth = maxHealth;
+        healthBarManager = GetComponent<HealthBarManager>();
+        UpdateHealthBar();
+    }
+
+    public void TakeDamage(float damage)
+    {
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
         UpdateHealthBar();
@@ -24,8 +28,6 @@ public class Player : MonoBehaviour
         {
             Die();
         }
-
-        Debug.Log("プレイヤーの体力: " + health);
     }
 
     public void Heal(float amount)
@@ -47,13 +49,6 @@ public class Player : MonoBehaviour
     {
         Debug.Log($"{gameObject.name} が倒されました！");
         //Destroy(gameObject);
-    }
-
-    void Start()
-    {
-        currentHealth = maxHealth;
-        healthBarManager = GetComponent<HealthBarManager>();
-        UpdateHealthBar();
     }
 
     // Update is called once per frame
