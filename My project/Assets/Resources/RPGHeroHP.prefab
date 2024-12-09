@@ -1546,7 +1546,6 @@ GameObject:
   - component: {fileID: -5875718603974644040}
   - component: {fileID: 2179785809566799200}
   - component: {fileID: 3760287559151789196}
-  - component: {fileID: 8891842843785169681}
   m_Layer: 0
   m_Name: RPGHeroHP
   m_TagString: Player
@@ -1646,21 +1645,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3ac4d1415e0124f9eb7a202294fd69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 53
-  maxHealth: 200
-  currentHealth: 0
---- !u!114 &8891842843785169681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1556040939566342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 421ca7fd3da28ec409b038b745a6fe64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  health: 10
+  maxHealth: 350
+  attack: 10
+  defence: 160
+  LV: 4
+  XP: 100
+  MaxXp: 144
+  currentHealth: 10
+  player: {fileID: 3760287559151789196}
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0

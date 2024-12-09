@@ -6,9 +6,13 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
     private EnemyCounter enemyCounter;
-    public float health = 50;
+    public float health = 50; //HP
+    public float maxHealth = 50f; //UIのHP
 
-    public float maxHealth = 50f;
+    [SerializeField]public int AT;
+    [SerializeField]public int DF;
+    
+    [SerializeField]private int EXP = 50; //経験値
     public float currentHealth;
 
     private HealthBarManager healthBarManager;
@@ -16,6 +20,7 @@ public class Enemy : MonoBehaviour
     public static Enemy selectedEnemy; // 選択された敵を記録する静的変数
 
     private ArrowManager arrowManager;
+    [SerializeField] Player player;
 
     void OnMouseDown()
     {
@@ -34,12 +39,6 @@ public class Enemy : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Die();
-        }
-
-        if (health <= 0)
-        {
-            Debug.Log("やられました");
             Die();
         }
     }
@@ -62,6 +61,7 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         // 敵が死亡する処理（例: エフェクトやスコアの増加など）
+        BattleManager.players[0].LevelUp(EXP);
         Destroy(this.gameObject);
     }
     // Start is called before the first frame update

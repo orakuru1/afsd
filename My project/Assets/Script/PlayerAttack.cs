@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     private BattleManager battleManager;
+    [SerializeField] public Player player;            // プレイヤーのスクリプト
     public void Attack()
     {
         // 選択された敵を攻撃
@@ -36,7 +37,7 @@ public class PlayerAttack : MonoBehaviour
         // 攻撃処理（例: 敵にダメージを与える）
         target.GetComponent<Enemy>()?.TakeDamage(25); //１０の部分は攻撃力の参照にできそう
         battleManager = FindObjectOfType<BattleManager>();
-        battleManager.PlayerAttack(15);
+        battleManager.PlayerAttack(25);
     }
     
     // Start is called before the first frame update

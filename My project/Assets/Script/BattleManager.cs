@@ -3,31 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class BattleManager : MonoBehaviour
 {
+    public string Name = "RPGHeroHP"; // 名前
+    public Transform SpawnPoint; // 生成する位置
+    private GameObject Instance;
+    //↑キャラクター生成用
+    public TextMeshProUGUI gameOverText; // 対象のTextコンポーネント
+    public Image fadeImage; // フェード用のImage
+
     public Transform enemySpawnPoint; // 敵を生成する位置
-    public Transform enemySpawnPoint2; // 敵を生成する位置
-    public Transform enemySpawnPoint3; // 敵を生成する位置
+    public Transform enemySpawnPoint0; // 敵を生成する位置
+    public Transform enemySpawnPoint1; // 敵を生成する位置
     public Text enemyNameText;        // 敵の名前を表示するUI
     public Slider enemyHealthSlider;  // 敵の体力を表示するUI
 
     public Text battleLog;           // バトルログを表示するUI
-    public Player player;            // プレイヤーのスクリプト
+    [SerializeField]private Player player;            // プレイヤーのスクリプト
+    [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
     public Enemy enemy;              // 敵のスクリプト
     private bool isPlayerTurn = true; // プレイヤーのターンかどうか
 
     public GameObject hpBarPrefab; // HPバーのPrefab
     public Transform hpBarParent; // HPバーの親（Canvas）
 
-    private Enemy enemy3;
-    private Enemy enemy4;
-
     //private Enemy enemy2;
-    List<GameObject> II = new List<GameObject>(); //InstanceInformation
+    List<GameObject> II = new List<GameObject>(); //インスタンス化された敵の情報
+
+    List<string> EnemyName = new List<string>();
+
+    public static List<Player> players = new List<Player>();
     
     void Start()
     {
+
+        EnemyName.Add("Goblin");
+        EnemyName.Add("suraimu");
+
         SetupBattle();
         StartBattle();
 
@@ -48,6 +62,38 @@ public class BattleManager : MonoBehaviour
             CreateHealthBarFor(enemy);
         }
 
+        ScriptPlayer.OnStatsUpdated += SyncPlayerStats;
+
+    }
+
+    // フェードアウト（画面が暗くなる）
+    public IEnumerator FadeOut(float duration)
+    {
+        float startTime = Time.time;
+
+        while (Time.time < startTime + duration)
+        {
+            float alpha = Mathf.Lerp(0, 1, (Time.time - startTime) / duration);
+            fadeImage.color = new Color(0, 0, 0, alpha);
+            yield return null;
+        }
+
+        fadeImage.color = new Color(0, 0, 0, 1); // 最終的に完全に暗くする
+        Debug.Log("暗くなった？");
+    }
+
+    void SyncPlayerStats()
+    {
+        player.health = ScriptPlayer.health;
+        player.maxHealth = ScriptPlayer.maxHealth;
+        player.currentHealth = ScriptPlayer.currentHealth;
+        player.attack = ScriptPlayer.attack;
+        player.defence = ScriptPlayer.defence;
+        player.LV = ScriptPlayer.LV;
+        player.XP = ScriptPlayer.XP;
+        player.MaxXp = ScriptPlayer.MaxXp;
+
+        // 必要に応じて他の値も同期
     }
 
     void CreateHealthBarFor(GameObject character)
@@ -65,9 +111,9 @@ public class BattleManager : MonoBehaviour
         battleLog.text = ""; // 空文字列でテキストをクリア
     }
 
-    public void AddLog(string message)
+    public void AddLog(string message , Color color)
     {
-        battleLog.text += "\n" + message; // メッセージを追加
+        battleLog.text += $"\n<color=#{ColorUtility.ToHtmlStringRGB(color)}>{message}</color>"; // メッセージを追加
     }
 
     void StartBattle()
@@ -79,7 +125,7 @@ public class BattleManager : MonoBehaviour
 
     void UpdateBattleState()
     {
-        if (player.health <= 0)
+        if (players[0].health <= 0)
         {
             EndBattle2(false); // プレイヤーの敗北
         }
@@ -98,8 +144,7 @@ public class BattleManager : MonoBehaviour
             {
                 battleLog.text += "\n敵のターン！";
                 EnablePlayerActions(false);
-                Invoke("EnemyTurn", 2); // 2秒後に敵のターンを実行
-                
+                StartCoroutine(EnemyTurn()); // コルーチンとして実行
             }
         }
     }
@@ -126,15 +171,33 @@ public class BattleManager : MonoBehaviour
 */
     }
 
-    void EnemyTurn()        //敵のターンが発動できない
+    IEnumerator EnemyTurn()        //敵のターン
     {
-        int damage = Random.Range(5, 15);
-        ClearBattleLog();
-        battleLog.text += $"\n敵がプレイヤーに{damage}のダメージ！";
-        player.TakeDamage(damage);
-
+        // EnemyManager.enemies をループして攻撃処理を実行
+        for(int i = 0;i < EnemyManager.enemies.Count; i++)
+        {
+            Enemy enemy = EnemyManager.enemies[i];
+            if (enemy != null) // 敵が有効な場合のみ攻撃
+            {
+                yield return new WaitForSeconds(2f); //2秒待機
+                int damage = Random.Range(enemy.AT-5, enemy.AT+5);
+                // 攻撃演出をここでいれたい
+                PlayAttackAnimation(enemy);
+                ClearBattleLog();
+                string colorCode = ColorUtility.ToHtmlStringRGB(Color.red);
+                battleLog.text +=  $"\n<color=#{colorCode}>プレイヤーが{damage}のダメージを受けた!</color>";
+                //AddLog($"\n敵がプレイヤーに{damage}のダメージ！",Color.red);
+                players[0].TakeDamage(damage); // プレイヤーにダメージを与える
+            }
+        }
         isPlayerTurn = true;
         UpdateBattleState();
+    }
+
+    void PlayAttackAnimation(Enemy enemy)
+    {
+        // 攻撃アニメーションやエフェクトを実行
+        //Debug.Log($"{enemy.name} の攻撃アニメーションが再生されます！");
     }
 
     void EnablePlayerActions(bool enable)
@@ -153,23 +216,45 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
+            StartCoroutine(EndBattleSequence());
             battleLog.text += "\nプレイヤーの敗北...";
         }
     }
 
     void SetupBattle()  
     {
+        GameObject playerprefab = (GameObject)Resources.Load (Name);
+        Instance = Instantiate(playerprefab, SpawnPoint.position, Quaternion.identity);
+        ScriptPlayer = Instance.GetComponent<Player>();
+        players.Add(ScriptPlayer);
         // BattleDataから敵の情報を取得して設定
         if (BattleData.Instance.enemyName != null)
         {
             // 敵のPrefabを生成
             GameObject prefab = (GameObject)Resources.Load (BattleData.Instance.enemyName);
             II.Add(Instantiate(prefab, enemySpawnPoint.position, Quaternion.identity));
-            II.Add(Instantiate(prefab, enemySpawnPoint2.position, Quaternion.identity));
-            II.Add(Instantiate(prefab, enemySpawnPoint3.position, Quaternion.identity));
+            int EnemyCount = Random.Range(0,3);
+            Debug.Log(EnemyCount);
+            if(EnemyCount != 0)
+            {
+                for(int i = 0; i < EnemyCount; i++)
+                {
+                    int index = (int)Random.Range(0.0f,EnemyName.Count); //敵の名前を習得できる数字がランダムで作られる
+                    Debug.Log(index);
+                    GameObject Inst = (GameObject)Resources.Load(EnemyName[index]);
+                    if(i != 0)
+                    {
+                        II.Add(Instantiate(Inst, enemySpawnPoint0.position, Quaternion.identity));
+                    }else{
+                        II.Add(Instantiate(Inst, enemySpawnPoint1.position, Quaternion.identity));
+                    }
+                }
+            }
 
-            enemy3 = II[0].GetComponent<Enemy>(); //生成された敵オブジェクトのscript<Enemy>を習得
-            enemy4 = II[1].GetComponent<Enemy>();
+            
+            //II.Add(Instantiate(prefab, enemySpawnPoint1.position, Quaternion.identity));
+
+
             //Debug.Log(BattleData.Instance.enemyPrefab);
 
             /*
@@ -188,6 +273,30 @@ public class BattleManager : MonoBehaviour
 
         // フィールドシーンに戻る
         SceneManager.LoadScene("SampleScene");
+    }
+
+    private IEnumerator EndBattleSequence()
+    {
+        // フェードアウト
+        yield return FadeOut(2.0f); // 2秒かけてフェードアウト
+
+        // プレイヤーを表示する処理
+        ShowPlayerAndGameOver();
+
+        // 3秒待機
+        yield return new WaitForSeconds(3.0f);
+
+        // BattleDataの情報をリセット（必要に応じて）
+        //BattleData.Instance.SetEnemyData("", 0);
+
+        // フィールドシーンに戻る
+        //SceneManager.LoadScene("SampleScene");
+    }
+
+    private void ShowPlayerAndGameOver()
+    {
+        // "GAME OVER" テキストを表示
+        gameOverText.gameObject.SetActive(true);
     }
 
     // Update is called once per frame

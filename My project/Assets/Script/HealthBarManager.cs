@@ -10,6 +10,7 @@ public class HealthBarManager : MonoBehaviour
     private Slider hpSlider;
 
     private Transform characterTransform; // キャラクターのTransform
+    private Player player; // プレイヤーキャラクターを参照
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +23,15 @@ public class HealthBarManager : MonoBehaviour
 
         // キャラクターのTransformを取得
         characterTransform = this.transform;
-        Debug.Log(characterTransform);
+
+        // プレイヤースクリプトを取得（例: このスクリプトがアタッチされているオブジェクトに基づく）
+        player = GetComponent<Player>();
+        
+        // プレイヤーの初期HPをHPバーに反映
+        if (player != null)
+        {
+            UpdateHealth(player.currentHealth, player.maxHealth);
+        }
     }
 
     // Update is called once per frame

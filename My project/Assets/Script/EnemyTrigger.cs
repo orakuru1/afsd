@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class EnemyTrigger : MonoBehaviour
 {
     private string battleSceneName = "BattleScene"; // 戦闘シーンの名前
-    private string enemyName = "Goblin"; // 敵の名前
+    [SerializeField]private string enemyName = "Goblin"; // 敵の名前
     private int enemyHealth = 100; // 敵の体力
     // Start is called before the first frame update
     private void OnCollisionEnter(Collision collision)

@@ -1024,8 +1024,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764,
         type: 3}
+      propertyPath: LV
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764,
+        type: 3}
+      propertyPath: XP
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764,
+        type: 3}
+      propertyPath: MaxXp
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764,
+        type: 3}
+      propertyPath: attack
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764,
+        type: 3}
       propertyPath: health
-      value: 200
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764,
+        type: 3}
+      propertyPath: maxHealth
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
