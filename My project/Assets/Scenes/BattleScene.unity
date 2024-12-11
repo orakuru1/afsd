@@ -216,7 +216,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 22445515}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764,
+          type: 3}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: escape
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &22445515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,7 +492,7 @@ RectTransform:
   m_GameObject: {fileID: 574905792}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.844729, y: 0.41386816, z: 1}
+  m_LocalScale: {x: 0.67, y: 0.32, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 915735825}
@@ -487,7 +500,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -70, y: 136}
+  m_AnchoredPosition: {x: -146, y: 136}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &574905794
@@ -686,6 +699,7 @@ GameObject:
   - component: {fileID: 915735824}
   - component: {fileID: 915735823}
   - component: {fileID: 915735822}
+  - component: {fileID: 915735826}
   m_Layer: 5
   m_Name: AttackUI
   m_TagString: Untagged
@@ -750,7 +764,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -778,6 +792,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &915735826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915735820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20d03eecca40d0f4695516a1f35a4cc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackbotton: {fileID: 1553865884}
+  escapebotton: {fileID: 22445513}
 --- !u!1 &921016493
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,6 +1069,15 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 9103103726191324022, guid: b3a3894aea2efd745a867b6074f71d0f,
     type: 3}
   hpBarParent: {fileID: 353650792}
+  skillButtonPrefab: {fileID: 7551929868324969678, guid: c34a9cb13b3b2524fab3db65a58f4c2a,
+    type: 3}
+  skillpanel: {fileID: 8404645995570498775, guid: 3e6ffa73239c4e444afd6a76cf25ae41,
+    type: 3}
+  skillListParent: {fileID: 8404645995570498774, guid: 3e6ffa73239c4e444afd6a76cf25ae41,
+    type: 3}
+  panerspawn: {fileID: 915735825}
+  attackbotton: {fileID: 1553865884}
+  escapebotton: {fileID: 22445513}
 --- !u!4 &1148973463
 Transform:
   m_ObjectHideFlags: 0
@@ -1166,7 +1203,7 @@ RectTransform:
   m_GameObject: {fileID: 1306730087}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.59, y: 0.53, z: 1}
+  m_LocalScale: {x: 0.44, y: 0.47, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 915735825}
@@ -1174,7 +1211,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -65, y: 120}
+  m_AnchoredPosition: {x: -145, y: 131}
   m_SizeDelta: {x: 1300, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1306730089
@@ -1421,10 +1458,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764,
-          type: 3}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: Attack
+      - m_Target: {fileID: 915735826}
+        m_TargetAssemblyTypeName: BattleSystem, Assembly-CSharp
+        m_MethodName: OnAttackButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1148973462}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+        m_MethodName: GenerateSkillButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1454,8 +1502,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 0}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1851,6 +1899,7 @@ GameObject:
   - component: {fileID: 1956116120}
   - component: {fileID: 1956116122}
   - component: {fileID: 1956116121}
+  - component: {fileID: 1956116123}
   m_Layer: 5
   m_Name: GameOverText
   m_TagString: Untagged
@@ -1975,3 +2024,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1956116119}
   m_CullTransparentMesh: 1
+--- !u!95 &1956116123
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956116119}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 29c83767a3daf5f4a8f99b7209a7776f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

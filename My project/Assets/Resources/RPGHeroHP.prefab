@@ -1645,14 +1645,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3ac4d1415e0124f9eb7a202294fd69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
-  maxHealth: 350
-  attack: 10
-  defence: 160
-  LV: 4
-  XP: 100
-  MaxXp: 144
-  currentHealth: 10
+  skills: []
+  health: 145
+  maxHealth: 550
+  attack: 90
+  defence: 200
+  LV: 8
+  XP: 200
+  MaxXp: 298.59839999999997
+  currentHealth: 145
   player: {fileID: 3760287559151789196}
 --- !u!1 &1613396906338018
 GameObject:

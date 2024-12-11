@@ -2,8 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+[System.Serializable]
+public class Skill
+{
+    public string skillName;
+    public int damage;
+    public string description;
+}
 public class Player : MonoBehaviour
 {
+    public List<Skill> skills = new List<Skill>();
     [SerializeField]public int health;
     [SerializeField]public float maxHealth;//一緒になってる
 
@@ -13,13 +23,13 @@ public class Player : MonoBehaviour
     [SerializeField] public double XP;
     [SerializeField] public double MaxXp;
     [SerializeField]public float currentHealth;
-
     private HealthBarManager healthBarManager;
 
     private BattleManager battleManager;
     [SerializeField]private Player player;
 
-    public event System.Action OnStatsUpdated;
+    public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
+    private BattleSystem battleSystem;
 
     public void LevelUp(int experience) //経験値習得
     {
@@ -37,7 +47,19 @@ public class Player : MonoBehaviour
         }
         OnStatsUpdated?.Invoke(); // 通知を送信
     }
-    public void Attack()
+
+    public void escape()
+    {
+        double ran = Random.Range(1,10);
+        if(ran < 4)
+        {
+            SceneManager.LoadScene("SampleScene");
+        }else
+        {
+            Debug.Log("逃げられなかった!");
+        }
+    }
+    public void Attack(Skill skill)
     {
         // 選択された敵を攻撃
         Enemy targetEnemy = Enemy.selectedEnemy;
@@ -51,7 +73,7 @@ public class Player : MonoBehaviour
         if (targetEnemy != null)
         {
             Debug.Log($"攻撃！ {targetEnemy.gameObject.name} を攻撃します。");
-            ExecuteAttack(targetEnemy);
+            ExecuteAttack(targetEnemy,skill);
         }
         else
         {
@@ -60,15 +82,20 @@ public class Player : MonoBehaviour
 
         // 攻撃後、選択状態をリセット
         //Enemy.selectedEnemy = null;
+
+        Destroy(BattleManager.panelTransform);
     }
 
-    private void ExecuteAttack(Enemy target)
+    private void ExecuteAttack(Enemy target,Skill skill)
     {
-        int damage = Random.Range(BattleManager.players[0].attack,BattleManager.players[0].attack);
+        //int damage = Random.Range(BattleManager.players[0].attack,BattleManager.players[0].attack);
+        int damage = Random.Range(BattleManager.players[0].attack+skill.damage,BattleManager.players[0].attack+skill.damage);
         // 攻撃処理（例: 敵にダメージを与える）
         target.GetComponent<Enemy>()?.TakeDamage(damage); //１０の部分は攻撃力の参照にできそう
         battleManager = FindObjectOfType<BattleManager>();
         battleManager.PlayerAttack(damage);
+
+        skills.Add(new Skill { skillName = "Dia", damage = 50, description = "A shard of ice that pierces enemies." }); //お試し、攻撃した後にスキルボタンが増える
     }
 
     public void TakeDamage(int damage)
@@ -120,7 +147,12 @@ public class Player : MonoBehaviour
         //currentHealth = maxHealth;
         healthBarManager = GetComponent<HealthBarManager>();
         UpdateHealthBar();
-    }
+
+        // デバッグ用: リストにスキルを手動で追加
+        skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
+        skills.Add(new Skill { skillName = "Ice Shard", damage = 25, description = "A shard of ice that pierces enemies." });
+        
+    }              
 
     // Update is called once per frame
     void Update()

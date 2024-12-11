@@ -35,6 +35,15 @@ public class BattleManager : MonoBehaviour
     List<string> EnemyName = new List<string>();
 
     public static List<Player> players = new List<Player>();
+
+    [SerializeField] private GameObject skillButtonPrefab; // 技ボタンのプレハブ
+    [SerializeField] private GameObject skillpanel;
+    [SerializeField] public Transform skillListParent; // ボタンを配置する親オブジェクト
+    [SerializeField] public Transform panerspawn; // ボタンを配置する親オブジェクト
+    public static GameObject panelTransform;
+    private List<GameObject> insta = new List<GameObject>();
+    [SerializeField] private GameObject attackbotton; // 技選択UIパネル
+    [SerializeField] private GameObject escapebotton; // 技選択UIパネル
     
     void Start()
     {
@@ -64,6 +73,24 @@ public class BattleManager : MonoBehaviour
 
         ScriptPlayer.OnStatsUpdated += SyncPlayerStats;
 
+    }
+
+    public void GenerateSkillButtons()
+    {
+        panelTransform = Instantiate(skillpanel,panerspawn);
+        //GameObject button = Instantiate(skillpanel)
+        foreach (Skill skill in players[0].skills)
+        {
+            GameObject button = Instantiate(skillButtonPrefab, panelTransform.transform);
+            insta.Add(button);
+            Debug.Log(button);  //ボタンに新しいスクリプトを入れてここで、スキルのダメージを受け取れるようにする。ボタンのスクリプトでplayerattackを呼び出す
+            button.GetComponentInChildren<Text>().text = skill.skillName;
+
+            // ボタンが押されたときにスキルを実行
+            Button btn = button.GetComponent<Button>();
+            btn.onClick.AddListener(() => players[0].Attack(skill));
+
+        }
     }
 
     // フェードアウト（画面が暗くなる）
@@ -191,6 +218,9 @@ public class BattleManager : MonoBehaviour
             }
         }
         isPlayerTurn = true;
+        attackbotton.SetActive(!attackbotton.activeSelf);
+        escapebotton.SetActive(!escapebotton.activeSelf);
+        //敵のターンが終わった時にボタンが復活するようにする......................................................................
         UpdateBattleState();
     }
 
@@ -204,8 +234,10 @@ public class BattleManager : MonoBehaviour
     {
         // プレイヤーの行動UI（ボタンなど）を有効化または無効化
         // ここでは例として簡単に設定
-        Button attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
-        attackButton.interactable = enable;
+
+        //Button attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
+        //attackButton.interactable = enable;
+        
     }
 
     void EndBattle2(bool isPlayerWin)

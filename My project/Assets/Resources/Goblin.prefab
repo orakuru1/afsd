@@ -184,3 +184,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01b99955d5cb81648b96dd0430c3fc20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyName: Goblin
