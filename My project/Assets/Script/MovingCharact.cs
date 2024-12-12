@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class MovingCharact : MonoBehaviour
 {
     Rigidbody rb;
@@ -13,6 +12,10 @@ public class MovingCharact : MonoBehaviour
     bool MovuFlagRight = false;
     bool MovuFlagLeft = false;
     bool MovuFlagBack = false;
+    public bool PattackMotion = false;
+    public bool PdamageMotion = false;
+    public bool PdieMotion = false;
+    public float dietime;
 
     Quaternion _playerRotation;
     Vector3 _aim;
@@ -79,6 +82,10 @@ public class MovingCharact : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        PattackMotion = Player.attackmotion;
+        PdamageMotion = Player.damagemotion;
+        PdieMotion = Player.diemotion;
+        dietime = EnemyManager.enemies.Count;
         //wキー(前方移動)
         if (Input.GetKey(KeyCode.W))
         {
@@ -112,5 +119,39 @@ public class MovingCharact : MonoBehaviour
         {
             anim.SetBool("walking", false);//何も押されなかったら止まる
         }
+        
+        if (PattackMotion == true)//攻撃ボタンが押されたら
+        {
+            anim.SetBool("attack", true);//攻撃のモーション
+            Invoke(nameof(StopAttackMotion), 0.1f);//攻撃のモーションを止める
+        }
+
+        if (PdamageMotion == true)//ダメージを受けたら
+        {
+            anim.SetBool("gethit", true);//ダメージのモーション
+            Invoke(nameof(StopDamageMotion), 0.1f);//ダメージのモーションを止める
+        }
+
+        if (PdieMotion == true)//hpがなくなったら
+        {   
+            Invoke(nameof(DieMotion),dietime*1.5f);//倒れるモーション
+        }
+
     }
+
+    void StopAttackMotion()
+    { 
+        anim.SetBool("attack", false);  
+    }
+    
+    void StopDamageMotion()
+    {
+        anim.SetBool("gethit", false);
+    }
+
+    void DieMotion()
+    {
+        anim.SetBool("die", true);
+    }
+
 }
