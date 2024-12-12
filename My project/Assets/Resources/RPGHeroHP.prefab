@@ -1645,15 +1645,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3ac4d1415e0124f9eb7a202294fd69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skills: []
-  health: 145
-  maxHealth: 550
-  attack: 90
-  defence: 200
-  LV: 8
-  XP: 200
-  MaxXp: 298.59839999999997
-  currentHealth: 145
+  skills:
+  - skillName: Fireball
+    damage: 30
+    description: A ball of fire that burns enemies.
+  health: 583
+  maxHealth: 1250
+  attack: 370
+  defence: 340
+  LV: 1
+  XP: 0
+  MaxXp: 100
+  currentHealth: 583
   player: {fileID: 3760287559151789196}
 --- !u!1 &1613396906338018
 GameObject:

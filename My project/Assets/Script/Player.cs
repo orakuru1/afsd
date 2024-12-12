@@ -94,8 +94,6 @@ public class Player : MonoBehaviour
         target.GetComponent<Enemy>()?.TakeDamage(damage); //１０の部分は攻撃力の参照にできそう
         battleManager = FindObjectOfType<BattleManager>();
         battleManager.PlayerAttack(damage);
-
-        skills.Add(new Skill { skillName = "Dia", damage = 50, description = "A shard of ice that pierces enemies." }); //お試し、攻撃した後にスキルボタンが増える
     }
 
     public void TakeDamage(int damage)
@@ -149,8 +147,7 @@ public class Player : MonoBehaviour
         UpdateHealthBar();
 
         // デバッグ用: リストにスキルを手動で追加
-        skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
-        skills.Add(new Skill { skillName = "Ice Shard", damage = 25, description = "A shard of ice that pierces enemies." });
+        //skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
         
     }              
 

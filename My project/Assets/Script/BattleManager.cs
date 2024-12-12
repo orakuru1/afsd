@@ -119,6 +119,13 @@ public class BattleManager : MonoBehaviour
         player.LV = ScriptPlayer.LV;
         player.XP = ScriptPlayer.XP;
         player.MaxXp = ScriptPlayer.MaxXp;
+        
+        if(player.LV == 2 && player.XP == 0)
+        {
+            player.skills = ScriptPlayer.skills;
+            player.skills.Add(new Skill { skillName = "ice", damage = 20, description = "A ball of fire that burns enemies." });
+        }
+        
 
         // 必要に応じて他の値も同期
     }
