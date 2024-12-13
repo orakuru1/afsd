@@ -24,6 +24,10 @@ public class Player : MonoBehaviour
     [SerializeField] public double MaxXp;
     [SerializeField]public float currentHealth;
     private HealthBarManager healthBarManager;
+    public static bool attackmotion = false;
+    public static bool damagemotion = false;
+    public static bool diemotion = false;
+
 
     private BattleManager battleManager;
     [SerializeField]private Player player;
@@ -61,6 +65,7 @@ public class Player : MonoBehaviour
     }
     public void Attack(Skill skill)
     {
+        attackmotion = true;
         // 選択された敵を攻撃
         Enemy targetEnemy = Enemy.selectedEnemy;
 
@@ -82,7 +87,7 @@ public class Player : MonoBehaviour
 
         // 攻撃後、選択状態をリセット
         //Enemy.selectedEnemy = null;
-
+        Invoke(nameof(StopAttack), 0.1f);
         Destroy(BattleManager.panelTransform);
     }
 
@@ -98,6 +103,7 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        StartCoroutine("MDamage");
         health -= damage;
         if (health < 0) health = 0;
         currentHealth -= damage;
@@ -106,10 +112,12 @@ public class Player : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            diemotion = true;
             Die();
         }
 
         Debug.Log("プレイヤーの体力: " + health);
+        Invoke(nameof(StopDamage), 0.2f);
     }
 
     public void Heal(float amount)
@@ -140,6 +148,22 @@ public class Player : MonoBehaviour
         BattleManager.players.Remove(this);
     }
 
+    void StopAttack()
+    {
+        attackmotion = false;
+    }
+
+    void StopDamage()
+    {
+        damagemotion = false;
+    }
+
+    IEnumerator MDamage()
+    {
+        damagemotion = true;
+        yield return new WaitForSeconds(4f);
+    }
+
     void Start()
     {
         //currentHealth = maxHealth;
@@ -154,6 +178,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        attackmotion = false;
     }
 }
