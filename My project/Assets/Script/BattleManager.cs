@@ -44,16 +44,20 @@ public class BattleManager : MonoBehaviour
     private List<GameObject> insta = new List<GameObject>();
     [SerializeField] private GameObject attackbotton; // 技選択UIパネル
     [SerializeField] private GameObject escapebotton; // 技選択UIパネル
-    
+    Animator anim;
     void Start()
     {
-
-        EnemyName.Add("Goblin");
-        EnemyName.Add("suraimu");
+        
+        //EnemyName.Add("Goblin");
+        //EnemyName.Add("suraimu");
+        EnemyName.Add("GruntHP");
+        EnemyName.Add("SlimePBR");
+        EnemyName.Add("TurtleShellPBR");
 
         SetupBattle();
         StartBattle();
 
+        
         // プレイヤーを探してHPバーを生成
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
@@ -207,16 +211,19 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator EnemyTurn()        //敵のターン
     {
+        yield return new WaitForSeconds(0.2f); //0.2秒待機
+
         // EnemyManager.enemies をループして攻撃処理を実行
-        for(int i = 0;i < EnemyManager.enemies.Count; i++)
+        for (int i = 0;i < EnemyManager.enemies.Count; i++)
         {
             Enemy enemy = EnemyManager.enemies[i];
             if (enemy != null) // 敵が有効な場合のみ攻撃
             {
-                yield return new WaitForSeconds(2f); //2秒待機
+                yield return new WaitForSeconds(3); //3秒待機
                 int damage = Random.Range(enemy.AT-5, enemy.AT+5);
                 // 攻撃演出をここでいれたい
-                PlayAttackAnimation(enemy);
+                anim = enemy.GetComponent<Animator>();
+                StartCoroutine(PlayAttackAnimation());
                 ClearBattleLog();
                 string colorCode = ColorUtility.ToHtmlStringRGB(Color.red);
                 battleLog.text +=  $"\n<color=#{colorCode}>プレイヤーが{damage}のダメージを受けた!</color>";
@@ -231,12 +238,16 @@ public class BattleManager : MonoBehaviour
         UpdateBattleState();
     }
 
-    void PlayAttackAnimation(Enemy enemy)
+    IEnumerator PlayAttackAnimation()
     {
         // 攻撃アニメーションやエフェクトを実行
+        anim.SetBool("attack", true);
+        yield return new WaitForSeconds(0.1f);
+        anim.SetBool("attack", false);
         //Debug.Log($"{enemy.name} の攻撃アニメーションが再生されます！");
     }
 
+    
     void EnablePlayerActions(bool enable)
     {
         // プレイヤーの行動UI（ボタンなど）を有効化または無効化
@@ -271,7 +282,7 @@ public class BattleManager : MonoBehaviour
         {
             // 敵のPrefabを生成
             GameObject prefab = (GameObject)Resources.Load (BattleData.Instance.enemyName);
-            II.Add(Instantiate(prefab, enemySpawnPoint.position, Quaternion.identity));
+            II.Add(Instantiate(prefab, enemySpawnPoint.position, enemySpawnPoint.rotation));
             int EnemyCount = Random.Range(0,3);
             Debug.Log(EnemyCount);
             if(EnemyCount != 0)
@@ -283,9 +294,9 @@ public class BattleManager : MonoBehaviour
                     GameObject Inst = (GameObject)Resources.Load(EnemyName[index]);
                     if(i != 0)
                     {
-                        II.Add(Instantiate(Inst, enemySpawnPoint0.position, Quaternion.identity));
+                        II.Add(Instantiate(Inst, enemySpawnPoint0.position, enemySpawnPoint.rotation));
                     }else{
-                        II.Add(Instantiate(Inst, enemySpawnPoint1.position, Quaternion.identity));
+                        II.Add(Instantiate(Inst, enemySpawnPoint1.position, enemySpawnPoint.rotation));
                     }
                 }
             }

@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour
 
     private ArrowManager arrowManager;
     [SerializeField] Player player;
-
+    Animator anim;
     void OnMouseDown()
     {
         // 敵がクリックされたときに、この敵を選択状態にする
@@ -36,7 +36,7 @@ public class Enemy : MonoBehaviour
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
         UpdateHealthBar();
-
+        StartCoroutine("PlayDamageAnimation");
         if (currentHealth <= 0)
         {
             Die();
@@ -60,6 +60,7 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        
         // 敵が死亡する処理（例: エフェクトやスコアの増加など）
         BattleManager.players[0].LevelUp(EXP);
         Destroy(this.gameObject);
@@ -86,6 +87,7 @@ public class Enemy : MonoBehaviour
         if (enemyCounter != null)
         {
             enemyCounter.OnEnemyDestroyed();
+            
         }
 
         // 敵が破壊されたときにArrowManagerのターゲットを更新
@@ -106,7 +108,14 @@ public class Enemy : MonoBehaviour
         }
 
     }
-    
+
+    public IEnumerator PlayDamageAnimation()
+    {
+        anim = GetComponent<Animator>();
+        anim.SetBool("gethit", true);
+        yield return new WaitForSeconds(0.1f);
+        anim.SetBool("gethit", false);
+    }
 
     // Update is called once per frame
     void Update()
