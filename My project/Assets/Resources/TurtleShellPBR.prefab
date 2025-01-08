@@ -611,9 +611,11 @@ MonoBehaviour:
   maxHealth: 50
   AT: 100
   DF: 50
+  Speed: 20
   EXP: 50
   currentHealth: 50
-  player: {fileID: 0}
+  player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
+  DropGorld: 0
 --- !u!114 &3436241718584592849
 MonoBehaviour:
   m_ObjectHideFlags: 0

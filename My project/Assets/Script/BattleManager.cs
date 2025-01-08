@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Linq;
 
 public class BattleManager : MonoBehaviour
 {
@@ -35,6 +36,8 @@ public class BattleManager : MonoBehaviour
     List<string> EnemyName = new List<string>();
 
     public static List<Player> players = new List<Player>();
+    public static List<Enemy> enemys = new List<Enemy>();
+    public List<object> AllCharacter = new List<object>();
 
     [SerializeField] private GameObject skillButtonPrefab; // 技ボタンのプレハブ
     [SerializeField] private GameObject skillpanel;
@@ -44,6 +47,7 @@ public class BattleManager : MonoBehaviour
     private List<GameObject> insta = new List<GameObject>();
     [SerializeField] private GameObject attackbotton; // 技選択UIパネル
     [SerializeField] private GameObject escapebotton; // 技選択UIパネル
+    private bool actionSelected = false;
     Animator anim;
     void Start()
     {
@@ -55,7 +59,7 @@ public class BattleManager : MonoBehaviour
         EnemyName.Add("TurtleShellPBR");
 
         SetupBattle();
-        StartBattle();
+        StartCoroutine(StartBattle());
 
         
         // プレイヤーを探してHPバーを生成
@@ -93,6 +97,7 @@ public class BattleManager : MonoBehaviour
             // ボタンが押されたときにスキルを実行
             Button btn = button.GetComponent<Button>();
             btn.onClick.AddListener(() => players[0].Attack(skill));
+            btn.onClick.AddListener(() => OnActionSelected(skill.skillName));
 
         }
     }
@@ -154,51 +159,151 @@ public class BattleManager : MonoBehaviour
         battleLog.text += $"\n<color=#{ColorUtility.ToHtmlStringRGB(color)}>{message}</color>"; // メッセージを追加
     }
 
-    void StartBattle()
+    private IEnumerator StartBattle()
     {
         battleLog.text = "戦闘開始！";
-        isPlayerTurn = true;
+        yield return new WaitForSeconds(1f);
         UpdateBattleState();
     }
 
     void UpdateBattleState()
     {
-        if (players[0].health <= 0)
+        if (players.All(p => p.health <= 0))
         {
             EndBattle2(false); // プレイヤーの敗北
         }
-        else if (enemy.health <= 0)
+        else if (enemys.All(e => e.health <= 0))
         {
             EndBattle2(true); // プレイヤーの勝利
         }
         else
         {
-            if (isPlayerTurn)
-            {
-                battleLog.text += "\nプレイヤーのターン！";
-                EnablePlayerActions(true);
-            }
-            else
-            {
-                battleLog.text += "\n敵のターン！";
-                EnablePlayerActions(false);
-                StartCoroutine(EnemyTurn()); // コルーチンとして実行
-            }
+            StartCoroutine(BattleLoop());
         }
     }
+    void OtameshiUpdate()
+    {
+        AllCharacter.Clear();
+        // 全プレイヤーと敵をリストに追加
+        AllCharacter.AddRange(players);
+        AllCharacter.AddRange(enemys);
 
+        // スピードで降順にソート
+        AllCharacter = AllCharacter.OrderByDescending(character =>
+        {
+            if (character is Player player)
+                return player.Speed;
+            if (character is Enemy enemy)
+                return enemy.Speed;
+            return 0;
+        }).ToList();
+    }
+    IEnumerator BattleLoop()
+    {
+        while (true)
+        {
+            // スピード順に行動
+            foreach (var character in AllCharacter.ToList()) // コピーを作成してループ
+            {
+                if (character is Player player && player.health > 0) // 生存している場合
+                {
+                    Debug.Log($"プレイヤー {player.name} のターン");
+                    yield return PlayerTurn(player);
+                }
+                else if (character is Enemy enemy && enemy.health > 0) // 生存している場合
+                {
+                    Debug.Log($"敵 {enemy.name} のターン");
+                    yield return EnemyTurn(enemy);
+                }
+
+                // バトル終了条件を確認
+                if (IsBattleOver())
+                {
+                    StartCoroutine(EndBattleSequence());
+                    yield break;
+                }
+            }
+
+            // ソートし直して次のターンへ
+            OtameshiUpdate();
+        }
+    }
+    public void hyouzi(int damage)
+    {
+        battleLog.text += $"\nプレイヤーが敵に{damage}のダメージ！";
+    }
+    IEnumerator PlayerTurn(Player player)
+    {
+        if(attackbotton.activeSelf == false)
+        {
+            attackbotton.SetActive(!attackbotton.activeSelf);
+            escapebotton.SetActive(!escapebotton.activeSelf);
+        }
+        battleLog.text = $"{player.name} のターン！";
+
+        // ボタンが押されるまで待機
+        actionSelected = false; // 初期化
+        while (!actionSelected)
+        {
+            yield return null; // 1フレーム待機
+        }
+
+        Debug.Log($"{player.name} のアクションが終了しました");
+        yield return new WaitForSeconds(2f); // デモ用の遅延
+    }
+
+    IEnumerator EnemyTurn(Enemy enemy)
+    {
+        if(attackbotton.activeSelf == true)
+        {
+            attackbotton.SetActive(!attackbotton.activeSelf);
+            escapebotton.SetActive(!escapebotton.activeSelf);
+        }
+        battleLog.text = $"{enemy.name} のターン！";
+
+        // 敵の行動処理を実装
+        int damage = Random.Range(enemy.AT - 5, enemy.AT + 5);
+        damage -= (players[0].armor[0].number + players[0].defence);
+        if (damage < 0) damage = 0;
+
+        // 攻撃演出をここでいれたい
+        anim = enemy.GetComponent<Animator>();
+        StartCoroutine(PlayAttackAnimation());
+        ClearBattleLog();
+        string colorCode = ColorUtility.ToHtmlStringRGB(Color.red);
+        battleLog.text +=  $"\n<color=#{colorCode}>プレイヤーが{damage}のダメージを受けた!</color>";
+        //battleLog.text += $"\n敵がプレイヤーに{damage}のダメージ！";
+        players[0].TakeDamage(damage);
+
+        yield return new WaitForSeconds(2f); // デモ用の遅延
+    }
+    void OnActionSelected(string action)
+    {
+        Debug.Log($"選択されたアクション: {action}");
+        actionSelected = true; // ボタンが押されたことを通知
+    }
+
+    bool IsBattleOver()
+    {
+        // バトル終了条件
+        bool allPlayersDead = players.All(p => p.health <= 0);
+        bool allEnemiesDead = enemys.All(e => e.health <= 0);
+
+        return allPlayersDead || allEnemiesDead;
+    }
+/*
     public void PlayerAttack(int damage)
     {
         if (!isPlayerTurn) return;
 
         //int damage = Random.Range(5, 15);
         ClearBattleLog();
-        battleLog.text += $"\nプレイヤーが敵に{damage}のダメージ！";
+
         //enemy.TakeDamage(damage);
 
         isPlayerTurn = false;
         UpdateBattleState();
-/*
+
         enemy2 = FindObjectOfType<Enemy>();  ///違うやつが探されそう
         if (enemy != null)
         {
@@ -206,7 +311,7 @@ public class BattleManager : MonoBehaviour
             battleManager.PlayerAttack();
             //enemy.TakeDamage(damage);
         }
-*/
+
     }
 
     IEnumerator EnemyTurn()        //敵のターン
@@ -237,6 +342,7 @@ public class BattleManager : MonoBehaviour
         //敵のターンが終わった時にボタンが復活するようにする......................................................................
         UpdateBattleState();
     }
+    */
 
     IEnumerator PlayAttackAnimation()
     {
@@ -282,7 +388,9 @@ public class BattleManager : MonoBehaviour
         {
             // 敵のPrefabを生成
             GameObject prefab = (GameObject)Resources.Load (BattleData.Instance.enemyName);
-            II.Add(Instantiate(prefab, enemySpawnPoint.position, enemySpawnPoint.rotation));
+            GameObject hab = Instantiate(prefab, enemySpawnPoint.position, enemySpawnPoint.rotation);
+            //hab.transform.rotation = Quaternion.Euler(0, 180, 0);
+            enemys.Add(hab.GetComponent<Enemy>());
             int EnemyCount = Random.Range(0,3);
             Debug.Log(EnemyCount);
             if(EnemyCount != 0)
@@ -294,9 +402,11 @@ public class BattleManager : MonoBehaviour
                     GameObject Inst = (GameObject)Resources.Load(EnemyName[index]);
                     if(i != 0)
                     {
-                        II.Add(Instantiate(Inst, enemySpawnPoint0.position, enemySpawnPoint.rotation));
+                        GameObject kari = Instantiate(Inst, enemySpawnPoint1.position, Quaternion.identity);
+                        enemys.Add(kari.GetComponent<Enemy>());
                     }else{
-                        II.Add(Instantiate(Inst, enemySpawnPoint1.position, enemySpawnPoint.rotation));
+                        GameObject kari = Instantiate(Inst, enemySpawnPoint1.position, Quaternion.identity);
+                        enemys.Add(kari.GetComponent<Enemy>());
                     }
                 }
             }

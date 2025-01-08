@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]public int AT;
     [SerializeField]public int DF;
+    [SerializeField]public int Speed;
     
     [SerializeField]private int EXP = 50; //経験値
     public float currentHealth;
@@ -18,9 +19,10 @@ public class Enemy : MonoBehaviour
     private HealthBarManager healthBarManager;
 
     public static Enemy selectedEnemy; // 選択された敵を記録する静的変数
-
+    private BattleManager battleManager;
     private ArrowManager arrowManager;
     [SerializeField] Player player;
+    [SerializeField] int DropGorld;
     Animator anim;
     void OnMouseDown()
     {
@@ -31,6 +33,11 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        damage -= DF;
+        if(damage < 0) damage = 0;
+        battleManager = FindObjectOfType<BattleManager>();
+        battleManager.hyouzi(damage);
+
         health -= damage;
         Debug.Log(health);
         currentHealth -= damage;
@@ -63,6 +70,7 @@ public class Enemy : MonoBehaviour
         
         // 敵が死亡する処理（例: エフェクトやスコアの増加など）
         BattleManager.players[0].LevelUp(EXP);
+        player.GetGolrd(DropGorld);
         Destroy(this.gameObject);
     }
     // Start is called before the first frame update
@@ -106,7 +114,10 @@ public class Enemy : MonoBehaviour
         {
             EnemyManager.enemies.Remove(enemy);
         }
-
+        if(BattleManager.enemys.Contains(enemy))
+        {
+            BattleManager.enemys.Remove(enemy);
+        }
     }
 
     public IEnumerator PlayDamageAnimation()

@@ -1686,17 +1686,17 @@ MonoBehaviour:
     number: 20
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
-  health: 200
-  maxHealth: 500
-  attack: 180
-  defence: 5
-  Speed: 10
-  LV: 9
-  XP: 350
-  MaxXp: 429.98169599999994
-  currentHealth: 474
+  health: 650
+  maxHealth: 650
+  attack: 240
+  defence: 35
+  Speed: 30
+  LV: 12
+  XP: 450
+  MaxXp: 743.0083706879998
+  currentHealth: 650
   player: {fileID: 3760287559151789196}
-  gold: 2670
+  gold: 2880
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0
