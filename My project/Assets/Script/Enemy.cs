@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]public int AT;
     [SerializeField]public int DF;
+    [SerializeField]public int Speed;
     
     [SerializeField]private int EXP = 50; //経験値
     public float currentHealth;
@@ -20,7 +21,9 @@ public class Enemy : MonoBehaviour
     public static Enemy selectedEnemy; // 選択された敵を記録する静的変数
 
     private ArrowManager arrowManager;
+    private BattleManager battleManager;
     [SerializeField] Player player;
+    [SerializeField] int DropGorld;
 
     void OnMouseDown()
     {
@@ -31,6 +34,11 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        damage -= DF;
+        if (damage < 0) damage = 0; //敵が攻撃を受けたときに敵の防御力を反映している
+        battleManager = FindObjectOfType<BattleManager>();
+        battleManager.hyouzi(damage);
+        
         health -= damage;
         Debug.Log(health);
         currentHealth -= damage;
@@ -62,6 +70,7 @@ public class Enemy : MonoBehaviour
     {
         // 敵が死亡する処理（例: エフェクトやスコアの増加など）
         BattleManager.players[0].LevelUp(EXP);
+        player.GetGolrd(DropGorld);
         Destroy(this.gameObject);
     }
     // Start is called before the first frame update
@@ -96,13 +105,18 @@ public class Enemy : MonoBehaviour
 
         RemoveEnemy(this);
 
+
     }
 
     public void RemoveEnemy(Enemy enemy)
     {
-        if (EnemyManager.enemies.Contains(enemy))
+        if (EnemyManager.enemies.Contains(enemy)) //findで探して敵を探してる
         {
-            EnemyManager.enemies.Remove(enemy);
+            EnemyManager.enemies.Remove(enemy); //エネミーの情報を消す
+        }
+        if(BattleManager.enemys.Contains(enemy)) //インスタンスしたときの情報を持ってる
+        {
+            BattleManager.enemys.Remove(enemy); //エネミーの情報を消す
         }
 
     }

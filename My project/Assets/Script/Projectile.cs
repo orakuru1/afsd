@@ -29,8 +29,8 @@ public class Projectile : MonoBehaviour
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {
-                battleManager = FindObjectOfType<BattleManager>();
-                battleManager.PlayerAttack(15);
+                //battleManager = FindObjectOfType<BattleManager>();
+                //battleManager.PlayerAttack(15);
                 //enemy.TakeDamage(damage);
             }
             // 弾丸を削除

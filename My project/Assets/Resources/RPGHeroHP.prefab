@@ -1633,6 +1633,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f63b0a6621dd018449e368aa141dde4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PattackMotion: 0
+  PdamageMotion: 0
+  PdieMotion: 0
+  dietime: 0
 --- !u!114 &3760287559151789196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1646,18 +1650,53 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skills:
-  - skillName: Fireball
+  - skillName: Fire
     damage: 30
     description: A ball of fire that burns enemies.
-  health: 583
-  maxHealth: 1250
-  attack: 370
-  defence: 340
-  LV: 1
-  XP: 0
-  MaxXp: 100
-  currentHealth: 583
+  - skillName: ice
+    damage: 20
+    description: A ball of fire that burns enemies.
+  weapon:
+  - equipName: efsfd
+    number: 30
+    description: "\u92FC\u9244\u306E\u5263\u3067\u5A01\u529B\u304C\u4E0A\u304C\u308B"
+    price: 100
+  - equipName: "\u9244\u306E\u5263"
+    number: 30
+    description: "\u92FC\u9244\u306E\u5263\u3067\u5A01\u529B\u304C\u4E0A\u304C\u308B"
+    price: 100
+  - equipName: "\u6728\u306E\u5263"
+    number: 10
+    description: "\u521D\u5FC3\u8005\u5411\u3051\u306E\u5263"
+    price: 50
+  armor:
+  - armorname: "\u9B54\u6CD5\u306E\u76FE"
+    number: 20
+    description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
+    price: 100
+  - armorname: "\u9B54\u6CD5\u306E\u76FE"
+    number: 20
+    description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
+    price: 100
+  - armorname: "\u9B54\u6CD5\u306E\u76FE"
+    number: 20
+    description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
+    price: 100
+  - armorname: "\u9B54\u6CD5\u306E\u76FE"
+    number: 20
+    description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
+    price: 100
+  health: 200
+  maxHealth: 500
+  attack: 180
+  defence: 5
+  Speed: 10
+  LV: 9
+  XP: 350
+  MaxXp: 429.98169599999994
+  currentHealth: 474
   player: {fileID: 3760287559151789196}
+  gold: 2670
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0
