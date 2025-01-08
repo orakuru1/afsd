@@ -402,10 +402,10 @@ public class BattleManager : MonoBehaviour
                     GameObject Inst = (GameObject)Resources.Load(EnemyName[index]);
                     if(i != 0)
                     {
-                        GameObject kari = Instantiate(Inst, enemySpawnPoint1.position, Quaternion.identity);
+                        GameObject kari = Instantiate(Inst, enemySpawnPoint0.position, enemySpawnPoint.rotation);
                         enemys.Add(kari.GetComponent<Enemy>());
                     }else{
-                        GameObject kari = Instantiate(Inst, enemySpawnPoint1.position, Quaternion.identity);
+                        GameObject kari = Instantiate(Inst, enemySpawnPoint1.position, enemySpawnPoint.rotation);
                         enemys.Add(kari.GetComponent<Enemy>());
                     }
                 }
