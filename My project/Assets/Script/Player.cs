@@ -105,7 +105,7 @@ public class Player : MonoBehaviour
             Debug.Log("逃げられなかった!");
         }
     }
-    public void Attack(Skill skill) //プレイヤーの攻撃処理
+    public void Attack(Skill skill,Player player,GameObject panel) //プレイヤーの攻撃処理
     {
         attackmotion = true;
         // 選択された敵を攻撃
@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
         if (targetEnemy != null) //敵がクリックされてる
         {
             Debug.Log($"攻撃！ {targetEnemy.gameObject.name} を攻撃します。");
-            ExecuteAttack(targetEnemy,skill); //選択されてる敵の情報と、生成されたスキルボタンの内容を送る
+            ExecuteAttack(targetEnemy,skill,player); //選択されてる敵の情報と、生成されたスキルボタンの内容を送る
         }
         else
         {
@@ -130,13 +130,13 @@ public class Player : MonoBehaviour
         // 攻撃後、選択状態をリセット
         //Enemy.selectedEnemy = null;
         Invoke(nameof(StopAttack), 0.1f);
-        Destroy(BattleManager.panelTransform);
+        Destroy(panel);
     }
 
-    private void ExecuteAttack(Enemy target,Skill skill) //実際に攻撃するところ
+    private void ExecuteAttack(Enemy target,Skill skill,Player player) //実際に攻撃するところ
     {
         //int damage = Random.Range(BattleManager.players[0].attack,BattleManager.players[0].attack);
-        int damage = Random.Range(BattleManager.players[0].attack + skill.damage + weapon[0].number,BattleManager.players[0].attack + skill.damage + weapon[0].number); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
+        int damage = Random.Range(player.attack + skill.damage + weapon[0].number,player.attack + skill.damage + weapon[0].number); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
         // 攻撃処理（例: 敵にダメージを与える）
         //battleManager = FindObjectOfType<BattleManager>();
         //battleManager.PlayerAttack(damage);

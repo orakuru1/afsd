@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: 
   enemyHealth: 0
+  player: {fileID: 0}
 --- !u!4 &31898324
 Transform:
   m_ObjectHideFlags: 0

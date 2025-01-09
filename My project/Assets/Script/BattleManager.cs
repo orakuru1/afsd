@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Linq;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class BattleManager : MonoBehaviour
 {
@@ -23,9 +25,8 @@ public class BattleManager : MonoBehaviour
 
     public Text battleLog;           // バトルログを表示するUI
     [SerializeField]private Player player;            // プレイヤーのスクリプト
+    [SerializeField]private Player secondplayer;            // プレイヤーのスクリプト
     [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
-    public Enemy enemy;              // 敵のスクリプト
-    private bool isPlayerTurn = true; // プレイヤーのターンかどうか
 
     public GameObject hpBarPrefab; // HPバーのPrefab
     public Transform hpBarParent; // HPバーの親（Canvas）
@@ -35,23 +36,25 @@ public class BattleManager : MonoBehaviour
 
     List<string> EnemyName = new List<string>();
 
-    public static List<Player> players = new List<Player>();
-    public static List<Enemy> enemys = new List<Enemy>();
+    public static List<Player> players = new List<Player>(); //プレイヤーのplayerスクリプト
+    private List<GameObject> PlayerObject = new List<GameObject>(); //プレイヤーのオブジェクトのほう
+    public static List<Enemy> enemys = new List<Enemy>(); //エネミーのenemyスクリプト
     public List<object> AllCharacter = new List<object>();
 
     [SerializeField] private GameObject skillButtonPrefab; // 技ボタンのプレハブ
     [SerializeField] private GameObject skillpanel;
     [SerializeField] public Transform skillListParent; // ボタンを配置する親オブジェクト
     [SerializeField] public Transform panerspawn; // ボタンを配置する親オブジェクト
-    public static GameObject panelTransform;
     private List<GameObject> insta = new List<GameObject>();
     [SerializeField] private GameObject attackbotton; // 技選択UIパネル
     [SerializeField] private GameObject escapebotton; // 技選択UIパネル
     private bool actionSelected = false;
+    private bool attackakuction = false;
+    public string assetAddress = "Assets/Resources_moved/otamesi.prefab";
     Animator anim;
     void Start()
     {
-        
+        LoadAsset(assetAddress);
         //EnemyName.Add("Goblin");
         //EnemyName.Add("suraimu");
         EnemyName.Add("GruntHP");
@@ -63,14 +66,14 @@ public class BattleManager : MonoBehaviour
 
         
         // プレイヤーを探してHPバーを生成
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        //GameObject[] player = GameObject.FindGameObjectsWithTag("Player");
+        /*
+        foreach(GameObject player in PlayerObject) //バンドルアセットを試してみたら非同期で遅かったため、場所を変更
         {
+            Debug.Log(player.name);
             CreateHealthBarFor(player);
-        }
-        else{
-            Debug.Log("いません！");
-        }
+        } 
+        */
 
         // 敵を探してHPバーを生成（複数の敵に対応）
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -83,11 +86,41 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    public void GenerateSkillButtons()
+    void LoadAsset(string address)
     {
-        panelTransform = Instantiate(skillpanel,panerspawn);
+        // 非同期でアセットをロード
+        Addressables.LoadAssetAsync<GameObject>(address).Completed += OnAssetLoaded;
+    }
+
+    void OnAssetLoaded(AsyncOperationHandle<GameObject> obj)
+    {
+        if (obj.Status == AsyncOperationStatus.Succeeded)
+        {
+            Debug.Log($"アセットロード成功: {obj.Result.name}");
+            GameObject kari = Instantiate(obj.Result); // オブジェクトをインスタンス化
+            PlayerObject.Add(kari);
+            players.Add(kari.GetComponent<Player>());
+        }
+        else
+        {
+            Debug.LogError("アセットロード失敗");
+        }
+
+        foreach(GameObject player in PlayerObject)
+        {
+            Debug.Log(player.name);
+            CreateHealthBarFor(player);
+        } 
+    }
+    void UnloadAsset(GameObject loadedObject)
+    {
+        Addressables.ReleaseInstance(loadedObject);
+    }
+    public void GenerateSkillButtons(Player player)
+    {
         //GameObject button = Instantiate(skillpanel)
-        foreach (Skill skill in players[0].skills)
+        GameObject panelTransform = Instantiate(skillpanel,panerspawn);
+        foreach (Skill skill in player.skills)
         {
             GameObject button = Instantiate(skillButtonPrefab, panelTransform.transform);
             insta.Add(button);
@@ -96,9 +129,8 @@ public class BattleManager : MonoBehaviour
 
             // ボタンが押されたときにスキルを実行
             Button btn = button.GetComponent<Button>();
-            btn.onClick.AddListener(() => players[0].Attack(skill));
+            btn.onClick.AddListener(() => player.Attack(skill,player,panelTransform));
             btn.onClick.AddListener(() => OnActionSelected(skill.skillName));
-
         }
     }
 
@@ -234,12 +266,20 @@ public class BattleManager : MonoBehaviour
     }
     IEnumerator PlayerTurn(Player player)
     {
+        battleLog.text = $"{player.name} のターン！";
+
         if(attackbotton.activeSelf == false)
         {
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
         }
-        battleLog.text = $"{player.name} のターン！";
+        attackakuction = false;
+        while (!attackakuction)
+        {
+            yield return null;
+        }
+        GenerateSkillButtons(player);
+
 
         // ボタンが押されるまで待機
         actionSelected = false; // 初期化
@@ -254,16 +294,20 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator EnemyTurn(Enemy enemy)
     {
+        battleLog.text = $"{enemy.name} のターン！";
+        yield return new WaitForSeconds(2f);
+
+        int playernumber = Random.Range(0,2);
+        Debug.Log(playernumber);
         if(attackbotton.activeSelf == true)
         {
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
         }
-        battleLog.text = $"{enemy.name} のターン！";
 
         // 敵の行動処理を実装
         int damage = Random.Range(enemy.AT - 5, enemy.AT + 5);
-        damage -= (players[0].armor[0].number + players[0].defence);
+        damage -= (players[playernumber].armor[0].number + players[playernumber].defence);
         if (damage < 0) damage = 0;
 
         // 攻撃演出をここでいれたい
@@ -271,9 +315,9 @@ public class BattleManager : MonoBehaviour
         StartCoroutine(PlayAttackAnimation());
         ClearBattleLog();
         string colorCode = ColorUtility.ToHtmlStringRGB(Color.red);
-        battleLog.text +=  $"\n<color=#{colorCode}>プレイヤーが{damage}のダメージを受けた!</color>";
+        battleLog.text +=  $"\n<color=#{colorCode}>{PlayerObject[playernumber].name}が{damage}のダメージを受けた!</color>";
         //battleLog.text += $"\n敵がプレイヤーに{damage}のダメージ！";
-        players[0].TakeDamage(damage);
+        players[playernumber].TakeDamage(damage);
 
         yield return new WaitForSeconds(2f); // デモ用の遅延
     }
@@ -281,6 +325,10 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log($"選択されたアクション: {action}");
         actionSelected = true; // ボタンが押されたことを通知
+    }
+    public void OnActionSelected()
+    {
+        attackakuction = true; // ボタンが押されたことを通知
     }
 
     bool IsBattleOver()
@@ -381,6 +429,7 @@ public class BattleManager : MonoBehaviour
     {
         GameObject playerprefab = (GameObject)Resources.Load (Name);
         Instance = Instantiate(playerprefab, SpawnPoint.position, Quaternion.identity);
+        PlayerObject.Add(Instance);
         ScriptPlayer = Instance.GetComponent<Player>();
         players.Add(ScriptPlayer);
         // BattleDataから敵の情報を取得して設定
@@ -402,7 +451,7 @@ public class BattleManager : MonoBehaviour
                     GameObject Inst = (GameObject)Resources.Load(EnemyName[index]);
                     if(i != 0)
                     {
-                        GameObject kari = Instantiate(Inst, enemySpawnPoint1.position, Quaternion.identity);
+                        GameObject kari = Instantiate(Inst, enemySpawnPoint0.position, Quaternion.identity);
                         enemys.Add(kari.GetComponent<Enemy>());
                     }else{
                         GameObject kari = Instantiate(Inst, enemySpawnPoint1.position, Quaternion.identity);
