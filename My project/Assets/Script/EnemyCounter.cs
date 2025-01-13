@@ -37,7 +37,6 @@ public class EnemyCounter : MonoBehaviour
             enemyCountText.text = "敵の数: " + enemyCount;
         }
         */
-        Debug.Log(enemyCount);
 
         battleManager = FindObjectOfType<BattleManager>();
         if (enemyCount <= 0)
