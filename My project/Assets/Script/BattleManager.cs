@@ -12,6 +12,7 @@ public class BattleManager : MonoBehaviour
 {
     public string Name = "RPGHeroHP"; // 名前
     public Transform SpawnPoint; // 生成する位置
+    public Transform SecondSpawnPoint;
     private GameObject Instance;
     //↑キャラクター生成用
     public TextMeshProUGUI gameOverText; // 対象のTextコンポーネント
@@ -25,7 +26,6 @@ public class BattleManager : MonoBehaviour
 
     public Text battleLog;           // バトルログを表示するUI
     [SerializeField]private Player player;            // プレイヤーのスクリプト
-    [SerializeField]private Player secondplayer;            // プレイヤーのスクリプト
     [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
 
     public GameObject hpBarPrefab; // HPバーのPrefab
@@ -51,10 +51,16 @@ public class BattleManager : MonoBehaviour
     private bool actionSelected = false;
     private bool attackakuction = false;
     public string assetAddress = "Assets/Resources_moved/otamesi.prefab";
+    [SerializeField]private GameObject kariplayer;
+    [SerializeField]private Player SecondPlayer;
+    private List<Player> oomoto = new List<Player>();
     Animator anim;
     void Start()
     {
-        LoadAsset(assetAddress);
+        oomoto.Add(player);
+        oomoto.Add(SecondPlayer);
+
+        //LoadAsset(assetAddress);
         //EnemyName.Add("Goblin");
         //EnemyName.Add("suraimu");
         EnemyName.Add("GruntHP");
@@ -75,6 +81,11 @@ public class BattleManager : MonoBehaviour
         } 
         */
 
+        foreach(GameObject player in PlayerObject) //プレイヤーのhpバー
+        {
+            CreateHealthBarFor(player);
+        } 
+
         // 敵を探してHPバーを生成（複数の敵に対応）
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemies)
@@ -82,7 +93,7 @@ public class BattleManager : MonoBehaviour
             CreateHealthBarFor(enemy);
         }
 
-        ScriptPlayer.OnStatsUpdated += SyncPlayerStats;
+        //ScriptPlayer.OnStatsUpdated += SyncPlayerStats;
 
     }
 
@@ -96,7 +107,6 @@ public class BattleManager : MonoBehaviour
     {
         if (obj.Status == AsyncOperationStatus.Succeeded)
         {
-            Debug.Log($"アセットロード成功: {obj.Result.name}");
             GameObject kari = Instantiate(obj.Result); // オブジェクトをインスタンス化
             PlayerObject.Add(kari);
             players.Add(kari.GetComponent<Player>());
@@ -105,12 +115,6 @@ public class BattleManager : MonoBehaviour
         {
             Debug.LogError("アセットロード失敗");
         }
-
-        foreach(GameObject player in PlayerObject)
-        {
-            Debug.Log(player.name);
-            CreateHealthBarFor(player);
-        } 
     }
     void UnloadAsset(GameObject loadedObject)
     {
@@ -124,7 +128,6 @@ public class BattleManager : MonoBehaviour
         {
             GameObject button = Instantiate(skillButtonPrefab, panelTransform.transform);
             insta.Add(button);
-            Debug.Log(button);  //ボタンに新しいスクリプトを入れてここで、スキルのダメージを受け取れるようにする。ボタンのスクリプトでplayerattackを呼び出す
             button.GetComponentInChildren<Text>().text = skill.skillName;
 
             // ボタンが押されたときにスキルを実行
@@ -147,7 +150,6 @@ public class BattleManager : MonoBehaviour
         }
 
         fadeImage.color = new Color(0, 0, 0, 1); // 最終的に完全に暗くする
-        Debug.Log("暗くなった？");
     }
 
     void SyncPlayerStats()
@@ -165,8 +167,7 @@ public class BattleManager : MonoBehaviour
         {
             player.skills = ScriptPlayer.skills;
             player.skills.Add(new Skill { skillName = "ice", damage = 20, description = "A ball of fire that burns enemies." });
-        }
-        
+        }        
 
         // 必要に応じて他の値も同期
     }
@@ -179,6 +180,13 @@ public class BattleManager : MonoBehaviour
         // キャラクターの位置に応じたHPバーを管理するスクリプトを設定
         HealthBarManager healthBarManager = character.AddComponent<HealthBarManager>();
         healthBarManager.hpBarInstance = hpBar;
+
+        Player playerComponent = character.GetComponent<Player>();
+        if (playerComponent != null)
+        {
+            healthBarManager.player = playerComponent;
+            //playerComponent.healthBarManager = healthBarManager;
+        }
     }
 
     public void ClearBattleLog()
@@ -194,6 +202,11 @@ public class BattleManager : MonoBehaviour
     private IEnumerator StartBattle()
     {
         battleLog.text = "戦闘開始！";
+        if(attackbotton.activeSelf == true)
+        {
+            attackbotton.SetActive(!attackbotton.activeSelf);
+            escapebotton.SetActive(!escapebotton.activeSelf);
+        }
         yield return new WaitForSeconds(1f);
         UpdateBattleState();
     }
@@ -239,12 +252,12 @@ public class BattleManager : MonoBehaviour
             {
                 if (character is Player player && player.health > 0) // 生存している場合
                 {
-                    Debug.Log($"プレイヤー {player.name} のターン");
+                    Debug.Log($" {player.name} のターン");
                     yield return PlayerTurn(player);
                 }
                 else if (character is Enemy enemy && enemy.health > 0) // 生存している場合
                 {
-                    Debug.Log($"敵 {enemy.name} のターン");
+                    Debug.Log($" {enemy.name} のターン");
                     yield return EnemyTurn(enemy);
                 }
 
@@ -288,7 +301,6 @@ public class BattleManager : MonoBehaviour
             yield return null; // 1フレーム待機
         }
 
-        Debug.Log($"{player.name} のアクションが終了しました");
         yield return new WaitForSeconds(2f); // デモ用の遅延
     }
 
@@ -297,8 +309,16 @@ public class BattleManager : MonoBehaviour
         battleLog.text = $"{enemy.name} のターン！";
         yield return new WaitForSeconds(2f);
 
-        int playernumber = Random.Range(0,2);
-        Debug.Log(playernumber);
+            int playernumber;
+            Player targetPlayer;
+        do
+        {
+            playernumber = Random.Range(0,players.Count);
+            targetPlayer = players[playernumber];
+        }
+        while(targetPlayer.health <= 0);
+
+
         if(attackbotton.activeSelf == true)
         {
             attackbotton.SetActive(!attackbotton.activeSelf);
@@ -307,7 +327,7 @@ public class BattleManager : MonoBehaviour
 
         // 敵の行動処理を実装
         int damage = Random.Range(enemy.AT - 5, enemy.AT + 5);
-        damage -= (players[playernumber].armor[0].number + players[playernumber].defence);
+        damage -= (targetPlayer.armor[0].number + targetPlayer.defence);
         if (damage < 0) damage = 0;
 
         // 攻撃演出をここでいれたい
@@ -317,7 +337,8 @@ public class BattleManager : MonoBehaviour
         string colorCode = ColorUtility.ToHtmlStringRGB(Color.red);
         battleLog.text +=  $"\n<color=#{colorCode}>{PlayerObject[playernumber].name}が{damage}のダメージを受けた!</color>";
         //battleLog.text += $"\n敵がプレイヤーに{damage}のダメージ！";
-        players[playernumber].TakeDamage(damage);
+        Debug.Log($"{targetPlayer.name} に {damage} のダメージ！");
+        targetPlayer.TakeDamage(damage);
 
         yield return new WaitForSeconds(2f); // デモ用の遅延
     }
@@ -339,58 +360,6 @@ public class BattleManager : MonoBehaviour
 
         return allPlayersDead || allEnemiesDead;
     }
-/*
-    public void PlayerAttack(int damage)
-    {
-        if (!isPlayerTurn) return;
-
-        //int damage = Random.Range(5, 15);
-        ClearBattleLog();
-
-        //enemy.TakeDamage(damage);
-
-        isPlayerTurn = false;
-        UpdateBattleState();
-
-        enemy2 = FindObjectOfType<Enemy>();  ///違うやつが探されそう
-        if (enemy != null)
-        {
-            battleManager = FindObjectOfType<BattleManager>();
-            battleManager.PlayerAttack();
-            //enemy.TakeDamage(damage);
-        }
-
-    }
-
-    IEnumerator EnemyTurn()        //敵のターン
-    {
-        yield return new WaitForSeconds(0.2f); //0.2秒待機
-
-        // EnemyManager.enemies をループして攻撃処理を実行
-        for (int i = 0;i < EnemyManager.enemies.Count; i++)
-        {
-            Enemy enemy = EnemyManager.enemies[i];
-            if (enemy != null) // 敵が有効な場合のみ攻撃
-            {
-                yield return new WaitForSeconds(3); //3秒待機
-                int damage = Random.Range(enemy.AT-5, enemy.AT+5);
-                // 攻撃演出をここでいれたい
-                anim = enemy.GetComponent<Animator>();
-                StartCoroutine(PlayAttackAnimation());
-                ClearBattleLog();
-                string colorCode = ColorUtility.ToHtmlStringRGB(Color.red);
-                battleLog.text +=  $"\n<color=#{colorCode}>プレイヤーが{damage}のダメージを受けた!</color>";
-                //AddLog($"\n敵がプレイヤーに{damage}のダメージ！",Color.red);
-                players[0].TakeDamage(damage); // プレイヤーにダメージを与える
-            }
-        }
-        isPlayerTurn = true;
-        attackbotton.SetActive(!attackbotton.activeSelf);
-        escapebotton.SetActive(!escapebotton.activeSelf);
-        //敵のターンが終わった時にボタンが復活するようにする......................................................................
-        UpdateBattleState();
-    }
-    */
 
     IEnumerator PlayAttackAnimation()
     {
@@ -432,6 +401,13 @@ public class BattleManager : MonoBehaviour
         PlayerObject.Add(Instance);
         ScriptPlayer = Instance.GetComponent<Player>();
         players.Add(ScriptPlayer);
+        players[0].SetUpBattleManager(this);
+
+        GameObject sp = Instantiate(kariplayer,SecondSpawnPoint.position,Quaternion.identity);
+        PlayerObject.Add(sp);
+        players.Add(sp.GetComponent<Player>());
+        players[1].SetUpBattleManager(this);
+
         // BattleDataから敵の情報を取得して設定
         if (BattleData.Instance.enemyName != null)
         {
@@ -441,13 +417,11 @@ public class BattleManager : MonoBehaviour
             //hab.transform.rotation = Quaternion.Euler(0, 180, 0);
             enemys.Add(hab.GetComponent<Enemy>());
             int EnemyCount = Random.Range(0,3);
-            Debug.Log(EnemyCount);
             if(EnemyCount != 0)
             {
                 for(int i = 0; i < EnemyCount; i++)
                 {
                     int index = (int)Random.Range(0.0f,EnemyName.Count); //敵の名前を習得できる数字がランダムで作られる
-                    Debug.Log(index);
                     GameObject Inst = (GameObject)Resources.Load(EnemyName[index]);
                     if(i != 0)
                     {
@@ -478,10 +452,32 @@ public class BattleManager : MonoBehaviour
     public void EndBattle()
     {
         // BattleDataの情報をリセット（必要に応じて）
+        StatusOver();
         BattleData.Instance.SetEnemyData( "", 0);
 
         // フィールドシーンに戻る
         SceneManager.LoadScene("SampleScene");
+    }
+    public void StatusOver()
+    {
+        foreach(Player player in players)
+        {
+            foreach(Player player2 in oomoto)
+            {
+                if(player.pn == player2.pn)
+                {
+                    player2.health = player.health;
+                    player2.currentHealth = player.currentHealth;
+                    player2.maxHealth = player.maxHealth;
+                    player2.attack = player.attack;
+                    player2.defence = player.defence;
+                    player2.Speed = player.Speed;
+                    player2.LV = player.LV;
+                    player2.XP = player.XP;
+                    player2.MaxXp = player.MaxXp;
+                }
+            }
+        }
     }
 
     private IEnumerator EndBattleSequence()

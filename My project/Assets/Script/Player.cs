@@ -33,9 +33,9 @@ public class Player : MonoBehaviour
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト
     public List<Weapon> weapon = new List<Weapon>(); //装備が入ってるリスト
     public List<Armor> armor = new List<Armor>(); //装備が入ってるリスト
+    [SerializeField]public string pn;
     [SerializeField]public int health; //死んだ処理のHP
     [SerializeField]public float maxHealth;//一緒になってる
-
     [SerializeField] public int attack; //攻撃力
     [SerializeField] public int defence; //防御力
     [SerializeField] public int Speed;
@@ -47,15 +47,16 @@ public class Player : MonoBehaviour
     public static bool attackmotion = false;
     public static bool damagemotion = false;
     public static bool diemotion = false;
-
-
     private BattleManager battleManager; //ターン制バトルを管理するスクリプト
-    [SerializeField]private Player player; //自分の親元
 
-    public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
+    //public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
     private BattleSystem battleSystem; //技のボタンを表示・非表示してるとこ(今見てみたら使ってるのかわからんかった)
-
     [SerializeField]public int gold; // プレイヤーの初期ゴールド
+
+    public void SetUpBattleManager(BattleManager mana)
+    {
+        battleManager = mana;
+    }
     public void GetGolrd(int StealGorld) //プレイヤースクリプト(親元)のお金を増やす処理
     {
         gold += StealGorld; //お金の計算
@@ -90,7 +91,11 @@ public class Player : MonoBehaviour
             MaxXp *= 1.2; //次のレベルアップまでを更新する
             LV += 1; //現在のレベルを上げる
         }
-        OnStatsUpdated?.Invoke(); // 通知を送信
+        //OnStatsUpdated?.Invoke(); // 通知を送信
+        battleManager.StatusOver();
+        UpdateHealthBar();
+
+        BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);
     }
 
     public void escape() //逃げるボタンを押されたときの処理
@@ -140,7 +145,7 @@ public class Player : MonoBehaviour
         // 攻撃処理（例: 敵にダメージを与える）
         //battleManager = FindObjectOfType<BattleManager>();
         //battleManager.PlayerAttack(damage);
-        target.GetComponent<Enemy>()?.TakeDamage(damage); //敵に攻撃を送ってる
+        target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
     }
 
     public void TakeDamage(int damage) //自分のダメージを受ける処理
@@ -148,10 +153,15 @@ public class Player : MonoBehaviour
         StartCoroutine("MDamage");
         health -= damage; //HPにダメージを食らう
         if (health < 0) health = 0; //０より下になった時に０にする
+
         currentHealth -= damage; //ＨＰばーも減らす
         if (currentHealth < 0) currentHealth = 0; //０より下になった時に０にする
-        UpdateHealthBar(); //HPバーが減ったから更新する
-
+        
+        if(healthBarManager != null)
+        {
+            UpdateHealthBar(); //HPバーが減ったから更新する
+        }
+        
         if (currentHealth <= 0) //ＨＰがなくなったら
         {
             diemotion = true;

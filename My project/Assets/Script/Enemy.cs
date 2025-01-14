@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour
     public static Enemy selectedEnemy; // 選択された敵を記録する静的変数
     private BattleManager battleManager;
     private ArrowManager arrowManager;
-    [SerializeField] Player player;
+    [SerializeField]private Player player;
     [SerializeField] int DropGorld;
     Animator anim;
     void OnMouseDown()
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
         Debug.Log($"{gameObject.name} が選択されました。");
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage,Player player)
     {
         damage -= DF;
         if(damage < 0) damage = 0;
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
         StartCoroutine("PlayDamageAnimation");
         if (currentHealth <= 0)
         {
-            Die();
+            Die(player);
         }
     }
 
@@ -65,11 +65,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Die()
+    private void Die(Player player)
     {
-        
         // 敵が死亡する処理（例: エフェクトやスコアの増加など）
-        BattleManager.players[0].LevelUp(EXP);
+        player.LevelUp(EXP);
         player.GetGolrd(DropGorld);
         Destroy(this.gameObject);
     }

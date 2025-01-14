@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5724236641631149415}
   - component: {fileID: 3037706019587040286}
   - component: {fileID: -5805957014504363857}
+  - component: {fileID: -4160338664990824660}
   m_Layer: 0
   m_Name: otamesi
   m_TagString: Untagged
@@ -125,14 +126,30 @@ MonoBehaviour:
     number: 0
     description: 
     price: 0
-  health: 100
-  maxHealth: 100
-  attack: 10
-  defence: 30
+  pn: otamesi
+  health: 300
+  maxHealth: 450
+  attack: 120
+  defence: 40
   Speed: 0
-  LV: 1
+  LV: 2
   XP: 0
-  MaxXp: 100
-  currentHealth: 100
-  player: {fileID: -5805957014504363857}
+  MaxXp: 120
+  currentHealth: 300
   gold: 30
+--- !u!54 &-4160338664990824660
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7594112034592002553}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
