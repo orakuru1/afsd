@@ -342,8 +342,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 8
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &104257537
 --- !u!4 &237292626 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4086279202973348, guid: 1125b9f9224e7ca4da913be8a4360764,
