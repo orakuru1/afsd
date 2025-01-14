@@ -53,10 +53,11 @@ public class Player : MonoBehaviour
     private BattleSystem battleSystem; //技のボタンを表示・非表示してるとこ(今見てみたら使ってるのかわからんかった)
     [SerializeField]public int gold; // プレイヤーの初期ゴールド
 
-    public void SetUpBattleManager(BattleManager mana)
+    public void SetUpBattleManager(BattleManager mana) //battlemanagerをゲット
     {
         battleManager = mana;
     }
+
     public void GetGolrd(int StealGorld) //プレイヤースクリプト(親元)のお金を増やす処理
     {
         gold += StealGorld; //お金の計算
