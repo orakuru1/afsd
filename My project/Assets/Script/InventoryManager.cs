@@ -42,7 +42,7 @@ public class InventoryManager : MonoBehaviour
         descriptionText.SetActive(!descriptionText.activeSelf);
     }
 
-    public void OnbuttonInventoAll() //戻るボタンとインベントリの枠以外の場所を押したら、非表示にするようにする。何回も押したら、ボタンが無限に増えてしまうので、一個前の奴を全部消す処理を作ろうかな。
+    public void OnbuttonInventoWeapon() //戻るボタンとインベントリの枠以外の場所を押したら、非表示にするようにする。何回も押したら、ボタンが無限に増えてしまうので、一個前の奴を全部消す処理を作ろうかな。
     {
         InventoAll.SetActive(!InventoAll.activeSelf);
         InventoScrol.SetActive(!InventoScrol.activeSelf);
