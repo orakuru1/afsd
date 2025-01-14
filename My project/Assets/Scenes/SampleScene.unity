@@ -763,12 +763,12 @@ MonoBehaviour:
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
   InventoBotton: {fileID: 4211448239904593465, guid: db43ea21ac80b0b41b4ef0a7588c6537,
     type: 3}
-  Inventoparent: {fileID: 0}
-  InventoScrol: {fileID: 0}
-  descriptionText: {fileID: 0}
-  descriptionText2: {fileID: 0}
+  Inventoparent: {fileID: 1322922049}
+  InventoScrol: {fileID: 842437594}
+  descriptionText: {fileID: 691845035}
+  descriptionText2: {fileID: 691845037}
   gearButton: {fileID: 0}
-  InventoAll: {fileID: 0}
+  InventoAll: {fileID: 697559715}
 --- !u!114 &395610706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -801,13 +801,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f043e70f09e189b43bdf5846ac26289c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueText: {fileID: 0}
-  dialogueBox: {fileID: 0}
+  dialogueText: {fileID: 2101302538}
+  dialogueBox: {fileID: 1493683084}
   itemButtonPrefab: {fileID: 5215794715893339190, guid: a87b2dd3e500b984a8b6fbbd58914455,
     type: 3}
-  itemButtonParent: {fileID: 0}
-  currentEquipmentText: {fileID: 0}
-  shoppanel: {fileID: 0}
+  itemButtonParent: {fileID: 688813810}
+  currentEquipmentText: {fileID: 1087595491}
+  shoppanel: {fileID: 1820720073}
   player1: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
 --- !u!4 &395610708
 Transform:
@@ -1748,7 +1748,7 @@ GameObject:
   - component: {fileID: 665341371}
   - component: {fileID: 665341370}
   m_Layer: 0
-  m_Name: "\u5546\u4EBA (1)"
+  m_Name: "\u5546\u4EBA"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
