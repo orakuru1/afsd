@@ -127,15 +127,15 @@ MonoBehaviour:
     description: 
     price: 0
   pn: otamesi
-  health: 300
+  health: 0
   maxHealth: 450
   attack: 120
   defence: 40
   Speed: 0
   LV: 2
-  XP: 0
+  XP: 50
   MaxXp: 120
-  currentHealth: 300
+  currentHealth: 0
   gold: 30
 --- !u!54 &-4160338664990824660
 Rigidbody:
