@@ -3639,8 +3639,8 @@ MonoBehaviour:
   dialogue:
   - "\u3053\u3093\u306B\u3061\u306F"
   - "\u4F55\u3067\u3082\u58F2\u3063\u3066\u308B\u3088"
-  interactUI: {fileID: 0}
-  panel: {fileID: 0}
+  interactUI: {fileID: 668735228}
+  panel: {fileID: 1820720073}
 --- !u!136 &1545658160
 CapsuleCollider:
   m_ObjectHideFlags: 0
