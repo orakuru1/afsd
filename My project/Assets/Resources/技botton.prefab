@@ -109,10 +109,14 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_LocalScale: {x: 1.003772, y: 0.8, z: 1}
 =======
   m_LocalScale: {x: 1, y: 1, z: 1}
 >>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a
+=======
+  m_LocalScale: {x: 1, y: 1, z: 1}
+>>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1001480500768176431}
@@ -122,12 +126,17 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_AnchoredPosition: {x: 13.83255, y: 337}
   m_SizeDelta: {x: 275, y: 837}
 =======
   m_AnchoredPosition: {x: 13.83255, y: 604.2235}
   m_SizeDelta: {x: 160, y: 30}
 >>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a
+=======
+  m_AnchoredPosition: {x: 13.83255, y: 604.2235}
+  m_SizeDelta: {x: 160, y: 30}
+>>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1708240346515523551
 CanvasRenderer:

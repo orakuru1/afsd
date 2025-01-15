@@ -4,8 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
-
+[System.Serializable]
+public class Skill //攻撃する表示のスキルたち、４個ぐらいかな？
+{
+    public string skillName; //スキルの名前
+    public int damage; //ダメージ量
+    public string description; //説明
+}
 [System.Serializable]
 public class Weapon  //防具や武器のステータス・・・・・・0番が武器として機能している。１番が防具として機能している
 {
@@ -23,13 +28,6 @@ public class Armor
     public int price; //装備の値段
 }
 
-[System.Serializable]
-public class Skill
-{
-    public string skillName;
-    public int damage;
-    public string description;
-}
 public class Player : MonoBehaviour
 {
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト

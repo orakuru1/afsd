@@ -505,6 +505,51 @@ public class BattleManager : MonoBehaviour
         // フィールドシーンに戻る
         //SceneManager.LoadScene("SampleScene");
     }
+    public void StatusOver()
+    {
+        foreach(Player player in players)
+        {
+            foreach(Player player2 in oomoto)
+            {
+                if(player.pn == player2.pn)
+                {
+                    player2.health = player.health;
+                    player2.currentHealth = player.currentHealth;
+                    player2.maxHealth = player.maxHealth;
+                    player2.attack = player.attack;
+                    player2.defence = player.defence;
+                    player2.Speed = player.Speed;
+                    player2.LV = player.LV;
+                    player2.XP = player.XP;
+                    player2.MaxXp = player.MaxXp;
+                }
+            }
+        }
+    }
+
+    private IEnumerator EndBattleSequence()
+    {
+        // フェードアウト
+        yield return FadeOut(2.0f); // 2秒かけてフェードアウト
+
+        // プレイヤーを表示する処理
+        ShowPlayerAndGameOver();
+
+        // 3秒待機
+        yield return new WaitForSeconds(3.0f);
+
+        // BattleDataの情報をリセット（必要に応じて）
+        //BattleData.Instance.SetEnemyData("", 0);
+
+        // フィールドシーンに戻る
+        //SceneManager.LoadScene("SampleScene");
+    }
+
+    private void ShowPlayerAndGameOver()
+    {
+        // "GAME OVER" テキストを表示
+        gameOverText.gameObject.SetActive(true);
+    }
 
     // Update is called once per frame
     void Update()

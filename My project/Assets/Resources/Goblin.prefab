@@ -170,16 +170,22 @@ MonoBehaviour:
   AT: 10
   DF: 10
 <<<<<<< HEAD
+<<<<<<< HEAD
   EXP: 50
   currentHealth: 0
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
 =======
+=======
+>>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
   Speed: 20
   EXP: 50
   currentHealth: 0
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
   DropGorld: 0
+<<<<<<< HEAD
 >>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a
+=======
+>>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
 --- !u!114 &7782331532614720645
 MonoBehaviour:
   m_ObjectHideFlags: 0
