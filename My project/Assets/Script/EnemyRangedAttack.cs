@@ -48,7 +48,7 @@ public class EnemyRangedAttack : MonoBehaviour
 
         lastAttackTime = Time.time; // 攻撃間隔のリセット
 
-        Debug.Log("空中のプレイヤーに向けて攻撃しました！");
+        Debug.Log("プレイヤーに向けて攻撃しました！");
     }
 }
 

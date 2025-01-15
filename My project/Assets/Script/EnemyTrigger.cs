@@ -5,17 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class EnemyTrigger : MonoBehaviour
 {
-    public string battleSceneName = "BattleScene"; // 戦闘シーンの名前
-    public string enemyName = "Goblin"; // 敵の名前
-    public int enemyHealth = 100; // 敵の体力
+    private string battleSceneName = "BattleScene"; // 戦闘シーンの名前
+    [SerializeField]private string enemyName = "Goblin"; // 敵の名前
+    private int enemyHealth = 100; // 敵の体力
     // Start is called before the first frame update
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Player"))
+        if (collision.collider.CompareTag("Player"))
         {
             // BattleDataに敵の情報を設定
             BattleData.Instance.SetEnemyData(enemyName, enemyHealth);
-            //Debug.Log(BattleData.Instance.enemyPrefab);
+
             // 戦闘シーンに遷移
             SceneManager.LoadScene(battleSceneName);
         }

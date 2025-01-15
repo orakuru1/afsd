@@ -7,6 +7,7 @@ public class chara : MonoBehaviour
     [SerializeField] public bool onGround = true;
     [SerializeField] public bool inJumping = false;
     Rigidbody rb; //rigidbody定義
+    Animator anim;
     float speed = 3.0f; //移動スピード
     float sprintspeed = 6.0f; //ダッシュ
     float angleSpeed = 150;
@@ -16,6 +17,7 @@ public class chara : MonoBehaviour
     void Start()
     {
        rb = this.GetComponent<Rigidbody>();
+       anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -25,28 +27,45 @@ public class chara : MonoBehaviour
         if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
         {
             v = Time.deltaTime * sprintspeed;
+            anim.SetBool("dassyu", true);//歩くアニメーション
         }
 
         //sキー（後方移動）
         else if(Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.LeftShift))
         {
             v = -Time.deltaTime * sprintspeed;
+            anim.SetBool("dassyu", true);//歩くアニメーション
         }
 
         //Dキー（右移動）
         else if(Input.GetKey(KeyCode.W))
         {
             v = Time.deltaTime * speed;
+            anim.SetBool("walking", true);//歩くアニメーション
         }
 
         //Aキー（左移動）
         else if(Input.GetKey(KeyCode.S))
         {
             v = -Time.deltaTime * speed;
+            anim.SetBool("walking", true);//歩くアニメーション
+        }
+        else if(Input.GetKey(KeyCode.W) && Input.GetMouseButtonDown(0)){
+            anim.SetBool("walking", true);
+            anim.SetBool("attack", true);
+        }
+        else if(Input.GetKey(KeyCode.S) && Input.GetMouseButtonDown(0)){
+            anim.SetBool("walking", true);
+            anim.SetBool("attack", true);
+        }
+        else if(Input.GetMouseButtonDown(0)){
+            anim.SetBool("attack", true);
         }
         else 
         {
             v = 0;
+            anim.SetBool("walking", false);//何も押されなかったら止まる
+            anim.SetBool("attack", false);
         }
        
 
