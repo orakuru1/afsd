@@ -429,18 +429,8 @@ GameObject:
   - component: {fileID: 4198137525506542743}
   - component: {fileID: 4148027564549049612}
   m_Layer: 0
-<<<<<<< HEAD
-<<<<<<<< HEAD:My project/Assets/Charas/RPG Monster DUO PBR Polyart/Prefabs/ゴブリン.prefab
-  m_Name: "\u30B4\u30D6\u30EA\u30F3"
-  m_TagString: Untagged
-========
   m_Name: SlimePBR
   m_TagString: Enemy
->>>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a:My project/Assets/Resources/SlimePBR.prefab
-=======
-  m_Name: SlimePBR
-  m_TagString: Enemy
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -483,11 +473,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
-<<<<<<< HEAD
-<<<<<<<< HEAD:My project/Assets/Charas/RPG Monster DUO PBR Polyart/Prefabs/ゴブリン.prefab
-========
-=======
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
 --- !u!136 &1984278981321418307
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -552,7 +537,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
-<<<<<<< HEAD
->>>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a:My project/Assets/Resources/SlimePBR.prefab
-=======
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd

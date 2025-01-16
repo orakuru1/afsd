@@ -125,11 +125,6 @@ AnimatorStateTransition:
   m_TransitionOffset: 0
   m_ExitTime: 0.75
   m_HasExitTime: 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -158,10 +153,6 @@ AnimatorStateTransition:
   m_TransitionOffset: 0
   m_ExitTime: 0.75
   m_HasExitTime: 0
-<<<<<<< HEAD
->>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a
-=======
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -361,11 +352,6 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
 --- !u!1101 &4806756522125270170
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -418,10 +404,6 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
-<<<<<<< HEAD
->>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a
-=======
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
 --- !u!1101 &7929436218639871013
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -439,21 +421,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-<<<<<<< HEAD
-<<<<<<< HEAD
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0
-  m_ExitTime: 0.75
-=======
   m_TransitionDuration: 0.25000006
   m_TransitionOffset: 0
   m_ExitTime: 0.18037327
->>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a
-=======
-  m_TransitionDuration: 0.25000006
-  m_TransitionOffset: 0
-  m_ExitTime: 0.18037327
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0

@@ -1650,23 +1650,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skills:
-<<<<<<< HEAD
-<<<<<<< HEAD
-  - skillName: Fireball
-    damage: 30
-    description: A ball of fire that burns enemies.
-  health: 583
-  maxHealth: 1250
-  attack: 370
-  defence: 340
-  LV: 1
-  XP: 0
-  MaxXp: 100
-  currentHealth: 583
-  player: {fileID: 3760287559151789196}
-=======
-=======
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
   - skillName: Fire
     damage: 30
     description: A ball of fire that burns enemies.
@@ -1714,10 +1697,6 @@ MonoBehaviour:
   MaxXp: 1000
   currentHealth: 500
   gold: 2880
-<<<<<<< HEAD
->>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a
-=======
->>>>>>> e49e737c259e0dafaa65a8647efbb3dae1f821dd
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0
