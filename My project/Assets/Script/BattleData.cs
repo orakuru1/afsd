@@ -54,9 +54,7 @@ public class BattleData : MonoBehaviour
 
     void Start()
     {
-        //player.skills.Add(new Skill { skillName = "Fire", damage = 30, description = "A ball of fire that burns enemies." });
-        //player.equips.Add(new equipment{equipName = "woodsord",number = 5,description = "aaaaa"});
-        //player.equips.Add(new equipment{equipName = "Ianpreat",number = 100,description = "iiiiii"});
+        
     }
 
     // Update is called once per frame
