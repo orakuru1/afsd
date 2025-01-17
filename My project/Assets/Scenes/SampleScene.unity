@@ -559,7 +559,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 755961585}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -602,6 +602,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 169808140}
   m_CullTransparentMesh: 1
+--- !u!1001 &225398276
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1931298151966786, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_Name
+      value: SlimePBR
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.038558
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.00001001358
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.7503295
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4047972025199878, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c0caecebae74b4c4ea9a86478024bebc, type: 3}
 --- !u!4 &237292626 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4086279202973348, guid: 1125b9f9224e7ca4da913be8a4360764,
@@ -1067,7 +1124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4544219117696442, guid: e2aafa8770d34a9591b41bedf4e318ba, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4544219117696442, guid: e2aafa8770d34a9591b41bedf4e318ba, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1757,8 +1814,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 140939345}
   m_HandleRect: {fileID: 140939344}
   m_Direction: 2
-  m_Value: 0.5352859
-  m_Size: 0.61
+  m_Value: -0.000003390842
+  m_Size: 0.60999346
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2578,7 +2635,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3373,12 +3430,24 @@ MonoBehaviour:
   check: {fileID: 1961370416}
   golrd: 30
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
---- !u!1 &1114678104 stripped
+--- !u!1 &1114678104
 GameObject:
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 1931298151966786, guid: 928a1377c1cd4515b208fef3a396b8ea,
     type: 3}
   m_PrefabInstance: {fileID: 812409880}
   m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1114678111}
+  - component: {fileID: 1114678110}
+  m_Layer: 0
+  m_Name: 
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
 --- !u!54 &1114678110
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3395,6 +3464,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!4 &1114678111
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114678104}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1152118535
 GameObject:
   m_ObjectHideFlags: 0
@@ -3478,7 +3562,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030517578, y: 54.371544}
+  m_AnchoredPosition: {x: -0.000030517578, y: 117.000404}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1322922050
@@ -4284,8 +4368,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 662715311}
   m_HandleRect: {fileID: 662715310}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 0.99999994
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4876,7 +4960,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1603539852}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.99995595
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
