@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class EnemyTG : MonoBehaviour
 {
-    public Transform player;
-    public float speed = 3f;
-    public float stoppingDistance = 2f;
-    public float detectionRange = 10f;
+    public Transform player; //プレイヤーの位置
+    public float speed = 3f; //敵の移動速度
+    public float stoppingDistance = 2f; //停止距離
+    public float detectionRange = 10f;  //検知範囲
+
+    
 
     // Start is called before the first frame update
     void Start()
