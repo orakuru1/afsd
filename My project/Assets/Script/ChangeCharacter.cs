@@ -7,7 +7,7 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
 {
     [SerializeField]private GameObject NowPlayer;
     [SerializeField]private  List<GameObject> players = new List<GameObject>();
-    [SerializeField]private List<Player> ScriptPlayers = new List<Player>();
+    [SerializeField]public static List<Player> ScriptPlayers = new List<Player>();
     [SerializeField]private GameObject ChangeButton;
     [SerializeField]private Transform ButtonParent;
     [SerializeField]private List<Sprite> sprite = new List<Sprite>();

@@ -118,14 +118,14 @@ MonoBehaviour:
     damage: 10
     description: 
   weapon:
-  - equipName: 
+  - equipName: ddddddddd
     number: 0
-    description: 
+    description: ddd
     price: 0
   armor:
-  - armorname: 
+  - armorname: dddddddddddddddd
     number: 0
-    description: 
+    description: dd
     price: 0
   pn: otamesi
   health: 300

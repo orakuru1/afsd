@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class InventoryManager : MonoBehaviour
 {
-    [SerializeField]Player player; //プレイヤースクリプト
     [SerializeField]private GameObject InventoBotton; //生成するインベントリのボタン
     [SerializeField]private Transform Inventoparent; //インベントリボタンの親
     [SerializeField]private GameObject InventoScrol; //インベントリのスクロール
@@ -69,7 +68,7 @@ public class InventoryManager : MonoBehaviour
     private void CrieitoWeapon()
     {
         DestroyButton();
-        foreach(Weapon weapon in player.weapon)
+        foreach(Weapon weapon in ChangeCharacter.ScriptPlayers[0].weapon)
         {
             GameObject botton = Instantiate(InventoBotton,Inventoparent);
             Buttons.Add(botton); //ここのリストは分けたほうがいいかも。
@@ -84,7 +83,7 @@ public class InventoryManager : MonoBehaviour
     private void CrieitoArmor()
     {
         DestroyButton();
-        foreach(Armor armor in player.armor)
+        foreach(Armor armor in ChangeCharacter.ScriptPlayers[0].armor)
         {
             GameObject botton = Instantiate(InventoBotton,Inventoparent);
             Buttons.Add(botton);
@@ -100,16 +99,16 @@ public class InventoryManager : MonoBehaviour
     {
         if(descriptionText.activeSelf == false) descriptionText.SetActive(!descriptionText.activeSelf);
         descriptionText2.text = TentativeWeapon.description;
-        player.weapon.Remove(TentativeWeapon); //押された奴と同じ奴の中から、１個消える
-        player.weapon.Insert(0, TentativeWeapon); //０番目に挿入して、それまでの奴は一個後ろに移動する
+        ChangeCharacter.ScriptPlayers[0].weapon.Remove(TentativeWeapon); //押された奴と同じ奴の中から、１個消える
+        ChangeCharacter.ScriptPlayers[0].weapon.Insert(0, TentativeWeapon); //０番目に挿入して、それまでの奴は一個後ろに移動する
         CrieitoWeapon();
     }
     private void geardescription(Armor TentativeArmor)
     {
         if(descriptionText.activeSelf == false) descriptionText.SetActive(!descriptionText.activeSelf);
         descriptionText2.text = TentativeArmor.description;
-        player.armor.Remove(TentativeArmor); //押された奴と同じ奴の中から、１個消える
-        player.armor.Insert(0, TentativeArmor); //０番目に挿入して、それまでの奴は一個後ろに移動する
+        ChangeCharacter.ScriptPlayers[0].armor.Remove(TentativeArmor); //押された奴と同じ奴の中から、１個消える
+        ChangeCharacter.ScriptPlayers[0].armor.Insert(0, TentativeArmor); //０番目に挿入して、それまでの奴は一個後ろに移動する
         CrieitoArmor();
     }
 }
