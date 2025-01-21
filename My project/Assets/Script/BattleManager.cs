@@ -344,6 +344,11 @@ public class BattleManager : MonoBehaviour
     }
     void OnActionSelected(string action)
     {
+        if(attackbotton.activeSelf == true)
+        {
+            attackbotton.SetActive(!attackbotton.activeSelf);
+            escapebotton.SetActive(!escapebotton.activeSelf);
+        }
         Debug.Log($"選択されたアクション: {action}");
         actionSelected = true; // ボタンが押されたことを通知
     }
@@ -425,10 +430,10 @@ public class BattleManager : MonoBehaviour
                     GameObject Inst = (GameObject)Resources.Load(EnemyName[index]);
                     if(i != 0)
                     {
-                        GameObject kari = Instantiate(Inst, enemySpawnPoint0.position, Quaternion.identity);
+                        GameObject kari = Instantiate(Inst, enemySpawnPoint0.position, enemySpawnPoint0.rotation);
                         enemys.Add(kari.GetComponent<Enemy>());
                     }else{
-                        GameObject kari = Instantiate(Inst, enemySpawnPoint1.position, Quaternion.identity);
+                        GameObject kari = Instantiate(Inst, enemySpawnPoint1.position, enemySpawnPoint1.rotation);
                         enemys.Add(kari.GetComponent<Enemy>());
                     }
                 }
