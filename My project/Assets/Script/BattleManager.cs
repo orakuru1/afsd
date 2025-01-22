@@ -480,6 +480,7 @@ public class BattleManager : MonoBehaviour
                     player2.LV = player.LV;
                     player2.XP = player.XP;
                     player2.MaxXp = player.MaxXp;
+                    player2.gold = player.gold;
                 }
             }
         }

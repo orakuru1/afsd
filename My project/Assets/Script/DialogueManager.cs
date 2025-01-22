@@ -13,7 +13,7 @@ public class DialogueManager : MonoBehaviour
     public GameObject itemButtonPrefab; // アイテム用のボタンPrefab
     public Transform itemButtonParent; // ボタンの親（Scroll View内）
     public Text currentEquipmentText; // 現在の装備を表示するUI
-    private EquipmentManager equipmentManager;
+    [SerializeField]private EquipmentManager equipmentManager;
     [SerializeField] GameObject shoppanel;
     private List<GameObject> itemButtons = new List<GameObject>(); // 生成されたボタンを管理するリスト
 
@@ -46,7 +46,6 @@ public class DialogueManager : MonoBehaviour
     {
         if (sentences.Count == 0)
         {
-            equipmentManager = FindObjectOfType<EquipmentManager>();
 
             shoppanel.SetActive(true);
 

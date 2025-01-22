@@ -12,12 +12,14 @@ public class InventoryManager : MonoBehaviour
     [SerializeField]private Text descriptionText2; //テキストを変えるところ
     [SerializeField]private GameObject gearButton; //装備を確認するボタン
     [SerializeField]private GameObject InventoAll;
+    [SerializeField]private GameObject BuckButton;
     private List<GameObject> Buttons = new List<GameObject>();
     void Start()
     {
         descriptionText.SetActive(!descriptionText.activeSelf);
         InventoScrol.SetActive(!InventoScrol.activeSelf);
         InventoAll.SetActive(!InventoAll.activeSelf);
+        BuckButton.SetActive(!BuckButton.activeSelf);
     }
 
     // Update is called once per frame
@@ -39,10 +41,12 @@ public class InventoryManager : MonoBehaviour
         //InventoAll.SetActive(!InventoAll.activeSelf);
         InventoScrol.SetActive(!InventoScrol.activeSelf);
         descriptionText.SetActive(!descriptionText.activeSelf);
+        BuckButton.SetActive(!BuckButton.activeSelf);
     }
 
     public void OnbuttonInventoWeapon() //戻るボタンとインベントリの枠以外の場所を押したら、非表示にするようにする。何回も押したら、ボタンが無限に増えてしまうので、一個前の奴を全部消す処理を作ろうかな。
     {
+        BuckButton.SetActive(!BuckButton.activeSelf);
         InventoAll.SetActive(!InventoAll.activeSelf);
         InventoScrol.SetActive(!InventoScrol.activeSelf);
         descriptionText.SetActive(!descriptionText.activeSelf);
@@ -52,6 +56,7 @@ public class InventoryManager : MonoBehaviour
 
     public void OnbuttonInventoArmor()
     {
+        BuckButton.SetActive(!BuckButton.activeSelf);
         InventoAll.SetActive(!InventoAll.activeSelf);
         InventoScrol.SetActive(!InventoScrol.activeSelf);
         descriptionText.SetActive(!descriptionText.activeSelf);
