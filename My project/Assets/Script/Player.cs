@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
     //public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
     private BattleSystem battleSystem; //技のボタンを表示・非表示してるとこ(今見てみたら使ってるのかわからんかった)
     [SerializeField]public int gold; // プレイヤーの初期ゴールド
-
+    [SerializeField]public Sprite sprite;
     public void SetUpBattleManager(BattleManager mana) //battlemanagerをゲット
     {
         battleManager = mana;

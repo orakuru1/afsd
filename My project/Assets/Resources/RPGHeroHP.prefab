@@ -1687,16 +1687,17 @@ MonoBehaviour:
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
   pn: RPGHeroHP
-  health: 500
-  maxHealth: 500
-  attack: 280
-  defence: 20
-  Speed: 0
-  LV: 14
-  XP: 950
-  MaxXp: 1000
-  currentHealth: 500
+  health: 543
+  maxHealth: 550
+  attack: 300
+  defence: 30
+  Speed: 100
+  LV: 15
+  XP: 0
+  MaxXp: 1200
+  currentHealth: 543
   gold: 2880
+  sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0

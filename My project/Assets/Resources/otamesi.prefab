@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3037706019587040286}
   - component: {fileID: -5805957014504363857}
   - component: {fileID: -4160338664990824660}
+  - component: {fileID: -5680143316045410785}
   m_Layer: 0
   m_Name: otamesi
   m_TagString: Untagged
@@ -117,14 +118,14 @@ MonoBehaviour:
     damage: 10
     description: 
   weapon:
-  - equipName: 
+  - equipName: ddddddddd
     number: 0
-    description: 
+    description: ddd
     price: 0
   armor:
-  - armorname: 
+  - armorname: dddddddddddddddd
     number: 0
-    description: 
+    description: dd
     price: 0
   pn: otamesi
   health: 300
@@ -137,6 +138,7 @@ MonoBehaviour:
   MaxXp: 120
   currentHealth: 300
   gold: 30
+  sprite: {fileID: 21300000, guid: 27ed32cf565393142bb9f4fa4aead5a9, type: 3}
 --- !u!54 &-4160338664990824660
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -151,5 +153,21 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &-5680143316045410785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7594112034592002553}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f63b0a6621dd018449e368aa141dde4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PattackMotion: 0
+  PdamageMotion: 0
+  PdieMotion: 0
+  dietime: 0
