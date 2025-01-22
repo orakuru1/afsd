@@ -2927,7 +2927,7 @@ MonoBehaviour:
   players: []
   ChangeButton: {fileID: 3245370625723421944, guid: f2975bcdc5231a9428171f5cc7322959,
     type: 3}
-  ButtonParent: {fileID: 0}
+  ButtonParent: {fileID: 412104679}
   sprite:
   - {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
   - {fileID: 21300000, guid: 27ed32cf565393142bb9f4fa4aead5a9, type: 3}
