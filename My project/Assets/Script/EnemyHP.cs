@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyHP : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class EnemyHP : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHP -= damage;
-        currentHp = Mathf.Clamp(currentHP, 0, maxHP);
+        currentHP = Mathf.Clamp(currentHP, 0, maxHP);
 
         //HPバーを更新
         UpdateHPBar();
