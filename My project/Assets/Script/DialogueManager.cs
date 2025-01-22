@@ -13,9 +13,8 @@ public class DialogueManager : MonoBehaviour
     public GameObject itemButtonPrefab; // アイテム用のボタンPrefab
     public Transform itemButtonParent; // ボタンの親（Scroll View内）
     public Text currentEquipmentText; // 現在の装備を表示するUI
-    private EquipmentManager equipmentManager;
+    [SerializeField]private EquipmentManager equipmentManager;
     [SerializeField] GameObject shoppanel;
-    [SerializeField]public Player player1;
     private List<GameObject> itemButtons = new List<GameObject>(); // 生成されたボタンを管理するリスト
 
     void Start()
@@ -47,7 +46,6 @@ public class DialogueManager : MonoBehaviour
     {
         if (sentences.Count == 0)
         {
-            equipmentManager = FindObjectOfType<EquipmentManager>();
 
             shoppanel.SetActive(true);
 
@@ -120,7 +118,7 @@ public class DialogueManager : MonoBehaviour
     {
         Player player = FindObjectOfType<Player>();
         // ゴールドが足りるか確認
-        if (player1.SpendGold(item.price)) //大本のスクリプトの値が変わるようにしたけど、インスタンス化されたプレイヤーの値が変わったほうがいいのか、わからない
+        if (ChangeCharacter.ScriptPlayers[0].SpendGold(item.price)) //大本のスクリプトの値が変わるようにしたけど、インスタンス化されたプレイヤーの値が変わったほうがいいのか、わからない
         {
             // 購入処理
             equipmentManager.EquipItem(item);
@@ -138,7 +136,7 @@ public class DialogueManager : MonoBehaviour
     {
         Player player = FindObjectOfType<Player>();
         // ゴールドが足りるか確認
-        if (player1.SpendGold(item.price)) //大本のスクリプトの値が変わるようにしたけど、インスタンス化されたプレイヤーの値が変わったほうがいいのか、わからない
+        if (ChangeCharacter.ScriptPlayers[0].SpendGold(item.price)) //大本のスクリプトの値が変わるようにしたけど、インスタンス化されたプレイヤーの値が変わったほうがいいのか、わからない
         {
             // 購入処理
             equipmentManager.EquipItem(item);

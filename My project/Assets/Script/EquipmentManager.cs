@@ -7,7 +7,6 @@ public class EquipmentManager : MonoBehaviour
     public List<Weapon> WeaponItems = new List<Weapon>(); // ショップのアイテムリスト
     public List<Armor> ArmorItems = new List<Armor>();
     public Weapon currentEquipment; // 現在の装備
-    public Player player;
 
     void Start() //購入したアイテムをプレイヤーが持ってるリストに反映させる。できれば、今まで持ってる装備とかも一覧して持てて、選べるようにしたい。(インベントリ機能の作成するときが来たかも)お金の反映もする。他のところでも、違う商品のショップを作れるかやる。
     {
@@ -28,17 +27,17 @@ public class EquipmentManager : MonoBehaviour
     public void EquipItem(Weapon item)
     {
         //currentEquipment = item; // 装備を更新
-        player.weapon.Add(item);
+        ChangeCharacter.ScriptPlayers[0].weapon.Add(item);
         Debug.Log($"新しい装備: {item.equipName}");
     }
     public void EquipItem(Armor item)
     {
         //currentEquipment = item; // 装備を更新
-        player.armor.Add(item);
+        ChangeCharacter.ScriptPlayers[0].armor.Add(item);
         Debug.Log($"新しい装備: {item.armorname}");
     }
     public void ArmorItem(Armor item)
     {
-        player.armor.Add(item);
+        ChangeCharacter.ScriptPlayers[0].armor.Add(item);
     }
 }

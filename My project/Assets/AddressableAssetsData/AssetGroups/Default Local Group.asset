@@ -21,10 +21,6 @@ MonoBehaviour:
     m_Address: Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: f93a3c4154341b245a0c1aff324e0898
-    m_Address: Assets/Resources_moved/otamesi.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: dea2ad386c2a51246836ae5afcc410b0, type: 2}
   m_SchemaSet:
