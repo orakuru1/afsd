@@ -46,13 +46,15 @@ public class NpcController : MonoBehaviour
         // クリックされたときの処理
         isTalking = true;
         ChatLog.gameObject.SetActive(true);
-        ChatLog.text = "どうしたんだい?";
+        ChatLog.text = "この先は危険だ！！";
         yield return new WaitForSeconds(2);
-        ChatLog.text = "どうしたんだ?";
+        ChatLog.text = "敵がたくさんおるんじゃ";
         yield return new WaitForSeconds(2);
-        ChatLog.text = "どうした?";
+        ChatLog.text = "行くっていうなら別に止めはせん";
         yield return new WaitForSeconds(2);
-        ChatLog.text = "うわぁ";
+        ChatLog.text = "だがこれだけは言っておく";
+        yield return new WaitForSeconds(2);
+        ChatLog.text = "死ぬなよ！！";
         for(int i = 0; i <=5; i++)
         {
             ChatLog.text += "ぁ";
