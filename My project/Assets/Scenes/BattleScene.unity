@@ -1046,8 +1046,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: RPGHeroHP
-  SpawnPoint: {fileID: 1225514948}
-  SecondSpawnPoint: {fileID: 462092775}
+  SpawnPoint:
+  - {fileID: 1225514948}
+  - {fileID: 462092775}
   gameOverText: {fileID: 1956116121}
   fadeImage: {fileID: 279991446}
   enemySpawnPoint: {fileID: 1760288180}
