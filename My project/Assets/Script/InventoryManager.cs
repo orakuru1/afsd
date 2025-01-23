@@ -101,6 +101,7 @@ public class InventoryManager : MonoBehaviour
             {
                 HighlightButton(botton);
             }
+            i += 1;
         }
     }
     private void CrieitoArmor()
@@ -128,6 +129,7 @@ public class InventoryManager : MonoBehaviour
             {
                 HighlightButton(botton);
             }
+            i += 1;
         }
     }
     private void geardescription(Weapon TentativeWeapon)
