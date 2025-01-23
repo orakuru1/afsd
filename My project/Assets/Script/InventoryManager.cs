@@ -70,8 +70,15 @@ public class InventoryManager : MonoBehaviour
             Destroy(go);
         }
     }
+    private void HighlightButton(GameObject button)
+    {
+        Outline outline = button.AddComponent<Outline>();
+        outline.effectColor = Color.yellow; // アウトラインの色を黄色に設定
+        outline.effectDistance = new Vector2(5, 5); // アウトラインの太さ
+    }
     private void CrieitoWeapon()
     {
+        int i = 0;
         DestroyButton();
         foreach(Weapon weapon in ChangeCharacter.ScriptPlayers[0].weapon)
         {
@@ -81,12 +88,24 @@ public class InventoryManager : MonoBehaviour
 
             bottontext.text = weapon.equipName;
 
+            Image buttonimage = botton.GetComponent<Image>();
+            if(weapon.BuckSprite != null)
+            {
+                buttonimage.sprite = weapon.BuckSprite;
+            }
+
             Button btn = botton.GetComponent<Button>();
             btn.onClick.AddListener(() => geardescription(weapon));
+
+            if(i == 0)
+            {
+                HighlightButton(botton);
+            }
         }
     }
     private void CrieitoArmor()
     {
+        int i = 0;
         DestroyButton();
         foreach(Armor armor in ChangeCharacter.ScriptPlayers[0].armor)
         {
@@ -96,8 +115,19 @@ public class InventoryManager : MonoBehaviour
 
             bottontext.text = armor.armorname;
 
+            Image buttonimage = botton.GetComponent<Image>();
+            if(armor.BuckSprite != null)
+            {
+                buttonimage.sprite = armor.BuckSprite;
+            }
+
             Button btn = botton.GetComponent<Button>();
             btn.onClick.AddListener(() => geardescription(armor));
+
+            if(i == 0)
+            {
+                HighlightButton(botton);
+            }
         }
     }
     private void geardescription(Weapon TentativeWeapon)

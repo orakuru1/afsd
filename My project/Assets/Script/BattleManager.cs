@@ -11,8 +11,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class BattleManager : MonoBehaviour
 {
     public string Name = "RPGHeroHP"; // 名前
-    public Transform SpawnPoint; // 生成する位置
-    public Transform SecondSpawnPoint;
+    [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();
     private GameObject Instance;
     //↑キャラクター生成用
     public TextMeshProUGUI gameOverText; // 対象のTextコンポーネント
@@ -401,17 +400,18 @@ public class BattleManager : MonoBehaviour
 
     void SetupBattle()  
     {
-        GameObject playerprefab = (GameObject)Resources.Load (Name);
-        Instance = Instantiate(playerprefab, SpawnPoint.position, Quaternion.identity);
-        PlayerObject.Add(Instance);
-        ScriptPlayer = Instance.GetComponent<Player>();
-        players.Add(ScriptPlayer);
-        players[0].SetUpBattleManager(this);
-
-        GameObject sp = Instantiate(kariplayer,SecondSpawnPoint.position,Quaternion.identity);
-        PlayerObject.Add(sp);
-        players.Add(sp.GetComponent<Player>());
-        players[1].SetUpBattleManager(this);
+        if(BattleData.Instance.mainplayers[0] != null)
+        {
+            for(int i = 0 ; i < BattleData.Instance.mainplayers.Count ; i++)
+            {
+                GameObject playerprefab = (GameObject)Resources.Load(BattleData.Instance.mainplayers[i]);
+                Instance = Instantiate(playerprefab, SpawnPoint[i].position, Quaternion.identity);
+                PlayerObject.Add(Instance);
+                ScriptPlayer = Instance.GetComponent<Player>();
+                players.Add(ScriptPlayer);
+                ScriptPlayer.SetUpBattleManager(this);
+            }
+        }
 
         // BattleDataから敵の情報を取得して設定
         if (BattleData.Instance.enemyName != null)

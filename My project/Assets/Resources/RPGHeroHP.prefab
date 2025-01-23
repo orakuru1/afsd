@@ -1657,35 +1657,37 @@ MonoBehaviour:
     damage: 20
     description: A ball of fire that burns enemies.
   weapon:
-  - equipName: efsfd
-    number: 30
-    description: "\u92FC\u9244\u306E\u5263\u3067\u5A01\u529B\u304C\u4E0A\u304C\u308B"
-    price: 100
   - equipName: "\u9244\u306E\u5263"
     number: 30
     description: "\u92FC\u9244\u306E\u5263\u3067\u5A01\u529B\u304C\u4E0A\u304C\u308B"
     price: 100
+    BuckSprite: {fileID: 0}
   - equipName: "\u6728\u306E\u5263"
     number: 10
     description: "\u521D\u5FC3\u8005\u5411\u3051\u306E\u5263"
     price: 50
+    BuckSprite: {fileID: 21300000, guid: dfa3adb829c29f24e9c8f2875499c5f5, type: 3}
   armor:
   - armorname: "\u9B54\u6CD5\u306E\u76FE"
     number: 20
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
+    BuckSprite: {fileID: 0}
   - armorname: "\u9B54\u6CD5\u306E\u76FE"
     number: 20
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
+    BuckSprite: {fileID: 0}
   - armorname: "\u9B54\u6CD5\u306E\u76FE"
     number: 20
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
+    BuckSprite: {fileID: 0}
   - armorname: "\u9B54\u6CD5\u306E\u76FE"
     number: 20
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
+    BuckSprite: {fileID: 0}
   pn: RPGHeroHP
   health: 543
   maxHealth: 550

@@ -18,6 +18,7 @@ public class Weapon  //防具や武器のステータス・・・・・・0番�
     public int number; //装備の攻撃力
     public string description; //装備の説明
     public int price; //装備の値段
+    public Sprite BuckSprite;
 }
 [System.Serializable]
 public class Armor
@@ -26,6 +27,7 @@ public class Armor
     public int number; //装備の防御力
     public string description; //装備の説明
     public int price; //装備の値段
+    public Sprite BuckSprite;
 }
 
 public class Player : MonoBehaviour

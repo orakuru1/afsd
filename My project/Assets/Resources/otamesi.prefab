@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -5680143316045410785}
   m_Layer: 0
   m_Name: otamesi
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,11 +122,13 @@ MonoBehaviour:
     number: 0
     description: ddd
     price: 0
+    BuckSprite: {fileID: 0}
   armor:
   - armorname: dddddddddddddddd
     number: 0
     description: dd
     price: 0
+    BuckSprite: {fileID: 0}
   pn: otamesi
   health: 300
   maxHealth: 450

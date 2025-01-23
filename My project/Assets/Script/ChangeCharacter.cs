@@ -17,12 +17,17 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
 
     void Start()
     {
+        if(BattleData.Instance.mainplayers != null)
+        {
+
+        }
         GameObject fast = Instantiate(NowPlayer);
         NowPlayer = fast;
         playernames.Add(fast.GetComponent<Player>().pn); //インスタンス化された奴の名前を覚えさせる。名前で判断する仲間の数
-        playernames.Add("otamesi");
+        playernames.Add("otamesi"); //仲間が増えたよ
         players.Add(fast);
         ScriptPlayers.Add(fast.GetComponent<Player>());
+        BattleData.Instance.currentplayers(playernames);
         SpawnCharaButton();
     }
 
@@ -44,26 +49,7 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
             Destroy(button);
         }
         buttons.Clear();
-/*
-        foreach(Player player in ScriptPlayers)
-        {
-            if(player != NowPlayer)
-            {
-                GameObject button = Instantiate(ChangeButton,ButtonParent);
-                buttons.Add(button);
-                
-                Image btnImage = button.GetComponent<Image>();
-                if(btnImage != null)
-                {
-                    Debug.Log("生成されました");
-                    btnImage.sprite = player.sprite; //この要素を渡して、インスタンスさせたところで絵を入れるという処理にしよう
-                }
-                Button btn = button.GetComponent<Button>();
-                btn.onClick.AddListener(() => OnPushChange());
-            }
 
-        }
-*/
         foreach(string str in playernames)
         {
             if(str != NowPlayer.GetComponent<Player>().pn)
@@ -90,10 +76,13 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
     {
         if(NowPlayer != null)
         {
-            players.Remove(NowPlayer);
-            ScriptPlayers.Remove(NowPlayer.GetComponent<Player>());
-            spawnposition = NowPlayer.transform.position;
-            Destroy(NowPlayer);
+            playernames.Remove(str);
+            playernames.Insert(0,str);
+            BattleData.Instance.currentplayers(playernames);
+            players.Remove(NowPlayer); //破壊する前にリストから削除
+            ScriptPlayers.Remove(NowPlayer.GetComponent<Player>()); //破壊する前にplayerをリストから削除
+            spawnposition = NowPlayer.transform.position; //破壊される前の位置を記憶
+            Destroy(NowPlayer); //現在のプレイヤーを破壊
         }
         
         if(playernames.Count > 0)

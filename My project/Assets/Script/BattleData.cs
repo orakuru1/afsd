@@ -19,6 +19,7 @@ public class BattleData : MonoBehaviour
     [SerializeField]private double XP; //現在の経験値
     [SerializeField]private double MaxXp; //次のレベルアップの値
     [SerializeField]private float currentHealth; //HPバーに反映される値　(前のHPとごっちゃになった)
+    public List<string> mainplayers = new List<string>();
 
     private void Awake()
     {
@@ -31,6 +32,14 @@ public class BattleData : MonoBehaviour
         else
         {
             Destroy(gameObject); // すでに存在する場合は削除
+        }
+    }
+    public void currentplayers(List<string> pn)
+    {
+        mainplayers.Clear();
+        foreach(string str in pn)
+        {
+            mainplayers.Add(str);
         }
     }
     public void SetEnemyData(string name, int health)
