@@ -501,6 +501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 50
   maxHealth: 50
+  enemyname: SlimePBR
   AT: 75
   DF: 50
   Speed: 10

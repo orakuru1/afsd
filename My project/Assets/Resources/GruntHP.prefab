@@ -930,6 +930,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 50
   maxHealth: 50
+  enemyname: GruntHP
   AT: 50
   DF: 50
   Speed: 10

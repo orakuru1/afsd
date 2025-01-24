@@ -167,6 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 50
   maxHealth: 50
+  enemyname: Goblin
   AT: 10
   DF: 10
   Speed: 20
