@@ -164,6 +164,7 @@ MonoBehaviour:
   XP: 0
   MaxXp: 0
   currentHealth: 0
+  mainplayers: []
 --- !u!4 &31898324
 Transform:
   m_ObjectHideFlags: 0
@@ -839,7 +840,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6cc9aa62eb0d557438164c6fac33239d, type: 3}
   m_Name: 
@@ -2840,6 +2841,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 27ed32cf565393142bb9f4fa4aead5a9, type: 3}
   playernames: []
   spawnposition: {x: 0, y: 0, z: 0}
+  camera: {fileID: 330585543}
 --- !u!4 &1291659509
 Transform:
   m_ObjectHideFlags: 0

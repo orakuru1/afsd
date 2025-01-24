@@ -113,6 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 30
   maxHealth: 30
+  enemyname: suraimu
   AT: 50
   DF: 10
   Speed: 10

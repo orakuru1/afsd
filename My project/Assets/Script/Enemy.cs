@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
     private EnemyCounter enemyCounter;
     public float health = 50; //HP
     public float maxHealth = 50f; //UIのHP
-
+    [SerializeField]private string enemyname;
     [SerializeField]public int AT;
     [SerializeField]public int DF;
     [SerializeField]public int Speed;

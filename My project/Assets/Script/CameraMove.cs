@@ -19,6 +19,10 @@ public class CameraMove : MonoBehaviour
     {
         
     }
+    public void SetUp(Transform transform)
+    {
+        target = transform;
+    }
     void LateUpdate()
     {
     if (Input.GetMouseButton(1)) // 右クリックで回転を有効にする場合

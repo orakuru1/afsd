@@ -14,21 +14,30 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
     [SerializeField]private List<string> playernames = new List<string>();
     private List<GameObject> buttons = new List<GameObject>();
     [SerializeField]private Vector3 spawnposition = new Vector3();
+    [SerializeField]private GameObject camera;
+    private CameraMove cameraMove;
 
     void Start()
     {
-        if(BattleData.Instance.mainplayers != null)
+        cameraMove = camera.GetComponent<CameraMove>();
+
+        if(BattleData.Instance.mainplayers.Count != 0)
         {
 
         }
-        GameObject fast = Instantiate(NowPlayer);
-        NowPlayer = fast;
-        playernames.Add(fast.GetComponent<Player>().pn); //インスタンス化された奴の名前を覚えさせる。名前で判断する仲間の数
-        playernames.Add("otamesi"); //仲間が増えたよ
-        players.Add(fast);
-        ScriptPlayers.Add(fast.GetComponent<Player>());
-        BattleData.Instance.currentplayers(playernames);
-        SpawnCharaButton();
+        else
+        {
+            GameObject fast = Instantiate(NowPlayer);
+            NowPlayer = fast;
+            cameraMove.SetUp(NowPlayer.transform);
+            playernames.Add(fast.GetComponent<Player>().pn); //インスタンス化された奴の名前を覚えさせる。名前で判断する仲間の数
+            playernames.Add("otamesi"); //仲間が増えたよ
+            players.Add(fast);
+            ScriptPlayers.Add(fast.GetComponent<Player>());
+            BattleData.Instance.currentplayers(playernames);
+            SpawnCharaButton();
+        }
+
     }
 
     // Update is called once per frame
@@ -91,6 +100,7 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
             GameObject newPlayer = Instantiate(playerprefab,spawnposition,Quaternion.identity);
             ScriptPlayers.Add(newPlayer.GetComponent<Player>());
             NowPlayer = newPlayer;
+            cameraMove.SetUp(NowPlayer.transform);
 
             players.Add(newPlayer);
         }

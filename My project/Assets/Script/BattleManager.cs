@@ -439,12 +439,6 @@ public class BattleManager : MonoBehaviour
                 }
             }
 
-            
-            //II.Add(Instantiate(prefab, enemySpawnPoint1.position, Quaternion.identity));
-
-
-            //Debug.Log(BattleData.Instance.enemyPrefab);
-
             /*
             // UIに敵の情報を反映
             enemyNameText.text = BattleData.Instance.enemyName;
