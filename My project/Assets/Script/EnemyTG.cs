@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyTG : MonoBehaviour
 {
@@ -9,12 +10,18 @@ public class EnemyTG : MonoBehaviour
     public float stoppingDistance = 2f; //停止距離
     public float detectionRange = 10f;  //検知範囲
 
+    private Animator anim;
+
+    public GameObject hpBarCanvas; //HPバーのCanvas
+    public Image hpFillImage; //前景のImage(緑部分)
+     
+
     
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -22,6 +29,9 @@ public class EnemyTG : MonoBehaviour
     {
         if(player == null)
         {
+            hpBarCanvas.SetActive(false);
+            anim.SetBool("walking", false);
+           // anim.SetBool("attack", false);
             return;
         }
 
@@ -31,6 +41,9 @@ public class EnemyTG : MonoBehaviour
         {
             Vector3 direction = (player.position - transform.position).normalized;
             transform.position += direction * speed * Time.deltaTime;
+
+            anim.SetBool("walking", true);
+            //anim.SetBool("attack", true);
 
             transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
         }

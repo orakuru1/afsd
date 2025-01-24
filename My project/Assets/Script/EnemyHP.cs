@@ -8,10 +8,10 @@ public class EnemyHP : MonoBehaviour
 
     public GameObject hpBarCanvas; //HPバーのCanvas
     public Image hpFillImage; //前景のImage(緑部分)
-   
+    
     void Start()
     {
-        currentHP = maxHP; // 初期化
+        currentHP = maxHP; //初期化
         hpBarCanvas.SetActive(false); //初期状態で非表示
     }
 

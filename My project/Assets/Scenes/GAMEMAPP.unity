@@ -730,6 +730,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5162232971360506, guid: 24a0663f813d4beb91fc0c6b1e8fef36, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 1f68948a5bb74f2fa9e9087a872750e9, type: 2}
     - target: {fileID: 6265206175713501824, guid: 24a0663f813d4beb91fc0c6b1e8fef36,
         type: 3}
       propertyPath: m_RootOrder
@@ -1239,8 +1243,11 @@ MonoBehaviour:
   projectilePrefab: {fileID: 5200221547340017721}
   firePoint: {fileID: 1544228665}
   detectionRange: 50
+  detectionrange: 20
   attackCooldown: 2
   projectileSpeed: 70
+  hpBarCanvas: {fileID: 281384963}
+  hpFillImage: {fileID: 1393902357}
 --- !u!4 &333021943 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6265206175713501824, guid: 24a0663f813d4beb91fc0c6b1e8fef36,
@@ -1273,6 +1280,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 100
+  hpBarCanvas: {fileID: 281384963}
+  hpFillImage: {fileID: 1393902357}
 --- !u!114 &333021947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1289,6 +1298,8 @@ MonoBehaviour:
   speed: 5
   stoppingDistance: 2
   detectionRange: 50
+  hpBarCanvas: {fileID: 281384963}
+  hpFillImage: {fileID: 1393902357}
 --- !u!1001 &343379570
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2329,6 +2340,7 @@ MonoBehaviour:
   MaxXp: 0
   currentHealth: 0
   gold: 0
+  sprite: {fileID: 0}
 --- !u!4 &579868810 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4086279202973348, guid: c20397bf1592dc040b827e8716b0bd41,
@@ -4067,7 +4079,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4086279202973348, guid: c20397bf1592dc040b827e8716b0bd41, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 95.01375
+      value: 95.39
       objectReference: {fileID: 0}
     - target: {fileID: 4086279202973348, guid: c20397bf1592dc040b827e8716b0bd41, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5063,7 +5075,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -21}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1393902357
@@ -5079,7 +5091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

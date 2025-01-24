@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyRangedAttack : MonoBehaviour
 {
@@ -6,10 +9,21 @@ public class EnemyRangedAttack : MonoBehaviour
     public GameObject projectilePrefab; // 発射する弾のPrefab
     public Transform firePoint; // 弾を発射する位置
     public float detectionRange = 20f; // 検知範囲
+    public float detectionrange = 20f;
     public float attackCooldown = 1.5f; // 攻撃間隔
     public float projectileSpeed = 10f; // 弾の速度
 
+    private Animator anim; //アニメーション
+
+    public GameObject hpBarCanvas; //HPバーのCanvas
+    public Image hpFillImage; //前景のImage(緑部分)
+
     private float lastAttackTime; // 最後に攻撃した時間
+
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     void Update()
     {
@@ -20,12 +34,23 @@ public class EnemyRangedAttack : MonoBehaviour
         {
             // プレイヤーをターゲットとして向きを調整
             AimAtPlayer();
+            hpBarCanvas.SetActive(true);
 
             // 一定間隔で攻撃
             if (Time.time > lastAttackTime + attackCooldown)
             {
                 AttackPlayer();
             }
+        }
+        if (distanceToPlayer <= detectionrange)
+        {
+            // プレイヤーをターゲットとして向きを調整
+            AimAtPlayer();
+            anim.SetBool("attack", true);
+        }
+        else{
+            hpBarCanvas.SetActive(false);
+            anim.SetBool("attack", false);
         }
     }
 
