@@ -10,7 +10,7 @@ public class GaugeManager : MonoBehaviour
     public Player player; // プレイヤーキャラクターを参照
 
     [Header("ゲージ設定")]
-    public float maxGauge = 100f; // ゲージの最大値
+    //public float maxGauge = 100f; // ゲージの最大値
     //public float currentGauge = 0f; // 現在のゲージ値
     //public float fillRate = 10f; // ゲージの増加速度（1秒あたり）
 
@@ -26,7 +26,7 @@ public class GaugeManager : MonoBehaviour
         if (gaugeInstance != null)
         {
             hpSlider = gaugeInstance.GetComponentInChildren<Slider>(); //スライダーをいじれるようにした
-            hpSlider.maxValue = maxGauge;
+            hpSlider.maxValue = player.maxGauge;
             hpSlider.value = player.currentGauge;
         }
 
@@ -69,7 +69,7 @@ public class GaugeManager : MonoBehaviour
         //FillGauge(Time.deltaTime * fillRate);
 
         // 技が使えるかどうかをチェック
-        if (player.currentGauge >= maxGauge)
+        if (player.currentGauge >= player.maxGauge)
         {
             canUseSkill = true;
         }
@@ -81,9 +81,9 @@ public class GaugeManager : MonoBehaviour
         player.currentGauge += amount;
 
         // ゲージを最大値に制限
-        if (player.currentGauge > maxGauge)
+        if (player.currentGauge > player.maxGauge)
         {
-            player.currentGauge = maxGauge;
+            player.currentGauge = player.maxGauge;
         }
 
         // SliderのUIに反映

@@ -120,10 +120,27 @@ public class BattleManager : MonoBehaviour
             btn.onClick.AddListener(() => OnActionSelected(skill.skillName));
         }
     }
-    public void GenerateGuageButtons() //押されたらゲージのボタンを出現されるようにした。ここから条件や効果を作る。。。。。。。。。。。。。。。。。。。
+    public void GenerateGuageButtons(Player player) //押されたらゲージのボタンを出現されるようにした。ここから条件や効果を作る。。。。。。。。。。。。。。。。。。。
     {
         guagebutton = Instantiate(gaugebutton,panerspawn);
+        //guagebutton.GetComponentInChildren<Text>().text =  ;
+
+        Button btn = guagebutton.GetComponent<Button>();
+        btn.onClick.AddListener(() => OnSpecialAction(player));
     }
+    private void OnSpecialAction(Player player)
+    {
+        if(player.currentGauge >= player.maxGauge)
+        {
+            Debug.Log("スペシャル技発動！");
+            player.currentGauge = 0f;
+        }
+        else
+        {
+            Debug.Log("エネルギーが足りません");
+        }
+    }
+    
 
     // フェードアウト（画面が暗くなる）
     public IEnumerator FadeOut(float duration)
@@ -294,7 +311,7 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
         GenerateSkillButtons(player);
-        GenerateGuageButtons();
+        GenerateGuageButtons(player);
 
         // ボタンが押されるまで待機
         actionSelected = false; // 初期化
@@ -477,6 +494,7 @@ public class BattleManager : MonoBehaviour
             {
                 if(player.pn == player2.pn)
                 {
+                    Debug.Log(player.pn);
                     player2.health = player.health;
                     player2.currentHealth = player.currentHealth;
                     player2.maxHealth = player.maxHealth;

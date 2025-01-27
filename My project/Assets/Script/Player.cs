@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
     [SerializeField]public int gold; // プレイヤーの初期ゴールド
     [SerializeField]public Sprite sprite;
     [SerializeField]public float currentGauge; // 現在のゲージ値
+    [SerializeField]public float maxGauge;
     public void SetUpBattleManager(BattleManager mana) //battlemanagerをゲット
     {
         battleManager = mana;
