@@ -55,6 +55,7 @@ public class Player : MonoBehaviour
     private BattleSystem battleSystem; //技のボタンを表示・非表示してるとこ(今見てみたら使ってるのかわからんかった)
     [SerializeField]public int gold; // プレイヤーの初期ゴールド
     [SerializeField]public Sprite sprite;
+    [SerializeField]public float currentGauge; // 現在のゲージ値
     public void SetUpBattleManager(BattleManager mana) //battlemanagerをゲット
     {
         battleManager = mana;

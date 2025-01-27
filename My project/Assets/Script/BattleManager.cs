@@ -10,36 +10,28 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class BattleManager : MonoBehaviour
 {
-    public string Name = "RPGHeroHP"; // 名前
     [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();
     private GameObject Instance;
     //↑キャラクター生成用
     public TextMeshProUGUI gameOverText; // 対象のTextコンポーネント
     public Image fadeImage; // フェード用のImage
-
     public Transform enemySpawnPoint; // 敵を生成する位置
     public Transform enemySpawnPoint0; // 敵を生成する位置
     public Transform enemySpawnPoint1; // 敵を生成する位置
     public Text enemyNameText;        // 敵の名前を表示するUI
     public Slider enemyHealthSlider;  // 敵の体力を表示するUI
-
     public Text battleLog;           // バトルログを表示するUI
     [SerializeField]private Player player;            // プレイヤーのスクリプト
     [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
-
     public GameObject hpBarPrefab; // HPバーのPrefab
     public Transform hpBarParent; // HPバーの親（Canvas）
-
-    //private Enemy enemy2;
-    List<GameObject> II = new List<GameObject>(); //インスタンス化された敵の情報
-
     List<string> EnemyName = new List<string>();
 
     public static List<Player> players = new List<Player>(); //プレイヤーのplayerスクリプト
     private List<GameObject> PlayerObject = new List<GameObject>(); //プレイヤーのオブジェクトのほう
     public static List<Enemy> enemys = new List<Enemy>(); //エネミーのenemyスクリプト
     public List<object> AllCharacter = new List<object>();
-
+    [SerializeField]private GameObject gaugebutton; //ゲージ技のボタン
     [SerializeField] private GameObject skillButtonPrefab; // 技ボタンのプレハブ
     [SerializeField] private GameObject skillpanel;
     [SerializeField] public Transform skillListParent; // ボタンを配置する親オブジェクト
@@ -50,10 +42,13 @@ public class BattleManager : MonoBehaviour
     private bool actionSelected = false;
     private bool attackakuction = false;
     public string assetAddress = "Assets/Resources_moved/otamesi.prefab";
-    [SerializeField]private GameObject kariplayer;
     [SerializeField]private Player SecondPlayer;
-    private List<Player> oomoto = new List<Player>();
+    private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
+    [SerializeField]private GameObject GuageBar;
+    private GameObject guagebutton;
+
     Animator anim;
+
     void Start()
     {
         oomoto.Add(player);
@@ -69,24 +64,14 @@ public class BattleManager : MonoBehaviour
         SetupBattle();
         StartCoroutine(StartBattle());
 
-        
-        // プレイヤーを探してHPバーを生成
-        //GameObject[] player = GameObject.FindGameObjectsWithTag("Player");
-        /*
-        foreach(GameObject player in PlayerObject) //バンドルアセットを試してみたら非同期で遅かったため、場所を変更
-        {
-            Debug.Log(player.name);
-            CreateHealthBarFor(player);
-        } 
-        */
-
         foreach(GameObject player in PlayerObject) //プレイヤーのhpバー
         {
             CreateHealthBarFor(player);
+            CreateGuageBar(player);
         } 
 
         // 敵を探してHPバーを生成（複数の敵に対応）
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy"); //findを使わないようにできるよ
         foreach (GameObject enemy in enemies)
         {
             CreateHealthBarFor(enemy);
@@ -134,6 +119,10 @@ public class BattleManager : MonoBehaviour
             btn.onClick.AddListener(() => player.Attack(skill,player,panelTransform));
             btn.onClick.AddListener(() => OnActionSelected(skill.skillName));
         }
+    }
+    public void GenerateGuageButtons() //押されたらゲージのボタンを出現されるようにした。ここから条件や効果を作る。。。。。。。。。。。。。。。。。。。
+    {
+        guagebutton = Instantiate(gaugebutton,panerspawn);
     }
 
     // フェードアウト（画面が暗くなる）
@@ -184,7 +173,19 @@ public class BattleManager : MonoBehaviour
         if (playerComponent != null)
         {
             healthBarManager.player = playerComponent;
-            //playerComponent.healthBarManager = healthBarManager;
+        }
+    }
+    void CreateGuageBar(GameObject character)
+    {
+        GameObject guagebar = Instantiate(GuageBar,hpBarParent);
+
+        GaugeManager gaugemanager = character.AddComponent<GaugeManager>();
+        gaugemanager.gaugeInstance = guagebar;
+
+        Player playerComponent = character.GetComponent<Player>();
+        if (playerComponent != null)
+        {
+            gaugemanager.player = playerComponent;
         }
     }
 
@@ -278,6 +279,8 @@ public class BattleManager : MonoBehaviour
     }
     IEnumerator PlayerTurn(Player player)
     {
+        GaugeManager gaugeManager = player.GetComponent<GaugeManager>();
+        gaugeManager.FillGauge(10f);
         battleLog.text = $"{player.name} のターン！";
 
         if(attackbotton.activeSelf == false)
@@ -291,7 +294,7 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
         GenerateSkillButtons(player);
-
+        GenerateGuageButtons();
 
         // ボタンが押されるまで待機
         actionSelected = false; // 初期化
@@ -299,6 +302,7 @@ public class BattleManager : MonoBehaviour
         {
             yield return null; // 1フレーム待機
         }
+        Destroy(guagebutton);
 
         yield return new WaitForSeconds(2f); // デモ用の遅延
     }
@@ -343,17 +347,17 @@ public class BattleManager : MonoBehaviour
     }
     void OnActionSelected(string action)
     {
-        if(attackbotton.activeSelf == true)
-        {
-            attackbotton.SetActive(!attackbotton.activeSelf);
-            escapebotton.SetActive(!escapebotton.activeSelf);
-        }
         Debug.Log($"選択されたアクション: {action}");
         actionSelected = true; // ボタンが押されたことを通知
     }
     public void OnActionSelected()
     {
         attackakuction = true; // ボタンが押されたことを通知
+        if(attackbotton.activeSelf == true)
+        {
+            attackbotton.SetActive(!attackbotton.activeSelf);
+            escapebotton.SetActive(!escapebotton.activeSelf);
+        }
     }
 
     bool IsBattleOver()
@@ -483,6 +487,7 @@ public class BattleManager : MonoBehaviour
                     player2.XP = player.XP;
                     player2.MaxXp = player.MaxXp;
                     player2.gold = player.gold;
+                    player2.currentGauge = player.currentGauge;
                 }
             }
         }

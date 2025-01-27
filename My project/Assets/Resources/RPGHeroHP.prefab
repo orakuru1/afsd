@@ -1689,15 +1689,15 @@ MonoBehaviour:
     price: 100
     BuckSprite: {fileID: 0}
   pn: RPGHeroHP
-  health: 543
+  health: 200
   maxHealth: 550
   attack: 300
   defence: 30
   Speed: 100
   LV: 15
-  XP: 0
+  XP: 200
   MaxXp: 1200
-  currentHealth: 543
+  currentHealth: 200
   gold: 2880
   sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
 --- !u!1 &1613396906338018
