@@ -23,7 +23,18 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
 
         if(BattleData.Instance.mainplayers.Count != 0)
         {
-
+            spawnposition = BattleData.Instance.spawnposition;
+            foreach(string str in BattleData.Instance.mainplayers)
+            {
+                playernames.Add(str);
+            }
+            GameObject playerprefab = (GameObject)Resources.Load(BattleData.Instance.mainplayers[0]);
+            GameObject instance = Instantiate(playerprefab, spawnposition, Quaternion.identity);
+            NowPlayer = instance;
+            cameraMove.SetUp(NowPlayer.transform);
+            players.Add(instance);
+            ScriptPlayers.Add(instance.GetComponent<Player>());
+            SpawnCharaButton();
         }
         else
         {
@@ -31,7 +42,7 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
             NowPlayer = fast;
             cameraMove.SetUp(NowPlayer.transform);
             playernames.Add(fast.GetComponent<Player>().pn); //インスタンス化された奴の名前を覚えさせる。名前で判断する仲間の数
-            playernames.Add("otamesi"); //仲間が増えたよ
+            playernames.Add("otamesi"); //お試しで仲間を増やしてる
             players.Add(fast);
             ScriptPlayers.Add(fast.GetComponent<Player>());
             BattleData.Instance.currentplayers(playernames);

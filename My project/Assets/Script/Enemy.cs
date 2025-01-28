@@ -74,6 +74,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(triggeroff());
         battleManager = FindObjectOfType<BattleManager>();
         arrowManager = FindObjectOfType<ArrowManager>();
         // EnemyCounterオブジェクトを探して参照
@@ -86,7 +87,12 @@ public class Enemy : MonoBehaviour
         currentHealth = maxHealth;
         healthBarManager = GetComponent<HealthBarManager>();
         UpdateHealthBar();
+    }
 
+    private IEnumerator triggeroff()
+    {
+        yield return new WaitForSeconds(2.0f);
+        GetComponent<EnemyTrigger>().TriggerStart();
     }
     
     void OnDestroy()

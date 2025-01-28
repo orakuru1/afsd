@@ -19,6 +19,7 @@ public class BattleData : MonoBehaviour
     [SerializeField]private double XP; //現在の経験値
     [SerializeField]private double MaxXp; //次のレベルアップの値
     [SerializeField]private float currentHealth; //HPバーに反映される値　(前のHPとごっちゃになった)
+    [SerializeField]public Vector3 spawnposition = new Vector3(); //キャラクターが返って来るときの位置
     public List<string> mainplayers = new List<string>();
 
     private void Awake()
@@ -33,6 +34,10 @@ public class BattleData : MonoBehaviour
         {
             Destroy(gameObject); // すでに存在する場合は削除
         }
+    }
+    public void RePosition(Vector3 vector3)
+    {
+        spawnposition = vector3;
     }
     public void currentplayers(List<string> pn)
     {

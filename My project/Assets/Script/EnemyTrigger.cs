@@ -8,17 +8,28 @@ public class EnemyTrigger : MonoBehaviour
     private string battleSceneName = "BattleScene"; // 戦闘シーンの名前
     [SerializeField]private string enemyName = "Goblin"; // 敵の名前
     private int enemyHealth = 100; // 敵の体力
+    private bool isstart = true;
     // Start is called before the first frame update
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Player"))
+        if(isstart != true)
         {
-            // BattleDataに敵の情報を設定
-            BattleData.Instance.SetEnemyData(enemyName, enemyHealth);
+            if (collision.collider.CompareTag("Player"))
+            {
+                // BattleDataに敵の情報を設定
+                BattleData.Instance.SetEnemyData(enemyName, enemyHealth);
 
-            // 戦闘シーンに遷移
-            SceneManager.LoadScene(battleSceneName);
+                BattleData.Instance.RePosition(collision.collider.transform.position);
+
+                // 戦闘シーンに遷移
+                SceneManager.LoadScene(battleSceneName);
+            }
         }
+
+    }
+    public void TriggerStart()
+    {
+        isstart = false;
     }
     
     void Start()
