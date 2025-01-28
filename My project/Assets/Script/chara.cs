@@ -53,11 +53,16 @@ public class chara : MonoBehaviour
         {
             moveSpeed = isSprinting ? sprintSpeed : speed;
             isMoving = true;
+            anim.SetBool("walking", true);
         }
         else if (Input.GetKey(KeyCode.S))
         {
             moveSpeed = isSprinting ? -sprintSpeed : -speed;
             isMoving = true;
+        }
+        else if(Input.GetKeyUp(KeyCode.W))
+        {
+            anim.SetBool("walking", false);
         }
         else
         {

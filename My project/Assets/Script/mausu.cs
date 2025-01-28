@@ -12,34 +12,32 @@ public class mausu : MonoBehaviour
 
     void Start()
     {
-        LockCursor(); // ゲーム開始時にカーソルをロック
+        LockCursor();
+        Screen.fullScreenMode = FullScreenMode.FullScreenWindow; // フルスクリーンウィンドウモードを有効にする
     }
 
     void Update()
     {
-        // 1. キャンバスまたは画像が表示されている場合、カーソルを表示
         if ((canvas != null && canvas.activeSelf) || (imageObject != null && imageObject.activeSelf))
         {
-            if (isCursorLocked) // 既にロック解除されている場合は処理をしない
+            if (isCursorLocked)
                 UnlockCursor();
-            return; // キャンバスや画像が表示されている間は、それ以降の処理をしない
+            return;
         }
 
-        // 2. 左クリックでカーソルを非表示にする
         if (Input.GetMouseButtonDown(0))
         {
-            if (!isCursorLocked) // 既にロックされている場合は処理をしない
+            if (!isCursorLocked)
                 LockCursor();
         }
 
-        // 3. カメラ操作
         if (isCursorLocked)
         {
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
             xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);  // 上下の視点移動を制限
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             playerBody.Rotate(Vector3.up * mouseX);

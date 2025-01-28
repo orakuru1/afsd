@@ -30,22 +30,31 @@ public class EnemyTG : MonoBehaviour
         if(player == null)
         {
             hpBarCanvas.SetActive(false);
-            anim.SetBool("walking", false);
-           // anim.SetBool("attack", false);
             return;
         }
 
+        //プレイヤーとの距離を計算
         float distance = Vector3.Distance(transform.position, player.position);
 
         if(distance < detectionRange && distance > stoppingDistance)
         {
+            //プレイヤーに向かって移動
             Vector3 direction = (player.position - transform.position).normalized;
             transform.position += direction * speed * Time.deltaTime;
 
+            //歩くアニメーション
             anim.SetBool("walking", true);
-            //anim.SetBool("attack", true);
-
+            //攻撃アニメーション
+            anim.SetBool("attack", true);
+            //プレイヤーの方向を向く
             transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
+        }
+        else
+        {
+            //歩くアニメーションを停止
+            anim.SetBool("walking",false);
+            //攻撃アニメーションを停止
+            anim.SetBool("attack", false);
         }
     }
 }

@@ -3,38 +3,44 @@ using UnityEngine.UI;
 
 public class EnemyHP : MonoBehaviour
 {
-    public int maxHP = 100; // 敵の最大HP
+    public int maxHP = 100; // 最大HP
     private int currentHP;
 
-    public GameObject hpBarCanvas; //HPバーのCanvas
-    public Image hpFillImage; //前景のImage(緑部分)
-    
+    public Slider hpSlider; // HPバー用スライダー
+    public Text hpText; // HPを表示するテキスト
+
     void Start()
     {
-        currentHP = maxHP; //初期化
-        hpBarCanvas.SetActive(false); //初期状態で非表示
+        currentHP = maxHP; // 初期化
+        UpdateHPUI(); // 初期状態のUI更新
     }
 
-    // ダメージを受けるメソッド
+    // ダメージを受ける処理
     public void TakeDamage(int damage)
     {
         currentHP -= damage;
-        currentHP = Mathf.Clamp(currentHP, 0, maxHP);
+        currentHP = Mathf.Clamp(currentHP, 0, maxHP); // HPを0～maxHPに制限
+      
 
-        //HPバーを更新
-        UpdateHPBar();
+        UpdateHPUI(); // UIを更新
 
         if (currentHP <= 0)
         {
-            Die(); // HPが0以下になったら死亡処理
+            Die(); // HPが0になったら死亡処理
         }
     }
 
-    void UpdateHPBar()
+    // HPバーとテキストの更新
+    void UpdateHPUI()
     {
-        if(hpFillImage != null)
+        if (hpSlider != null)
         {
-            hpFillImage.fillAmount = (float)currentHP / maxHP;
+            hpSlider.value = (float)currentHP / maxHP; // HPスライダーの値を更新
+        }
+
+        if (hpText != null)
+        {
+            hpText.text = $"{currentHP} / {maxHP}"; // HPテキストの更新
         }
     }
 
@@ -42,7 +48,6 @@ public class EnemyHP : MonoBehaviour
     void Die()
     {
         Debug.Log("敵が倒れた！");
-        
-        Destroy(gameObject); // オブジェクトを削除
+        Destroy(gameObject); // 敵オブジェクトを削除
     }
 }

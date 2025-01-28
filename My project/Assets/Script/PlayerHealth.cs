@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI; // UIを操作するために必要
 using System.Collections;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHelth : MonoBehaviour
 {
     public int maxHealth = 100; // 最大HP
     private int currentHealth; // 現在のHP
