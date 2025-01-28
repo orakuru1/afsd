@@ -2841,7 +2841,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 27ed32cf565393142bb9f4fa4aead5a9, type: 3}
   playernames: []
   spawnposition: {x: 0, y: 0, z: 0}
-  camera: {fileID: 330585543}
+  targetcamera: {fileID: 330585543}
 --- !u!4 &1291659509
 Transform:
   m_ObjectHideFlags: 0

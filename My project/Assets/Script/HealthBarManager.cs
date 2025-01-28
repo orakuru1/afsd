@@ -62,6 +62,11 @@ public class HealthBarManager : MonoBehaviour
                 hpBarInstance.SetActive(false); // カメラ背面の場合は非表示
             }
         }
+
+        if (hpSlider.value <= hpSlider.maxValue * 0.25f)
+        {
+            hpSlider.fillRect.GetComponent<Image>().color = Color.red;
+        }
     }
 
     public void UpdateHealth(float currentHealth, float maxHealth)

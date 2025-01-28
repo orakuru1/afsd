@@ -14,12 +14,12 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
     [SerializeField]private List<string> playernames = new List<string>();
     private List<GameObject> buttons = new List<GameObject>();
     [SerializeField]private Vector3 spawnposition = new Vector3();
-    [SerializeField]private GameObject camera;
+    [SerializeField]private GameObject targetcamera;
     private CameraMove cameraMove;
 
     void Start()
     {
-        cameraMove = camera.GetComponent<CameraMove>();
+        cameraMove = targetcamera.GetComponent<CameraMove>();
 
         if(BattleData.Instance.mainplayers.Count != 0)
         {

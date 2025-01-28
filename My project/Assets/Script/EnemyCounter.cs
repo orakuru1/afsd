@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class EnemyCounter : MonoBehaviour
 {
     //public Text enemyCountText; // UIのTextコンポーネント
-    private int enemyCount = 0;    
+    [SerializeField]private int enemyCount = 0;    
 
     private BattleManager battleManager;
 
