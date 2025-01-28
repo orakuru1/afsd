@@ -129,6 +129,7 @@ MonoBehaviour:
     description: dd
     price: 0
     BuckSprite: {fileID: 0}
+  Spn: "\u7A81\u6483"
   pn: otamesi
   health: 243
   maxHealth: 550

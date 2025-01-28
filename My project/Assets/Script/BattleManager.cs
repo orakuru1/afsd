@@ -123,24 +123,12 @@ public class BattleManager : MonoBehaviour
     public void GenerateGuageButtons(Player player) //押されたらゲージのボタンを出現されるようにした。ここから条件や効果を作る。。。。。。。。。。。。。。。。。。。
     {
         guagebutton = Instantiate(gaugebutton,panerspawn);
+        player.SetUpSPN(guagebutton);
         //guagebutton.GetComponentInChildren<Text>().text =  ;
 
         Button btn = guagebutton.GetComponent<Button>();
-        btn.onClick.AddListener(() => OnSpecialAction(player));
+        btn.onClick.AddListener(() => player.OnSpecialAction(player));
     }
-    private void OnSpecialAction(Player player)
-    {
-        if(player.currentGauge >= player.maxGauge)
-        {
-            Debug.Log("スペシャル技発動！");
-            player.currentGauge = 0f;
-        }
-        else
-        {
-            Debug.Log("エネルギーが足りません");
-        }
-    }
-    
 
     // フェードアウト（画面が暗くなる）
     public IEnumerator FadeOut(float duration)
@@ -393,17 +381,6 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         anim.SetBool("attack", false);
         //Debug.Log($"{enemy.name} の攻撃アニメーションが再生されます！");
-    }
-
-    
-    void EnablePlayerActions(bool enable)
-    {
-        // プレイヤーの行動UI（ボタンなど）を有効化または無効化
-        // ここでは例として簡単に設定
-
-        //Button attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
-        //attackButton.interactable = enable;
-        
     }
 
     void EndBattle2(bool isPlayerWin)

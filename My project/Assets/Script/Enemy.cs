@@ -35,7 +35,6 @@ public class Enemy : MonoBehaviour
     {
         damage -= DF;
         if(damage < 0) damage = 0;
-        battleManager = FindObjectOfType<BattleManager>();
         battleManager.hyouzi(damage);
 
         health -= damage;
@@ -75,6 +74,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        battleManager = FindObjectOfType<BattleManager>();
         arrowManager = FindObjectOfType<ArrowManager>();
         // EnemyCounterオブジェクトを探して参照
         enemyCounter = FindObjectOfType<EnemyCounter>();

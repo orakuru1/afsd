@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト
     public List<Weapon> weapon = new List<Weapon>(); //装備が入ってるリスト
     public List<Armor> armor = new List<Armor>(); //装備が入ってるリスト
+    [SerializeField]private string Spn;
     [SerializeField]public string pn;
     [SerializeField]public int health; //死んだ処理のHP
     [SerializeField]public float maxHealth;//一緒になってる
@@ -60,6 +61,10 @@ public class Player : MonoBehaviour
     public void SetUpBattleManager(BattleManager mana) //battlemanagerをゲット
     {
         battleManager = mana;
+    }
+    public void SetUpSPN(GameObject gameObject)
+    {
+        gameObject.GetComponentInChildren<Text>().text = Spn;
     }
 
     public void GetGolrd(int StealGorld) //プレイヤースクリプト(親元)のお金を増やす処理
@@ -142,7 +147,6 @@ public class Player : MonoBehaviour
         Invoke(nameof(StopAttack), 0.1f);
         Destroy(panel);
     }
-
     private void ExecuteAttack(Enemy target,Skill skill,Player player) //実際に攻撃するところ
     {
         //int damage = Random.Range(BattleManager.players[0].attack,BattleManager.players[0].attack);
@@ -151,6 +155,22 @@ public class Player : MonoBehaviour
         //battleManager = FindObjectOfType<BattleManager>();
         //battleManager.PlayerAttack(damage);
         target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
+    }
+    public void OnSpecialAction(Player player)                    //スペシャル技
+    {
+        if(player.currentGauge >= player.maxGauge)
+        {
+            Debug.Log("スペシャル技発動！");
+            foreach(Enemy enemy in BattleManager.enemys)
+            {
+                enemy.TakeDamage((player.attack * 2 + player.weapon[0].number),player);
+            }
+            player.currentGauge = 0f;
+        }
+        else
+        {
+            Debug.Log("エネルギーが足りません");
+        }
     }
 
     public void TakeDamage(int damage) //自分のダメージを受ける処理
