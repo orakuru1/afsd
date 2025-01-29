@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class EnemyManager : MonoBehaviour
 {
     public static List<Enemy> enemies = new List<Enemy>(); // 敵リスト

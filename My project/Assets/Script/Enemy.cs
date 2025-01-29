@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour
     private ArrowManager arrowManager;
     [SerializeField]private Player player;
     [SerializeField] int DropGorld;
+    private bool isBurst = true;
     Animator anim;
     void OnMouseDown()
     {
@@ -62,6 +63,31 @@ public class Enemy : MonoBehaviour
         {
             healthBarManager.UpdateHealth(currentHealth, maxHealth);
         }
+    }
+
+    public void ChangeBurst()
+    {
+        if(isBurst != true)
+        {
+            isBurst = true;
+        }
+        else
+        {
+            isBurst = false;
+        }
+    }
+    public bool IsTurn()
+    {
+        if(isBurst != true)
+        {
+            ChangeBurst();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     private void Die(Player player)

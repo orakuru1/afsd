@@ -9,18 +9,6 @@ public class GaugeManager : MonoBehaviour
     private Transform characterTransform; // キャラクターのTransform
     public Player player; // プレイヤーキャラクターを参照
 
-    [Header("ゲージ設定")]
-    //public float maxGauge = 100f; // ゲージの最大値
-    //public float currentGauge = 0f; // 現在のゲージ値
-    //public float fillRate = 10f; // ゲージの増加速度（1秒あたり）
-
-    [Header("技の設定")]
-    public string skillName = "必殺技"; // 技の名前
-    public bool canUseSkill = false; // 技が使用可能かどうか
-
-    [Header("ゲージリセットの設定")]
-    public float skillGaugeCost = 100f; // 技発動時のゲージコスト
-
     void Start()
     {
         if (gaugeInstance != null)
@@ -67,12 +55,6 @@ public class GaugeManager : MonoBehaviour
 
         // ゲージを自動で増加
         //FillGauge(Time.deltaTime * fillRate);
-
-        // 技が使えるかどうかをチェック
-        if (player.currentGauge >= player.maxGauge)
-        {
-            canUseSkill = true;
-        }
     }
 
     // ゲージを増やす処理
@@ -92,33 +74,12 @@ public class GaugeManager : MonoBehaviour
             hpSlider.value = player.currentGauge;
         }
     }
-
-    // ゲージを消費して技を発動
-    public void UseSkill()
+    private void OnDestroy()
     {
-        if (canUseSkill)
+        // キャラクターが削除された際にHPバーも削除
+        if (gaugeInstance != null)
         {
-            Debug.Log($"{skillName} を発動！");
-            player.currentGauge -= skillGaugeCost;
-
-            // ゲージをリセット
-            if (player.currentGauge < 0)
-            {
-                player.currentGauge = 0;
-            }
-
-            // 技の使用を無効化
-            canUseSkill = false;
-
-            // SliderのUIを更新
-            if (hpSlider != null)
-            {
-                hpSlider.value = player.currentGauge;
-            }
-        }
-        else
-        {
-            Debug.Log("ゲージが足りません！");
+            Destroy(gaugeInstance);
         }
     }
 }

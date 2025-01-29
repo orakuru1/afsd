@@ -1062,6 +1062,8 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 9103103726191324022, guid: b3a3894aea2efd745a867b6074f71d0f,
     type: 3}
   hpBarParent: {fileID: 353650792}
+  EnemyGuage: {fileID: 3562792113239884545, guid: 30fc4be9e8c3d92439541600325a4c9e,
+    type: 3}
   gaugebutton: {fileID: 873184690009603294, guid: aa3964a9bc5242247aca0c7fa9f60c6d,
     type: 3}
   skillButtonPrefab: {fileID: 7551929868324969678, guid: c34a9cb13b3b2524fab3db65a58f4c2a,

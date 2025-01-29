@@ -58,6 +58,7 @@ public class Player : MonoBehaviour
     [SerializeField]public Sprite sprite;
     [SerializeField]public float currentGauge; // 現在のゲージ値
     [SerializeField]public float maxGauge;
+    public float sharp;
     public void SetUpBattleManager(BattleManager mana) //battlemanagerをゲット
     {
         battleManager = mana;
@@ -87,7 +88,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void LevelUp(int experience) //経験値習得
+    public void LevelUp(int experience) //経験値習得       BattleDataにオブザーバーでレベルアップをするたびに通知を送って既定のレベルに到達したらスキルを覚えるようにする。
     {
         XP += experience; //今の経験値に送られてきた経験値の計算
         if(XP >= MaxXp) //レベルアップに達しているかどうか
@@ -155,6 +156,8 @@ public class Player : MonoBehaviour
         //battleManager = FindObjectOfType<BattleManager>();
         //battleManager.PlayerAttack(damage);
         target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
+        EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
+        eneguage.FillGauge(sharp);
     }
     public void OnSpecialAction(Player player)                    //スペシャル技
     {
