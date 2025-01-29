@@ -767,7 +767,7 @@ PrefabInstance:
     - target: {fileID: 6265206175713501824, guid: 24a0663f813d4beb91fc0c6b1e8fef36,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 240.09798
+      value: 240.08
       objectReference: {fileID: 0}
     - target: {fileID: 6265206175713501824, guid: 24a0663f813d4beb91fc0c6b1e8fef36,
         type: 3}
@@ -1272,8 +1272,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.5, z: 1}
-  m_Center: {x: 0, y: 0.27, z: 0.03}
+  m_Size: {x: 1, y: 0.89, z: 2.22}
+  m_Center: {x: 0, y: 0.5, z: 0.44}
 --- !u!114 &333021947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1289,7 +1289,7 @@ MonoBehaviour:
   player: {fileID: 579868810}
   speed: 5
   stoppingDistance: 2
-  detectionRange: 50
+  detectionRange: 25
   hpBarCanvas: {fileID: 281384963}
   hpFillImage: {fileID: 1393902357}
 --- !u!114 &333021949
@@ -1307,6 +1307,20 @@ MonoBehaviour:
   maxHP: 3000
   hpSlider: {fileID: 1036073383}
   hpText: {fileID: 1720577714}
+--- !u!114 &333021951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333021940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d26bb33a8072e4585a0cff84c6b3e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDamage: 10
+  attackCooldown: 1.5
 --- !u!1001 &343379570
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2279,6 +2293,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 150
+--- !u!114 &558317866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558317854}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 511a491074e41f8468e80e76115a0b2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponCollider: {fileID: 558317858}
+  colliderActiveTime: 0.5
 --- !u!1 &574384369
 GameObject:
   m_ObjectHideFlags: 0
@@ -2328,7 +2356,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 579868803}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f3ac4d1415e0124f9eb7a202294fd69, type: 3}
   m_Name: 
@@ -2336,6 +2364,7 @@ MonoBehaviour:
   skills: []
   weapon: []
   armor: []
+  Spn: 
   pn: 
   health: 100
   maxHealth: 0
@@ -2348,6 +2377,8 @@ MonoBehaviour:
   currentHealth: 0
   gold: 0
   sprite: {fileID: 0}
+  currentGauge: 0
+  maxGauge: 0
 --- !u!4 &579868810 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4086279202973348, guid: c20397bf1592dc040b827e8716b0bd41,
@@ -2412,7 +2443,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 579868803}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18e952ebf87732b4fbef9fbc2f6d33b4, type: 3}
   m_Name: 

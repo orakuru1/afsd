@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
     public static bool damagemotion = false;
     public static bool diemotion = false;
     private BattleManager battleManager; //ターン制バトルを管理するスクリプト
+    private Animator anim; //アニメション
 
     //public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
     private BattleSystem battleSystem; //技のボタンを表示・非表示してるとこ(今見てみたら使ってるのかわからんかった)
@@ -215,6 +216,7 @@ public class Player : MonoBehaviour
     private void Die() //HPが０になった時の処理
     {
         Debug.Log($"{gameObject.name} が倒されました！");
+        anim.SetBool("die", true);
         //Destroy(gameObject);
     }
 
@@ -244,7 +246,7 @@ public class Player : MonoBehaviour
         //currentHealth = maxHealth;
         healthBarManager = GetComponent<HealthBarManager>(); //自分に追加されてるはずのＨＰバーのスクリプトを使えるようにしてる
         UpdateHealthBar(); //現在のＨＰを反映(最初からＨＰが減ってるときのため)
-
+        anim = GetComponent<Animator>();
         // デバッグ用: リストにスキルを手動で追加
         //skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
         
