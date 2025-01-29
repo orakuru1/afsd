@@ -31,6 +31,7 @@ public class BattleManager : MonoBehaviour
     private List<GameObject> PlayerObject = new List<GameObject>(); //プレイヤーのオブジェクトのほう
     public static List<Enemy> enemys = new List<Enemy>(); //エネミーのenemyスクリプト
     public List<object> AllCharacter = new List<object>();
+    [SerializeField]private GameObject EnemyGuage; //敵のゲージ
     [SerializeField]private GameObject gaugebutton; //ゲージ技のボタン
     [SerializeField] private GameObject skillButtonPrefab; // 技ボタンのプレハブ
     [SerializeField] private GameObject skillpanel;
@@ -46,11 +47,12 @@ public class BattleManager : MonoBehaviour
     private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
     [SerializeField]private GameObject GuageBar;
     private GameObject guagebutton;
-
+    private string colorCode;
     Animator anim;
 
     void Start()
     {
+        colorCode = ColorUtility.ToHtmlStringRGB(Color.red);
         oomoto.Add(player);
         oomoto.Add(SecondPlayer);
 
@@ -74,7 +76,8 @@ public class BattleManager : MonoBehaviour
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy"); //findを使わないようにできるよ
         foreach (GameObject enemy in enemies)
         {
-            CreateHealthBarFor(enemy);
+            CreateHealthBarFor(enemy);    //ゲージ技の生成もここでやる。次回予定
+            GenerateEnemyGuageButton(enemy);
         }
 
         //ScriptPlayer.OnStatsUpdated += SyncPlayerStats;
@@ -193,6 +196,14 @@ public class BattleManager : MonoBehaviour
             gaugemanager.player = playerComponent;
         }
     }
+    public void GenerateEnemyGuageButton(GameObject character)
+    {
+        GameObject gameObject = Instantiate(EnemyGuage,hpBarParent);
+
+        EnemyDestroyGuage enemyguage = character.AddComponent<EnemyDestroyGuage>();
+        enemyguage.SetObject(gameObject);
+
+    }
 
     public void ClearBattleLog()
     {
@@ -216,7 +227,7 @@ public class BattleManager : MonoBehaviour
         UpdateBattleState();
     }
 
-    void UpdateBattleState()
+    void UpdateBattleState()  //全然機能してないから消してもいい
     {
         if (players.All(p => p.health <= 0))
         {
@@ -332,23 +343,31 @@ public class BattleManager : MonoBehaviour
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
         }
+        if(enemy.IsTurn() != true) //敵のゲージがバーストしていないか
+        {
+            // 敵の行動処理を実装
+            int damage = Random.Range(enemy.AT - 5, enemy.AT + 5);
+            damage -= (targetPlayer.armor[0].number + targetPlayer.defence);
+            if (damage < 0) damage = 0;
 
-        // 敵の行動処理を実装
-        int damage = Random.Range(enemy.AT - 5, enemy.AT + 5);
-        damage -= (targetPlayer.armor[0].number + targetPlayer.defence);
-        if (damage < 0) damage = 0;
+            // 攻撃演出をここでいれたい
+            anim = enemy.GetComponent<Animator>();
+            StartCoroutine(PlayAttackAnimation());
+            ClearBattleLog();
+            battleLog.text +=  $"\n<color=#{colorCode}>{PlayerObject[playernumber].name}が{damage}のダメージを受けた!</color>";
+            //battleLog.text += $"\n敵がプレイヤーに{damage}のダメージ！";
+            Debug.Log($"{targetPlayer.name} に {damage} のダメージ！");
+            targetPlayer.TakeDamage(damage);
+            yield return new WaitForSeconds(2f); // 遅延
+        }
+        else
+        {
+            battleLog.text +=  $"\n<color=#{colorCode}>{enemy.name}は動けない！</color>";
+            yield return new WaitForSeconds(2f); // 遅延
+            enemy.GetComponent<EnemyDestroyGuage>().SetGuage();
+        }
 
-        // 攻撃演出をここでいれたい
-        anim = enemy.GetComponent<Animator>();
-        StartCoroutine(PlayAttackAnimation());
-        ClearBattleLog();
-        string colorCode = ColorUtility.ToHtmlStringRGB(Color.red);
-        battleLog.text +=  $"\n<color=#{colorCode}>{PlayerObject[playernumber].name}が{damage}のダメージを受けた!</color>";
-        //battleLog.text += $"\n敵がプレイヤーに{damage}のダメージ！";
-        Debug.Log($"{targetPlayer.name} に {damage} のダメージ！");
-        targetPlayer.TakeDamage(damage);
 
-        yield return new WaitForSeconds(2f); // デモ用の遅延
     }
     void OnActionSelected(string action)
     {
