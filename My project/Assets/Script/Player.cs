@@ -60,6 +60,8 @@ public class Player : MonoBehaviour
 
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
     public float fallThreshold = -30.0f; //落下とみなすY座標のしきい値
+    public float respawnUpdateDistance = 1.0f; //リスポーン位置を更新する間隔（メートル単位）
+    private bool isGrounded; //プレイヤーが地面にいるかどうか
 
     public bool isDead{ get; private set;} = false; //死亡フラグ
 
@@ -280,8 +282,26 @@ public class Player : MonoBehaviour
         Debug.Log("落下したのでリスポーンしました！");
     }
 
+    //地面に触れた時の処理
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    //地面から離れた時の処理
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+        }
+    }
+
     //プレイヤーが安全な位置を通過したらリスポーン地点を更新
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         //地面やチェックポイントに触れたらリスポーン位置を更新
         if(other.CompareTag("Ground") || other.CompareTag("Checkpoint"))
@@ -289,6 +309,12 @@ public class Player : MonoBehaviour
             respawnPosition = transform.position;
             Debug.Log("新しいリスポーン地点を設定しました：" + respawnPosition);
         }
+    }*/
+
+    void UpdateRespawnposition()
+    {
+        respawnPosition = transform.position;
+        Debug.Log("リスポーン位置を更新："　+ respawnPosition);
     }
 
     void Start()
@@ -306,6 +332,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //一定距離移動したらリスポーン位置を更新
+        if(isGrounded && Vector3.Distance(respawnPosition, transform.position) >= respawnUpdateDistance)
+        {
+            UpdateRespawnposition();
+        }
         //現在の座標を確認
         if(transform.position.y < fallThreshold)
         {
