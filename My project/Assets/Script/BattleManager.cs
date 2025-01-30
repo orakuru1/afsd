@@ -48,6 +48,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField]private GameObject GuageBar;
     private GameObject guagebutton;
     private string colorCode;
+    private GameObject panelTransform;
     Animator anim;
 
     void Start()
@@ -56,7 +57,6 @@ public class BattleManager : MonoBehaviour
         oomoto.Add(player);
         oomoto.Add(SecondPlayer);
 
-        //LoadAsset(assetAddress);
         //EnemyName.Add("Goblin");
         //EnemyName.Add("suraimu");
         EnemyName.Add("GruntHP");
@@ -81,36 +81,14 @@ public class BattleManager : MonoBehaviour
         }
 
         //ScriptPlayer.OnStatsUpdated += SyncPlayerStats;
-
+        SetupPlayers();
     }
 
-    void LoadAsset(string address)
-    {
-        // 非同期でアセットをロード
-        Addressables.LoadAssetAsync<GameObject>(address).Completed += OnAssetLoaded;
-    }
 
-    void OnAssetLoaded(AsyncOperationHandle<GameObject> obj)
-    {
-        if (obj.Status == AsyncOperationStatus.Succeeded)
-        {
-            GameObject kari = Instantiate(obj.Result); // オブジェクトをインスタンス化
-            PlayerObject.Add(kari);
-            players.Add(kari.GetComponent<Player>());
-        }
-        else
-        {
-            Debug.LogError("アセットロード失敗");
-        }
-    }
-    void UnloadAsset(GameObject loadedObject)
-    {
-        Addressables.ReleaseInstance(loadedObject);
-    }
     public void GenerateSkillButtons(Player player)
     {
         //GameObject button = Instantiate(skillpanel)
-        GameObject panelTransform = Instantiate(skillpanel,panerspawn);
+        panelTransform = Instantiate(skillpanel,panerspawn);
         foreach (Skill skill in player.skills)
         {
             GameObject button = Instantiate(skillButtonPrefab, panelTransform.transform);
@@ -123,7 +101,7 @@ public class BattleManager : MonoBehaviour
             btn.onClick.AddListener(() => OnActionSelected(skill.skillName));
         }
     }
-    public void GenerateGuageButtons(Player player) //押されたらゲージのボタンを出現されるようにした。ここから条件や効果を作る。。。。。。。。。。。。。。。。。。。
+    public void GenerateGuageButtons(Player player) //ゲージ技のボタン
     {
         guagebutton = Instantiate(gaugebutton,panerspawn);
         player.SetUpSPN(guagebutton);
@@ -131,6 +109,11 @@ public class BattleManager : MonoBehaviour
 
         Button btn = guagebutton.GetComponent<Button>();
         btn.onClick.AddListener(() => player.OnSpecialAction(player));
+    }
+    public void BuckSpecial() //スペシャルボタンを押す前に非表示にする
+    {
+        guagebutton.SetActive(!guagebutton.activeSelf);
+        panelTransform.SetActive(!panelTransform.activeSelf);
     }
 
     // フェードアウト（画面が暗くなる）
@@ -210,9 +193,9 @@ public class BattleManager : MonoBehaviour
         battleLog.text = ""; // 空文字列でテキストをクリア
     }
 
-    public void AddLog(string message , Color color)
+    public void AddLog(string message)
     {
-        battleLog.text += $"\n<color=#{ColorUtility.ToHtmlStringRGB(color)}>{message}</color>"; // メッセージを追加
+        battleLog.text += $"\n{message}"; // メッセージを追加
     }
 
     private IEnumerator StartBattle()
@@ -343,7 +326,13 @@ public class BattleManager : MonoBehaviour
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
         }
-        if(enemy.IsTurn() != true) //敵のゲージがバーストしていないか
+        if(enemy.IsTurn() != false) //敵のゲージがバーストしていないか
+        {
+            battleLog.text +=  $"\n<color=#{colorCode}>{enemy.name}は動けない！</color>";
+            yield return new WaitForSeconds(2f); // 遅延
+            enemy.GetComponent<EnemyDestroyGuage>().SetGuage();
+        }
+        else
         {
             // 敵の行動処理を実装
             int damage = Random.Range(enemy.AT - 5, enemy.AT + 5);
@@ -359,12 +348,6 @@ public class BattleManager : MonoBehaviour
             Debug.Log($"{targetPlayer.name} に {damage} のダメージ！");
             targetPlayer.TakeDamage(damage);
             yield return new WaitForSeconds(2f); // 遅延
-        }
-        else
-        {
-            battleLog.text +=  $"\n<color=#{colorCode}>{enemy.name}は動けない！</color>";
-            yield return new WaitForSeconds(2f); // 遅延
-            enemy.GetComponent<EnemyDestroyGuage>().SetGuage();
         }
 
 
@@ -481,6 +464,20 @@ public class BattleManager : MonoBehaviour
     {
         // "GAME OVER" テキストを表示
         gameOverText.gameObject.SetActive(true);
+    }
+    void SetupPlayers()
+    {
+        foreach(Player player in players)
+        {
+            if(player.pn == "RPGHeroHP")
+            {
+                player.SetSpecialSkill(player.gameObject.AddComponent<AOESpecial>());
+            }
+            else if(player.pn == "otamesi")
+            {
+                player.SetSpecialSkill(player.gameObject.AddComponent<HealAllSpecial>());
+            }
+        }
     }
     public void StatusOver()
     {

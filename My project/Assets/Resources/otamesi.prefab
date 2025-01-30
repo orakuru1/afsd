@@ -135,16 +135,17 @@ MonoBehaviour:
   maxHealth: 550
   attack: 160
   defence: 60
-  Speed: 0
+  Speed: 40
   LV: 4
-  XP: 0
+  XP: 100
   MaxXp: 172.79999999999998
   currentHealth: 243
   gold: 30
   sprite: {fileID: 21300000, guid: 27ed32cf565393142bb9f4fa4aead5a9, type: 3}
-  currentGauge: 0
+  currentGauge: 90
   maxGauge: 100
   sharp: 10
+  specialSkill: {fileID: 0}
 --- !u!54 &-4160338664990824660
 Rigidbody:
   m_ObjectHideFlags: 0

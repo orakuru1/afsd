@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     public List<Armor> armor = new List<Armor>(); //装備が入ってるリスト
     [SerializeField]private string Spn;
     [SerializeField]public string pn;
-    [SerializeField]public int health; //死んだ処理のHP
+    [SerializeField]public float health; //死んだ処理のHP
     [SerializeField]public float maxHealth;//一緒になってる
     [SerializeField] public int attack; //攻撃力
     [SerializeField] public int defence; //防御力
@@ -58,7 +58,15 @@ public class Player : MonoBehaviour
     [SerializeField]public Sprite sprite;
     [SerializeField]public float currentGauge; // 現在のゲージ値
     [SerializeField]public float maxGauge;
+    private Color color;
     public float sharp;
+    public SpecialSkill specialSkill;
+
+    public void SetSpecialSkill(SpecialSkill skill) //継承元の親だけでいい
+    {
+        specialSkill = skill;
+        skill.Initialize(this,battleManager);
+    }
     public void SetUpBattleManager(BattleManager mana) //battlemanagerをゲット
     {
         battleManager = mana;
@@ -106,7 +114,7 @@ public class Player : MonoBehaviour
         battleManager.StatusOver();
         UpdateHealthBar();
 
-        BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);
+        //BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);
     }
 
     public void escape() //逃げるボタンを押されたときの処理
@@ -159,16 +167,18 @@ public class Player : MonoBehaviour
         EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
         eneguage.FillGauge(sharp);
     }
-    public void OnSpecialAction(Player player)                    //スペシャル技
+    public void OnSpecialAction(Player player)                    ////////////////スペシャル技///////////////
     {
         if(player.currentGauge >= player.maxGauge)
         {
-            Debug.Log("スペシャル技発動！");
-            foreach(Enemy enemy in BattleManager.enemys)
+            if(specialSkill != null)
             {
-                enemy.TakeDamage((player.attack * 2 + player.weapon[0].number),player);
+                specialSkill.Activate();
             }
-            player.currentGauge = 0f;
+            else
+            {
+                Debug.Log("設定されていません");
+            }
         }
         else
         {
@@ -203,7 +213,9 @@ public class Player : MonoBehaviour
     public void Heal(float amount) //HPを回復させる処理
     {
         currentHealth += amount; //ＨＰを増やす
+        health += amount;
         if (currentHealth > maxHealth) currentHealth = maxHealth; //最大値を超えたとき最大値に合わせる
+        if (health > maxHealth) health = maxHealth; //最大値を超えたとき最大値に合わせる
         UpdateHealthBar(); //ＨＰバーを更新
     }
 
@@ -250,7 +262,7 @@ public class Player : MonoBehaviour
 
         // デバッグ用: リストにスキルを手動で追加
         //skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
-        
+        specialSkill.kari(); //お試し
     }              
 
     // Update is called once per frame

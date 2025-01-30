@@ -40,10 +40,6 @@ public class EnemyDestroyGuage : MonoBehaviour
             }
         }
 
-        if(currentGauge >= maxGauge)
-        {
-            enemy.ChangeBurst();
-        }
     }
     public void FillGauge(float amount)
     {
@@ -53,6 +49,10 @@ public class EnemyDestroyGuage : MonoBehaviour
         if (currentGauge > maxGauge)
         {
             currentGauge = maxGauge;
+        }
+        if(currentGauge >= maxGauge)
+        {
+            enemy.ChangeBurst();
         }
 
         // SliderのUIに反映
