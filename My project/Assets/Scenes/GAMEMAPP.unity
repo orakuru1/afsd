@@ -2375,10 +2375,14 @@ MonoBehaviour:
   XP: 0
   MaxXp: 0
   currentHealth: 0
+  healthSlider: {fileID: 1266060527}
+  healthText: {fileID: 1011816477}
+  smoothSpeed: 0.5
   gold: 0
   sprite: {fileID: 0}
   currentGauge: 0
   maxGauge: 0
+  sharp: 0
 --- !u!4 &579868810 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4086279202973348, guid: c20397bf1592dc040b827e8716b0bd41,
@@ -4167,6 +4171,16 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3760287559151789196, guid: c20397bf1592dc040b827e8716b0bd41,
+        type: 3}
+      propertyPath: healthText
+      value: 
+      objectReference: {fileID: 1011816477}
+    - target: {fileID: 3760287559151789196, guid: c20397bf1592dc040b827e8716b0bd41,
+        type: 3}
+      propertyPath: healthSlider
+      value: 
+      objectReference: {fileID: 1266060527}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c20397bf1592dc040b827e8716b0bd41, type: 3}
 --- !u!4 &1175300755 stripped
