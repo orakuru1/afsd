@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 [System.Serializable]
 public class Skill //攻撃する表示のスキルたち、４個ぐらいかな？
@@ -10,6 +11,9 @@ public class Skill //攻撃する表示のスキルたち、４個ぐらいか�
     public string skillName; //スキルの名前
     public int damage; //ダメージ量
     public string description; //説明
+    public BuffType buffType; // 付与するバフの種類
+    public int buffValue; // バフの上昇値
+    public int buffDuration; // バフの持続ターン数
 }
 [System.Serializable]
 public class Weapon  //防具や武器のステータス・・・・・・0番が武器として機能している。１番が防具として機能している
@@ -29,7 +33,13 @@ public class Armor
     public int price; //装備の値段
     public Sprite BuckSprite;
 }
-
+public enum BuffType//*****************見た目がわかりやすく可読性が増すであろう。数字などで管理しているときは使ってみてもよい。多くなりすぎるとやばい。switch分
+{
+    None,       // バフなし
+    AttackUp,   // 攻撃力アップ
+    DefenseUp,  // 防御力アップ
+    SpeedUp     // スピードアップ
+}
 public class Player : MonoBehaviour
 {
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト
@@ -37,7 +47,7 @@ public class Player : MonoBehaviour
     public List<Armor> armor = new List<Armor>(); //装備が入ってるリスト
     [SerializeField]private string Spn;
     [SerializeField]public string pn;
-    [SerializeField]public int health; //死んだ処理のHP
+    [SerializeField]public float health; //死んだ処理のHP
     [SerializeField]public float maxHealth;//一緒になってる
     [SerializeField] public int attack; //攻撃力
     [SerializeField] public int defence; //防御力
@@ -71,7 +81,103 @@ public class Player : MonoBehaviour
     [SerializeField]public Sprite sprite;
     [SerializeField]public float currentGauge; // 現在のゲージ値
     [SerializeField]public float maxGauge;
+    private Color color;
     public float sharp;
+    private SpecialSkill specialSkill;
+    private Dictionary<BuffType, int> ActiveBuffs = new Dictionary<BuffType, int>();
+    private Dictionary<BuffType, int> ActiveBuffs2 = new Dictionary<BuffType, int>();//dictionaryとenumのコンビは相性がいいと思います
+    public void ApplyBuff(BuffType buffType, int value, int duration)
+    {
+        if (buffType == BuffType.None) return; // バフなしなら処理しない
+
+        if (ActiveBuffs.ContainsKey(buffType))
+        {
+            ActiveBuffs[buffType] = Mathf.Max(ActiveBuffs[buffType], duration); // 持続ターンを更新
+            ActiveBuffs2[buffType] = Mathf.Max(ActiveBuffs2[buffType], value); // 持続ターンを更新
+        }
+        else
+        {
+            ActiveBuffs.Add(buffType, duration);
+            ActiveBuffs2.Add(buffType,value);
+            switch (buffType)//************************************リストより重いが早い。アイテム等の処理は使うとよいだろう
+            {
+                case BuffType.AttackUp:
+                    attack += ActiveBuffs2[buffType];
+                    break;
+                case BuffType.DefenseUp:
+                    defence += ActiveBuffs2[buffType];
+                    break;
+                case BuffType.SpeedUp:
+                    Speed += ActiveBuffs2[buffType];
+                    break;
+            }
+        }
+
+
+        Debug.Log($"{gameObject.name} に {buffType} のバフ（+{value}）を適用！ {duration}ターン持続");
+    }
+
+    public void UpdateBuffs()
+    {
+        List<BuffType> buffsToRemove = new List<BuffType>();
+
+        foreach (var buff in ActiveBuffs.Keys.ToList()) 
+        {
+            ActiveBuffs[buff]--;
+
+            if (ActiveBuffs[buff] <= 0)
+            {
+                buffsToRemove.Add(buff);
+            }
+        }
+
+        foreach (var buff in buffsToRemove)//*********************バトルが終わった時に、まだバフがついていたら解除してから戻る
+        {
+            switch (buff)
+            {
+                case BuffType.AttackUp:
+                    attack -= ActiveBuffs2[buff];
+                    break;
+                case BuffType.DefenseUp:
+                    defence -= ActiveBuffs2[buff];
+                    break;
+                case BuffType.SpeedUp:
+                    Speed -= ActiveBuffs2[buff];
+                    break;
+            }
+
+            ActiveBuffs.Remove(buff);
+            ActiveBuffs2.Remove(buff);
+            Debug.Log($"{gameObject.name} の {buff} バフが消えた！");
+        }
+    }
+    public int GetBuffedStat(BuffType type)  //現在のバフが何ターンか;
+    {
+        return ActiveBuffs.ContainsKey(type) ? ActiveBuffs[type] : 0;
+    }
+    public void RemoveBuffe()
+    {
+        foreach(var buff in ActiveBuffs.Keys)
+        {
+            switch(buff)
+            {
+                case BuffType.AttackUp:
+                    attack -= ActiveBuffs2[buff];
+                    break;
+                case BuffType.DefenseUp:
+                    defence -= ActiveBuffs2[buff];
+                    break;
+                case BuffType.SpeedUp:
+                    Speed -= ActiveBuffs2[buff];
+                    break;
+            }
+        }
+    }
+    public void SetSpecialSkill(SpecialSkill skill) //継承元の親だけでいい
+    {
+        specialSkill = skill;
+        skill.Initialize(this,battleManager);
+    }
     public void SetUpBattleManager(BattleManager mana) //battlemanagerをゲット
     {
         battleManager = mana;
@@ -120,7 +226,7 @@ public class Player : MonoBehaviour
         battleManager.StatusOver();
         UpdateHealthBar();
 
-        BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);
+        //BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);
     }
 
     public void escape() //逃げるボタンを押されたときの処理
@@ -164,25 +270,45 @@ public class Player : MonoBehaviour
     }
     private void ExecuteAttack(Enemy target,Skill skill,Player player) //実際に攻撃するところ
     {
-        //int damage = Random.Range(BattleManager.players[0].attack,BattleManager.players[0].attack);
-        int damage = Random.Range(player.attack + skill.damage + weapon[0].number,player.attack + skill.damage + weapon[0].number); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
-        // 攻撃処理（例: 敵にダメージを与える）
-        //battleManager = FindObjectOfType<BattleManager>();
-        //battleManager.PlayerAttack(damage);
-        target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
-        EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
-        eneguage.FillGauge(sharp);
+        Debug.Log($"{this.name} は {skill.skillName} を使用！");
+
+        if (skill.buffType != BuffType.None) // バフがある場合
+        {
+            player.ApplyBuff(skill.buffType, skill.buffValue, skill.buffDuration);
+            battleManager.AddLog(skill.buffType+"で"+skill.buffValue+"の効果がアップした!");
+        }
+        else
+        {
+            int damage = Random.Range(player.attack + skill.damage + weapon[0].number,player.attack + skill.damage + weapon[0].number); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
+            target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
+            EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
+            eneguage.FillGauge(sharp);
+            foreach(var type in ActiveBuffs.Keys)  //バフがたくさんあったらバトルログに入りきらない
+            {
+                if(GetBuffedStat(type) != 1)
+                {
+                    battleManager.AddLog("残りのバフ継続ターン数"+GetBuffedStat(type).ToString()+"ターンです");
+                }
+                else
+                {
+                    battleManager.AddLog(type+"のバフが切れた!");
+                }
+            }
+        }
+
     }
-    public void OnSpecialAction(Player player)                    //スペシャル技
+    public void OnSpecialAction(Player player)                    ////////////////スペシャル技///////////////
     {
         if(player.currentGauge >= player.maxGauge)
         {
-            Debug.Log("スペシャル技発動！");
-            foreach(Enemy enemy in BattleManager.enemys)
+            if(specialSkill != null)
             {
-                enemy.TakeDamage((player.attack * 2 + player.weapon[0].number),player);
+                specialSkill.Activate();
             }
-            player.currentGauge = 0f;
+            else
+            {
+                Debug.Log("設定されていません");
+            }
         }
         else
         {
@@ -222,7 +348,9 @@ public class Player : MonoBehaviour
     public void Heal(float amount) //HPを回復させる処理
     {
         currentHealth += amount; //ＨＰを増やす
+        health += amount;
         if (currentHealth > maxHealth) currentHealth = maxHealth; //最大値を超えたとき最大値に合わせる
+        if (health > maxHealth) health = maxHealth; //最大値を超えたとき最大値に合わせる
         UpdateHealthBar(); //ＨＰバーを更新
     }
 

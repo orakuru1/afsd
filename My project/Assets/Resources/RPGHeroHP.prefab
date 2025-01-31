@@ -1654,9 +1654,21 @@ MonoBehaviour:
   - skillName: Fire
     damage: 30
     description: A ball of fire that burns enemies.
+    buffType: 0
+    buffValue: 0
+    buffDuration: 0
   - skillName: ice
     damage: 20
     description: A ball of fire that burns enemies.
+    buffType: 0
+    buffValue: 0
+    buffDuration: 0
+  - skillName: attackbuff
+    damage: 20
+    description: A ball of fire that burns enemies.
+    buffType: 1
+    buffValue: 30
+    buffDuration: 3
   weapon:
   - equipName: "\u9244\u306E\u5263"
     number: 30
@@ -1703,6 +1715,8 @@ MonoBehaviour:
   healthSlider: {fileID: 0}
   healthText: {fileID: 0}
   smoothSpeed: 0.5
+  fallThreshold: -30
+  respawnUpdateDistance: 1
   gold: 2880
   sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
   currentGauge: 100
