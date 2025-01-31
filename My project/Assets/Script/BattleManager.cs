@@ -253,6 +253,7 @@ public class BattleManager : MonoBehaviour
                 {
                     Debug.Log($" {player.name} のターン");
                     yield return PlayerTurn(player);
+                    player.UpdateBuffs(); // バフを更新
                 }
                 else if (character is Enemy enemy && enemy.health > 0) // 生存している場合
                 {
@@ -451,6 +452,10 @@ public class BattleManager : MonoBehaviour
     public void EndBattle()
     {
         // BattleDataの情報をリセット（必要に応じて）
+        foreach(Player player in players)
+        {
+            player.RemoveBuffe();
+        }
         StatusOver();
         BattleData.Instance.SetEnemyData( "", 0);
 

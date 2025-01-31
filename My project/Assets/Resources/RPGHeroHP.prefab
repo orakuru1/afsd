@@ -1653,9 +1653,21 @@ MonoBehaviour:
   - skillName: Fire
     damage: 30
     description: A ball of fire that burns enemies.
+    buffType: 0
+    buffValue: 0
+    buffDuration: 0
   - skillName: ice
     damage: 20
     description: A ball of fire that burns enemies.
+    buffType: 0
+    buffValue: 0
+    buffDuration: 0
+  - skillName: dance
+    damage: 0
+    description: A ball of fire that burns enemies.
+    buffType: 1
+    buffValue: 100
+    buffDuration: 3
   weapon:
   - equipName: "\u9244\u306E\u5263"
     number: 30
@@ -1696,7 +1708,7 @@ MonoBehaviour:
   defence: 40
   Speed: 100
   LV: 16
-  XP: 700
+  XP: 900
   MaxXp: 1440
   currentHealth: 314
   gold: 2880
@@ -1704,7 +1716,6 @@ MonoBehaviour:
   currentGauge: 100
   maxGauge: 100
   sharp: 100
-  specialSkill: {fileID: 0}
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0

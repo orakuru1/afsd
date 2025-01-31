@@ -117,6 +117,9 @@ MonoBehaviour:
   - skillName: "\u30AD\u30EB"
     damage: 10
     description: 
+    buffType: 0
+    buffValue: 0
+    buffDuration: 0
   weapon:
   - equipName: ddddddddd
     number: 0
@@ -133,7 +136,7 @@ MonoBehaviour:
   pn: otamesi
   health: 243
   maxHealth: 550
-  attack: 160
+  attack: 0
   defence: 60
   Speed: 40
   LV: 4
