@@ -1547,6 +1547,7 @@ GameObject:
   - component: {fileID: 2179785809566799200}
   - component: {fileID: 3760287559151789196}
   - component: {fileID: 1253116640013937438}
+  - component: {fileID: 2803325598252015711}
   m_Layer: 0
   m_Name: RPGHeroHP
   m_TagString: Player
@@ -1703,9 +1704,11 @@ MonoBehaviour:
   healthSlider: {fileID: 0}
   healthText: {fileID: 0}
   smoothSpeed: 0.5
+  fallThreshold: -30
+  respawnUpdateDistance: 1
   gold: 2880
   sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
-  currentGauge: 100
+  currentGauge: 10
   maxGauge: 100
   sharp: 50
 --- !u!114 &1253116640013937438
@@ -1722,6 +1725,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleSpeed: 1
   minScaleY: 0.5
+--- !u!114 &2803325598252015711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556040939566342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4bdf1377da18a6449e9718053278347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onGround: 1
+  inJumping: 0
+  speed: 3
+  sprintSpeed: 6
+  rotationSpeed: 150
+  jumpForce: 8
+  forwardJumpForce: 6
+  backwardJumpForce: 3
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0

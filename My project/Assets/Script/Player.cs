@@ -208,6 +208,11 @@ public class Player : MonoBehaviour
         {
             UpdateHealthBar(); //HPバーが減ったから更新する
         }
+
+        if(healthText != null)
+        {
+            healthText.text = currentHealth.ToString(); //HPテキスト処理
+        }
         
         if (currentHealth <= 0) //ＨＰがなくなったら
         {
@@ -231,6 +236,24 @@ public class Player : MonoBehaviour
         if (healthBarManager != null) //スクリプトがちゃんと存在するか
         {
             healthBarManager.UpdateHealth(currentHealth, maxHealth); //違うスクリプトでHPバーを更新してる
+        }
+    }
+
+    
+
+    void UpdateHealthUI(bool instant = false)
+    {
+        if (healthSlider != null)
+        {
+            if (instant)
+            {
+                healthSlider.value = (float)currentHealth / maxHealth; // 即座に更新
+            }
+        }
+
+        if (healthText != null)
+        {
+            healthText.text = currentHealth.ToString(); // HPテキストを更新
         }
     }
 
@@ -314,7 +337,7 @@ public class Player : MonoBehaviour
     void UpdateRespawnposition()
     {
         respawnPosition = transform.position;
-        Debug.Log("リスポーン位置を更新："　+ respawnPosition);
+        //Debug.Log("リスポーン位置を更新："　+ respawnPosition);
     }
 
     void Start()

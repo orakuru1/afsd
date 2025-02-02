@@ -7,7 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class GameSceneLoadManager : MonoBehaviour
 {
-    public Transform player; // プレイヤーオブジェクト
+    [SerializeField]private Transform player; // プレイヤーオブジェクト
+    [SerializeField]private GameObject prf; // 生成したいプレイヤープレハブ
+
 
     // セーブするデータ：シーンとプレイヤーの位置
     public void SaveGame()
@@ -59,5 +61,10 @@ public class GameSceneLoadManager : MonoBehaviour
         // プレイヤーの位置を更新
         player.position = new Vector3(x, y, z);
         Debug.Log("プレイヤーの位置がロードされました！");
+    }
+
+    void Start()
+    {
+        
     }
 }
