@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     private ArrowManager arrowManager;
     [SerializeField]private Player player;
     [SerializeField] int DropGorld;
-    private bool isBurst = true;
+    private bool isBurst = false;
     Animator anim;
     void OnMouseDown()
     {
@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
     }
     public bool IsTurn()
     {
-        if(isBurst != true)
+        if(isBurst != false)
         {
             ChangeBurst();
             return true;
