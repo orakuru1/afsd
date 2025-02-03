@@ -23,6 +23,8 @@ public class chara : MonoBehaviour
     private float moveSpeed;
     private float rotationInput;
 
+    public float movespeed = 5f;
+
     private bool isAttacking = false; // 攻撃状態を追跡
 
     void Start()
@@ -33,6 +35,11 @@ public class chara : MonoBehaviour
 
     void Update()
     {
+        float horizontalInput = Input.GetAxis("Horizontal");
+
+        //オブジェクトを左右に移動
+        transform.Translate(Vector3.right * horizontalInput * movespeed * Time.deltaTime);
+        
         if (!isAttacking) // 攻撃中は他の動作をブロック
         {
             HandleMovement();

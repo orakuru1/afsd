@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -10,37 +8,32 @@ public class Projectile : MonoBehaviour
 
     void Start()
     {
-        // 一定時間後に弾を削除
-        Destroy(gameObject, lifetime);
+        Destroy(gameObject, lifetime); // 一定時間後に弾を削除
     }
 
     void Update()
     {
-        // 弾を前方に進める
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(Vector3.forward * speed * Time.deltaTime); // 弾を前方に進める
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // **敵に当たった場合**
-        /*if (other.CompareTag("Enemy"))
-        {
-            Enemy enemy = other.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(damage); // ダメージを与える
-            }
-            Destroy(gameObject); // 弾を削除
-        }*/
+        Debug.Log("弾が " + other.gameObject.name + " に当たった！");
 
-        // **プレイヤーに当たった場合**
         if (other.CompareTag("Player"))
         {
-            Player player = other.GetComponent<Player>();
-            if (player != null)
+            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+
+            if (playerHealth != null)
             {
-                player.TakeDamage(damage); // プレイヤーのHPを減らす
+                Debug.Log("プレイヤーにヒット！ダメージを与える: " + damage);
+                playerHealth.TakeDamage(damage); // プレイヤーのHPを減らす
             }
+            else
+            {
+                Debug.LogError("PlayerHealth スクリプトが見つかりません！");
+            }
+
             Destroy(gameObject); // 弾を削除
         }
     }
