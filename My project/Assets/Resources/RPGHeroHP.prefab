@@ -1630,7 +1630,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1556040939566342}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f63b0a6621dd018449e368aa141dde4b, type: 3}
   m_Name: 
@@ -1702,6 +1702,7 @@ MonoBehaviour:
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
     BuckSprite: {fileID: 0}
+  official: 0
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
   health: 127
@@ -1720,7 +1721,7 @@ MonoBehaviour:
   respawnUpdateDistance: 1
   gold: 2880
   sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
-  currentGauge: 10
+  currentGauge: 100
   maxGauge: 100
   sharp: 50
 --- !u!114 &1253116640013937438
