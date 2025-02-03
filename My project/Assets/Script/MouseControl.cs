@@ -35,7 +35,7 @@ public class MouseControl : MonoBehaviour
 
         // 縦の回転角度を更新し、カメラの回転に反映
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);  // 上下の視点移動を制限
+        xRotation = Mathf.Clamp(xRotation, -10f, 45f);  // 上下の視点移動を制限
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         

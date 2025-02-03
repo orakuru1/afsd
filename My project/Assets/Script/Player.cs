@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Linq;
+
 [System.Serializable]
 public class Skill //攻撃する表示のスキルたち、４個ぐらいかな？
 {
@@ -69,6 +70,19 @@ public class Player : MonoBehaviour
     public static bool damagemotion = false;
     public static bool diemotion = false;
     private BattleManager battleManager; //ターン制バトルを管理するスクリプト
+    private Animator anim; //アニメション
+    public Slider healthSlider; //HPバー
+    public Text healthText; //HPのテキスト表示
+    public float smoothSpeed = 0.5f; //HPバーが減る速度（小さいほど遅い）
+
+    private float targetSliderValue; //スライダーの目標値
+
+    private Vector3 respawnPosition; //リスポーン位置を記録する変数
+    public float fallThreshold = -30.0f; //落下とみなすY座標のしきい値
+    public float respawnUpdateDistance = 1.0f; //リスポーン位置を更新する間隔（メートル単位）
+    private bool isGrounded; //プレイヤーが地面にいるかどうか
+
+    public bool isDead{ get; private set;} = false; //死亡フラグ
 
     //public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
     private BattleSystem battleSystem; //技のボタンを表示・非表示してるとこ(今見てみたら使ってるのかわからんかった)
@@ -210,6 +224,7 @@ public class Player : MonoBehaviour
             health += 50; //HPアップ
             currentHealth += 50; //バーのHPもアップ
             maxHealth += 50; //最大HPもアップ
+            healthText.text = "healthText" + 50; //テキストの数もアップ
             attack += 20; //攻撃力アップ
             defence += 10; //防御力アップ
             XP = 0; //現在の経験値を０に更新　　　　(オーバーした経験値を引き継げるようにするかは考える)
@@ -319,11 +334,21 @@ public class Player : MonoBehaviour
         if (health < 0) health = 0; //０より下になった時に０にする
 
         currentHealth -= damage; //ＨＰばーも減らす
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // HPを範囲内に制限
+
+        // スライダーの目標値を計算
+        targetSliderValue = (float)currentHealth / maxHealth;
+
         if (currentHealth < 0) currentHealth = 0; //０より下になった時に０にする
         
         if(healthBarManager != null)
         {
             UpdateHealthBar(); //HPバーが減ったから更新する
+        }
+
+        if(healthText != null)
+        {
+            healthText.text = currentHealth.ToString(); //HPテキスト処理
         }
         
         if (currentHealth <= 0) //ＨＰがなくなったら
@@ -353,9 +378,29 @@ public class Player : MonoBehaviour
         }
     }
 
+    
+
+    void UpdateHealthUI(bool instant = false)
+    {
+        if (healthSlider != null)
+        {
+            if (instant)
+            {
+                healthSlider.value = (float)currentHealth / maxHealth; // 即座に更新
+            }
+        }
+
+        if (healthText != null)
+        {
+            healthText.text = currentHealth.ToString(); // HPテキストを更新
+        }
+    }
+
     private void Die() //HPが０になった時の処理
     {
         Debug.Log($"{gameObject.name} が倒されました！");
+        isDead = true;
+        anim.SetBool("die", true);
         //Destroy(gameObject);
     }
 
@@ -380,19 +425,85 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(4f);
     }
 
+    IEnumerator SmoothHealthBarChange()
+    {
+        while (Mathf.Abs(healthSlider.value - targetSliderValue) > 0.01f)
+        {
+            healthSlider.value = Mathf.Lerp(healthSlider.value, targetSliderValue, smoothSpeed);
+            yield return null; // フレームを待つ
+        }
+
+        // 最後に値を正確に設定（誤差補正）
+        healthSlider.value = targetSliderValue;
+    }
+
+    //リスポーン位置に戻す
+    void Respawn()
+    {
+        transform.position = respawnPosition;
+        Debug.Log("落下したのでリスポーンしました！");
+    }
+
+    //地面に触れた時の処理
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    //地面から離れた時の処理
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+        }
+    }
+
+    //プレイヤーが安全な位置を通過したらリスポーン地点を更新
+    /*private void OnTriggerEnter(Collider other)
+    {
+        //地面やチェックポイントに触れたらリスポーン位置を更新
+        if(other.CompareTag("Ground") || other.CompareTag("Checkpoint"))
+        {
+            respawnPosition = transform.position;
+            Debug.Log("新しいリスポーン地点を設定しました：" + respawnPosition);
+        }
+    }*/
+
+    void UpdateRespawnposition()
+    {
+        respawnPosition = transform.position;
+        //Debug.Log("リスポーン位置を更新："　+ respawnPosition);
+    }
+
     void Start()
     {
         //currentHealth = maxHealth;
         healthBarManager = GetComponent<HealthBarManager>(); //自分に追加されてるはずのＨＰバーのスクリプトを使えるようにしてる
         UpdateHealthBar(); //現在のＨＰを反映(最初からＨＰが減ってるときのため)
-
+        anim = GetComponent<Animator>();
         // デバッグ用: リストにスキルを手動で追加
         //skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
+        respawnPosition = transform.position; //初期位置をリスポーン位置として記録
+        
     }              
 
     // Update is called once per frame
     void Update()
     {
+        //一定距離移動したらリスポーン位置を更新
+        if(isGrounded && Vector3.Distance(respawnPosition, transform.position) >= respawnUpdateDistance)
+        {
+            UpdateRespawnposition();
+        }
+        //現在の座標を確認
+        if(transform.position.y < fallThreshold)
+        {
+            Respawn();
+        }
         attackmotion = false;
     }
 }
