@@ -1758,6 +1758,7 @@ MonoBehaviour:
   jumpForce: 8
   forwardJumpForce: 6
   backwardJumpForce: 3
+  movespeed: 5
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0
