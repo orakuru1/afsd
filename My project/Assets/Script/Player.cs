@@ -39,12 +39,20 @@ public enum BuffType//*****************見た目がわかりやすく可読性�
     DefenseUp,  // 防御力アップ
     SpeedUp     // スピードアップ
 }
+public enum Official
+{
+    None,
+    Worrier,
+    Magic,
+    Seef
+}
 
 public class Player : MonoBehaviour
 {
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト
     public List<Weapon> weapon = new List<Weapon>(); //装備が入ってるリスト
     public List<Armor> armor = new List<Armor>(); //装備が入ってるリスト
+    [SerializeField]private Official official; //役職
     [SerializeField]private string Spn;
     [SerializeField]public string pn;
     [SerializeField]public float health; //死んだ処理のHP
@@ -265,6 +273,8 @@ public class Player : MonoBehaviour
         }
         else
         {
+            battleManager.ClearBattleLog();
+            battleManager.AddLog($"{target.gameObject.name}を攻撃!!");
             int damage = Random.Range(player.attack + skill.damage + weapon[0].number,player.attack + skill.damage + weapon[0].number); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
             target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
@@ -378,7 +388,6 @@ public class Player : MonoBehaviour
 
         // デバッグ用: リストにスキルを手動で追加
         //skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
-        specialSkill.kari(); //お試し
     }              
 
     // Update is called once per frame

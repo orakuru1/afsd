@@ -1708,7 +1708,7 @@ MonoBehaviour:
   defence: 40
   Speed: 100
   LV: 16
-  XP: 900
+  XP: 1000
   MaxXp: 1440
   currentHealth: 314
   gold: 2880

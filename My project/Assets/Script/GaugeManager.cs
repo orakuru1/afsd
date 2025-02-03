@@ -72,6 +72,7 @@ public class GaugeManager : MonoBehaviour
         if (hpSlider != null)
         {
             hpSlider.value = player.currentGauge;
+            Debug.Log(hpSlider.value);
         }
     }
     private void OnDestroy()

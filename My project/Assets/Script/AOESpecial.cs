@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class AOESpecial : SpecialSkill
 {
-    public override void kari() //こっちで変えれるのかのお試し
-    {
-        Debug.Log("子供だよー");
-        base.kari();//これをすると変更しても、問題なく親を呼び出せれる
-    }
     protected override IEnumerator PerformSkill()
     {
         battleManager.AddLog($"{player.name} の範囲攻撃発動！");
         battleManager.BuckSpecial();
 
         yield return new WaitForSeconds(2f);
+        battleManager.ClearBattleLog();
 
         foreach (Enemy enemy in BattleManager.enemys)
         {
@@ -23,9 +19,7 @@ public class AOESpecial : SpecialSkill
             eneguage.FillGauge(player.sharp*2);
         }
 
-        player.currentGauge = 0f; // ゲージをリセット
-        battleManager.BuckSpecial();
-        battleManager.ClearBattleLog();
+        PushInSpecial();
     }
 
     void Start()

@@ -18,9 +18,12 @@ public abstract class SpecialSkill : MonoBehaviour
     {
         StartCoroutine(PerformSkill());
     }
-    public virtual void kari() //virtualのお試し
+
+    protected void PushInSpecial() //押した後の処理
     {
-        Debug.Log("親元だよー");
+        player.currentGauge = 0f; 
+        player.GetComponent<GaugeManager>().FillGauge(player.currentGauge);
+        battleManager.BuckSpecial();
     }
 
     // 派生クラスで実装する処理

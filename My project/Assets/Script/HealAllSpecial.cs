@@ -10,6 +10,7 @@ public class HealAllSpecial : SpecialSkill
         battleManager.BuckSpecial();
 
         yield return new WaitForSeconds(2f);
+        battleManager.ClearBattleLog();
 
         foreach (Player ally in BattleManager.players)
         {
@@ -17,8 +18,7 @@ public class HealAllSpecial : SpecialSkill
             ally.Heal(healAmount);
         }
 
-        player.currentGauge = 0f; // ゲージをリセット
-        battleManager.BuckSpecial();
+        PushInSpecial();
     }
     
     void Start()
