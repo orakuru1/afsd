@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class EnemyTrigger : MonoBehaviour
 {
-    private string battleSceneName = "BattleScene"; // 戦闘シーンの名前
+
     [SerializeField]private string enemyName = "Goblin"; // 敵の名前
     private int enemyHealth = 100; // 敵の体力
     private bool isstart = true;
@@ -22,11 +22,13 @@ public class EnemyTrigger : MonoBehaviour
                 BattleData.Instance.RePosition(collision.collider.transform.position);
 
                 // 戦闘シーンに遷移
-                SceneManager.LoadScene(battleSceneName);
+                //SceneManager.LoadScene(battleSceneName);
+                StartCoroutine(BattleData.Instance.LoadBattleScene()); // 非同期ロード
             }
         }
 
     }
+
     public void TriggerStart()
     {
         isstart = false;
@@ -34,7 +36,7 @@ public class EnemyTrigger : MonoBehaviour
     
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame

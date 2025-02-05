@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class BattleData : MonoBehaviour
 {
     public static BattleData Instance { get; private set; }
@@ -21,7 +21,7 @@ public class BattleData : MonoBehaviour
     [SerializeField]private float currentHealth; //HPバーに反映される値　(前のHPとごっちゃになった)
     [SerializeField]public Vector3 spawnposition = new Vector3(); //キャラクターが返って来るときの位置
     public List<string> mainplayers = new List<string>();
-
+    private AsyncOperation asyncLoad;
     private void Awake()
     {
         // シングルトンパターンを実装
@@ -66,10 +66,42 @@ public class BattleData : MonoBehaviour
         MaxXp = MaxXp2;
         currentHealth = currentHealth2;
     }
+    public IEnumerator LoadBattleScene() //非同期処理で読み込みシーン移動
+    {
+        asyncLoad = SceneManager.LoadSceneAsync("BattleScene");
+        
+        asyncLoad.allowSceneActivation = false; // シーンの切り替えを一時停止
+
+        while (!asyncLoad.isDone)
+        {
+            // 90% 以上読み込まれたら切り替え
+            if (asyncLoad.progress >= 0.9f)
+            {
+                asyncLoad.allowSceneActivation = true; // シーン遷移を許可
+            }
+            yield return null;
+        }
+    }
+    public IEnumerator LoadMap()
+    {
+        asyncLoad = SceneManager.LoadSceneAsync("SampleScene");
+        
+        asyncLoad.allowSceneActivation = false; // シーンの切り替えを一時停止
+
+        while (!asyncLoad.isDone)
+        {
+            // 90% 以上読み込まれたら切り替え
+            if (asyncLoad.progress >= 0.9f)
+            {
+                asyncLoad.allowSceneActivation = true; // シーン遷移を許可
+            }
+            yield return null;
+        }
+    }
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
