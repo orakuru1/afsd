@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public class ChangeCharacter : MonoBehaviour //リストでバトルに行っても保存しておいて、０番はキャラクターを生成、１番と２番はボタンを生成ってすればいいと思う。
 {
+    [SerializeField]private GameObject NowPlayer2; //一時しのぎ
+    [SerializeField]private GameObject NowPlayer3; //一時しのぎ
     [SerializeField]private GameObject NowPlayer;
+    [SerializeField]private Transform spanposition;
     [SerializeField]private  List<GameObject> players = new List<GameObject>();
     [SerializeField]public static List<Player> ScriptPlayers = new List<Player>();
     [SerializeField]private GameObject ChangeButton;
@@ -38,13 +41,16 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
         }
         else
         {
-            GameObject fast = Instantiate(NowPlayer);
+            GameObject fast = Instantiate(NowPlayer,spanposition.position,Quaternion.identity);
             NowPlayer = fast;
             cameraMove.SetUp(NowPlayer.transform);
             playernames.Add(fast.GetComponent<Player>().pn); //インスタンス化された奴の名前を覚えさせる。名前で判断する仲間の数
             playernames.Add("otamesi"); //お試しで仲間を増やしてる
             players.Add(fast);
             ScriptPlayers.Add(fast.GetComponent<Player>());
+            NowPlayer2.GetComponent<EnemyTG>().aaaa();
+            NowPlayer3.GetComponent<EnemyTG>().aaaa();
+            NowPlayer3.GetComponent<EnemyRangedAttack>().bbbb();
             BattleData.Instance.currentplayers(playernames);
             SpawnCharaButton();
         }

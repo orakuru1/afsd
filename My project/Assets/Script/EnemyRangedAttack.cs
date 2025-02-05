@@ -20,6 +20,13 @@ public class EnemyRangedAttack : MonoBehaviour
 
     private float lastAttackTime; // 最後に攻撃した時間
 
+
+    public void bbbb()
+    {
+        player = ChangeCharacter.ScriptPlayers[0].gameObject.transform;
+    }
+    
+
     void Start()
     {
         anim = GetComponent<Animator>();
