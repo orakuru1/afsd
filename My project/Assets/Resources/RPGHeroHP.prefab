@@ -1702,14 +1702,16 @@ MonoBehaviour:
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
     BuckSprite: {fileID: 0}
-  official: 0
+  job: 0
+  player0: {fileID: 3760287559151789196}
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
   health: 127
   maxHealth: 600
-  attack: 10
+  attack: 50
   defence: 40
   Speed: 100
+  Mp: 0
   LV: 16
   XP: 1000
   MaxXp: 1440
