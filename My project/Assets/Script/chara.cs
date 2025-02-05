@@ -39,7 +39,7 @@ public class chara : MonoBehaviour
 
         //オブジェクトを左右に移動
         transform.Translate(Vector3.right * horizontalInput * movespeed * Time.deltaTime);
-        
+
         if (!isAttacking) // 攻撃中は他の動作をブロック
         {
             HandleMovement();

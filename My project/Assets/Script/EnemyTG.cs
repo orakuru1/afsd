@@ -19,9 +19,15 @@ public class EnemyTG : MonoBehaviour
     
 
     // Start is called before the first frame update
+    public void aaaa()
+    {
+        player = ChangeCharacter.ScriptPlayers[0].gameObject.transform;
+    }
+    
     void Start()
     {
         anim = GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
@@ -29,7 +35,10 @@ public class EnemyTG : MonoBehaviour
     {
         if(player == null)
         {
-            hpBarCanvas.SetActive(false);
+            if(hpBarCanvas != null)
+            {
+                hpBarCanvas.SetActive(false);
+            }
             return;
         }
 
