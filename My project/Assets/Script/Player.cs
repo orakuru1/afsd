@@ -40,7 +40,7 @@ public enum BuffType//*****************見た目がわかりやすく可読性�
     DefenseUp,  // 防御力アップ
     SpeedUp     // スピードアップ
 }
-public enum Official
+public enum Job
 {
     None,
     Worrier,
@@ -53,7 +53,9 @@ public class Player : MonoBehaviour
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト
     public List<Weapon> weapon = new List<Weapon>(); //装備が入ってるリスト
     public List<Armor> armor = new List<Armor>(); //装備が入ってるリスト
-    [SerializeField]private Official official; //役職
+
+    [Header("ステータスここから")]
+    [SerializeField]public Job job; //役職
     [SerializeField]private string Spn;
     [SerializeField]public string pn;
     [SerializeField]public float health; //死んだ処理のHP
@@ -61,38 +63,44 @@ public class Player : MonoBehaviour
     [SerializeField] public int attack; //攻撃力
     [SerializeField] public int defence; //防御力
     [SerializeField] public int Speed;
+    [SerializeField] public int Mp;
     [SerializeField] public int LV; //現在のレベル
     [SerializeField] public double XP; //現在の経験値
     [SerializeField] public double MaxXp; //次のレベルアップの値
     [SerializeField]public float currentHealth; //HPバーに反映される値　(前のHPとごっちゃになった)
-    private HealthBarManager healthBarManager; //HPバーを管理するスクリプト
+    [SerializeField]public int gold; // プレイヤーの初期ゴールド
+    [SerializeField]public float currentGauge; // 現在のゲージ値
+    [SerializeField]public float maxGauge;
+    public float sharp;
+    [SerializeField]public Sprite sprite;
+
+    //*************************ここまでプレイヤーのステータス
     public static bool attackmotion = false;
     public static bool damagemotion = false;
     public static bool diemotion = false;
-    private BattleManager battleManager; //ターン制バトルを管理するスクリプト
+    private bool isGrounded; //プレイヤーが地面にいるかどうか
+    public bool isDead{ get; private set;} = false; //死亡フラグ
+
+    public float fallThreshold = -30.0f; //落下とみなすY座標のしきい値
+    public float respawnUpdateDistance = 1.0f; //リスポーン位置を更新する間隔（メートル単位）
+    public float smoothSpeed = 0.5f; //HPバーが減る速度（小さいほど遅い）
+    private float targetSliderValue; //スライダーの目標値
+
     private Animator anim; //アニメション
     public Slider healthSlider; //HPバー
     public Text healthText; //HPのテキスト表示
-    public float smoothSpeed = 0.5f; //HPバーが減る速度（小さいほど遅い）
 
-    private float targetSliderValue; //スライダーの目標値
+    private HealthBarManager healthBarManager; //HPバーを管理するスクリプト
+
+    private BattleManager battleManager; //ターン制バトルを管理するスクリプト
+    
+    private SpecialSkill specialSkill;
+
 
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
-    public float fallThreshold = -30.0f; //落下とみなすY座標のしきい値
-    public float respawnUpdateDistance = 1.0f; //リスポーン位置を更新する間隔（メートル単位）
-    private bool isGrounded; //プレイヤーが地面にいるかどうか
-
-    public bool isDead{ get; private set;} = false; //死亡フラグ
 
     //public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
-    private BattleSystem battleSystem; //技のボタンを表示・非表示してるとこ(今見てみたら使ってるのかわからんかった)
-    [SerializeField]public int gold; // プレイヤーの初期ゴールド
-    [SerializeField]public Sprite sprite;
-    [SerializeField]public float currentGauge; // 現在のゲージ値
-    [SerializeField]public float maxGauge;
     private Color color;
-    public float sharp;
-    private SpecialSkill specialSkill;
     private Dictionary<BuffType, int> ActiveBuffs = new Dictionary<BuffType, int>();
     private Dictionary<BuffType, int> ActiveBuffs2 = new Dictionary<BuffType, int>();//dictionaryとenumのコンビは相性がいいと思います
     public void ApplyBuff(BuffType buffType, int value, int duration)
@@ -216,7 +224,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void LevelUp(int experience) //経験値習得       BattleDataにオブザーバーでレベルアップをするたびに通知を送って既定のレベルに到達したらスキルを覚えるようにする。
+    public void LevelUp(int experience) //経験値習得     
     {
         XP += experience; //今の経験値に送られてきた経験値の計算
         if(XP >= MaxXp) //レベルアップに達しているかどうか
@@ -230,6 +238,25 @@ public class Player : MonoBehaviour
             XP = 0; //現在の経験値を０に更新　　　　(オーバーした経験値を引き継げるようにするかは考える)
             MaxXp *= 1.2; //次のレベルアップまでを更新する
             LV += 1; //現在のレベルを上げる
+            switch(job)
+            {
+                case(Job.None):
+                    break;
+                case(Job.Worrier):
+                    health += 20;
+                    currentHealth += 20;
+                    maxHealth += 20;
+                    attack += 20;
+                    break;
+                case(Job.Magic):
+                    Mp += 20;
+                    Speed += 20;
+                    break;
+                case(Job.Seef):
+                    Speed += 20;
+                    attack += 10;
+                    break;
+            }
         }
         //OnStatsUpdated?.Invoke(); // 通知を送信
         battleManager.StatusOver();
@@ -283,6 +310,7 @@ public class Player : MonoBehaviour
 
         if (skill.buffType != BuffType.None) // バフがある場合
         {
+            battleManager.ClearBattleLog();
             player.ApplyBuff(skill.buffType, skill.buffValue, skill.buffDuration);
             battleManager.AddLog(skill.buffType+"で"+skill.buffValue+"の効果がアップした!");
         }
@@ -294,15 +322,16 @@ public class Player : MonoBehaviour
             target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
             eneguage.FillGauge(sharp);
+            battleManager.ClearBattleLog();
             foreach(var type in ActiveBuffs.Keys)  //バフがたくさんあったらバトルログに入りきらない
             {
-                if(GetBuffedStat(type) != 1)
+                if(GetBuffedStat(type) != 1) //switch文でかいてもいい
                 {
                     battleManager.AddLog("残りのバフ継続ターン数"+GetBuffedStat(type).ToString()+"ターンです");
                 }
                 else
                 {
-                    battleManager.AddLog(type+"のバフが切れた!");
+                    battleManager.AddLog(GetBuffedStat(type).ToString()+"のバフが切れた!");
                 }
             }
         }

@@ -10,46 +10,52 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class BattleManager : MonoBehaviour
 {
-    [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();
-    private GameObject Instance;
-    //↑キャラクター生成用
-    public TextMeshProUGUI gameOverText; // 対象のTextコンポーネント
-    public Image fadeImage; // フェード用のImage
+
+    public static List<Enemy> enemys = new List<Enemy>(); //エネミーのenemyスクリプト
+    public static List<Player> players = new List<Player>(); //プレイヤーのplayerスクリプト
+    public List<object> AllCharacter = new List<object>();
+
     public Transform enemySpawnPoint; // 敵を生成する位置
     public Transform enemySpawnPoint0; // 敵を生成する位置
     public Transform enemySpawnPoint1; // 敵を生成する位置
-    public Text enemyNameText;        // 敵の名前を表示するUI
-    public Slider enemyHealthSlider;  // 敵の体力を表示するUI
-    public Text battleLog;           // バトルログを表示するUI
-    [SerializeField]private Player player;            // プレイヤーのスクリプト
-    [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
-    public GameObject hpBarPrefab; // HPバーのPrefab
     public Transform hpBarParent; // HPバーの親（Canvas）
-    List<string> EnemyName = new List<string>();
+    [SerializeField] public Transform panerspawn; // ボタンを配置する親オブジェクト
 
-    public static List<Player> players = new List<Player>(); //プレイヤーのplayerスクリプト
+    public Text battleLog;           // バトルログを表示するUI
+
+    public GameObject hpBarPrefab; // HPバーのPrefab
+
+    public TextMeshProUGUI gameOverText; // 対象のTextコンポーネント
+
+    public Image fadeImage; // フェード用のImage
+    
+    [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();
+
     private List<GameObject> PlayerObject = new List<GameObject>(); //プレイヤーのオブジェクトのほう
-    public static List<Enemy> enemys = new List<Enemy>(); //エネミーのenemyスクリプト
-    public List<object> AllCharacter = new List<object>();
+    private List<GameObject> insta = new List<GameObject>();
+    private GameObject Instance;    //キャラクター生成用
+    private GameObject guagebutton;
+    private GameObject panelTransform;
     [SerializeField]private GameObject EnemyGuage; //敵のゲージ
     [SerializeField]private GameObject gaugebutton; //ゲージ技のボタン
     [SerializeField] private GameObject skillButtonPrefab; // 技ボタンのプレハブ
     [SerializeField] private GameObject skillpanel;
-    [SerializeField] public Transform skillListParent; // ボタンを配置する親オブジェクト
-    [SerializeField] public Transform panerspawn; // ボタンを配置する親オブジェクト
-    private List<GameObject> insta = new List<GameObject>();
     [SerializeField] private GameObject attackbotton; // 技選択UIパネル
     [SerializeField] private GameObject escapebotton; // 技選択UIパネル
+    [SerializeField]private GameObject GuageBar;
+
+    private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
+    [SerializeField]private Player player;            // プレイヤーのスクリプト
+    [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
+    [SerializeField]private Player SecondPlayer;
+
     private bool actionSelected = false;
     private bool attackakuction = false;
-    public string assetAddress = "Assets/Resources_moved/otamesi.prefab";
-    [SerializeField]private Player SecondPlayer;
-    private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
-    [SerializeField]private GameObject GuageBar;
-    private GameObject guagebutton;
+
     private string colorCode;
-    private GameObject panelTransform;
-    Animator anim;
+    private List<string> EnemyName = new List<string>();
+    
+    private Animator anim;
 
     void Start()
     {
@@ -101,6 +107,7 @@ public class BattleManager : MonoBehaviour
             btn.onClick.AddListener(() => OnActionSelected(skill.skillName));
         }
     }
+
     public void GenerateGuageButtons(Player player) //ゲージ技のボタン
     {
         guagebutton = Instantiate(gaugebutton,panerspawn);
@@ -110,6 +117,7 @@ public class BattleManager : MonoBehaviour
         Button btn = guagebutton.GetComponent<Button>();
         btn.onClick.AddListener(() => player.OnSpecialAction(player));
     }
+
     public void BuckSpecial() //スペシャルボタンを押す前に非表示にする
     {
         guagebutton.SetActive(!guagebutton.activeSelf);
@@ -166,6 +174,7 @@ public class BattleManager : MonoBehaviour
             healthBarManager.player = playerComponent;
         }
     }
+
     void CreateGuageBar(GameObject character)
     {
         GameObject guagebar = Instantiate(GuageBar,hpBarParent);
@@ -179,6 +188,7 @@ public class BattleManager : MonoBehaviour
             gaugemanager.player = playerComponent;
         }
     }
+
     public void GenerateEnemyGuageButton(GameObject character)
     {
         GameObject gameObject = Instantiate(EnemyGuage,hpBarParent);
@@ -225,6 +235,7 @@ public class BattleManager : MonoBehaviour
             StartCoroutine(BattleLoop());
         }
     }
+
     void OtameshiUpdate()
     {
         AllCharacter.Clear();
@@ -242,6 +253,7 @@ public class BattleManager : MonoBehaviour
             return 0;
         }).ToList();
     }
+
     IEnumerator BattleLoop()
     {
         while (true)
@@ -273,10 +285,12 @@ public class BattleManager : MonoBehaviour
             OtameshiUpdate();
         }
     }
+
     public void hyouzi(int damage)
     {
         battleLog.text += $"\nプレイヤーが敵に{damage}のダメージ！";
     }
+
     IEnumerator PlayerTurn(Player player)
     {
         GaugeManager gaugeManager = player.GetComponent<GaugeManager>();
@@ -353,11 +367,13 @@ public class BattleManager : MonoBehaviour
 
 
     }
+
     void OnActionSelected(string action)
     {
         Debug.Log($"選択されたアクション: {action}");
         actionSelected = true; // ボタンが押されたことを通知
     }
+
     public void OnActionSelected()
     {
         attackakuction = true; // ボタンが押されたことを通知
@@ -463,13 +479,12 @@ public class BattleManager : MonoBehaviour
         SceneManager.LoadScene("GAMEMAPP");
     }
 
-
-
     private void ShowPlayerAndGameOver()
     {
         // "GAME OVER" テキストを表示
         gameOverText.gameObject.SetActive(true);
     }
+
     void SetupPlayers()
     {
         foreach(Player player in players)
@@ -484,6 +499,7 @@ public class BattleManager : MonoBehaviour
             }
         }
     }
+    
     public void StatusOver()
     {
         foreach(Player player in players)
@@ -499,11 +515,13 @@ public class BattleManager : MonoBehaviour
                     player2.attack = player.attack;
                     player2.defence = player.defence;
                     player2.Speed = player.Speed;
+                    player2.Mp = player.Mp;
                     player2.LV = player.LV;
                     player2.XP = player.XP;
                     player2.MaxXp = player.MaxXp;
                     player2.gold = player.gold;
                     player2.currentGauge = player.currentGauge;
+                    player2.job = player.job;
                 }
             }
         }

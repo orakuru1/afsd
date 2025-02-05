@@ -28,6 +28,7 @@ public class BattleData : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            transform.SetParent(null);
             DontDestroyOnLoad(gameObject); // シーン遷移時に削除されないようにする
         }
         else

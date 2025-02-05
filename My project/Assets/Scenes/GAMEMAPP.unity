@@ -9617,7 +9617,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1797626413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9646,7 +9646,7 @@ MonoBehaviour:
   players: []
   ChangeButton: {fileID: 3245370625723421944, guid: f2975bcdc5231a9428171f5cc7322959,
     type: 3}
-  ButtonParent: {fileID: 705543292}
+  ButtonParent: {fileID: 858836127}
   sprite:
   - {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
   - {fileID: 21300000, guid: 27ed32cf565393142bb9f4fa4aead5a9, type: 3}
@@ -10455,7 +10455,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2072847848
 MonoBehaviour:
   m_ObjectHideFlags: 0
