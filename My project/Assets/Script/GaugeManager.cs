@@ -46,6 +46,7 @@ public class GaugeManager : MonoBehaviour
             if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
             {
                 gaugeInstance.transform.position = screenPosition;
+                gaugeInstance.SetActive(true);
             }
             else
             {

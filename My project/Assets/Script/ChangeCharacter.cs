@@ -48,9 +48,14 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
             playernames.Add("otamesi"); //お試しで仲間を増やしてる
             players.Add(fast);
             ScriptPlayers.Add(fast.GetComponent<Player>());
-            NowPlayer2.GetComponent<EnemyTG>().aaaa();
-            NowPlayer3.GetComponent<EnemyTG>().aaaa();
-            NowPlayer3.GetComponent<EnemyRangedAttack>().bbbb();
+            
+            if(NowPlayer2 != null)
+            {
+                NowPlayer2.GetComponent<EnemyTG>().aaaa();
+                NowPlayer3.GetComponent<EnemyTG>().aaaa();
+                NowPlayer3.GetComponent<EnemyRangedAttack>().bbbb();
+            }
+
             BattleData.Instance.currentplayers(playernames);
             SpawnCharaButton();
         }

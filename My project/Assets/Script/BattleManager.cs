@@ -36,6 +36,7 @@ public class BattleManager : MonoBehaviour
     private GameObject Instance;    //キャラクター生成用
     private GameObject guagebutton;
     private GameObject panelTransform;
+    [SerializeField]private GameObject BattleLog;
     [SerializeField]private GameObject EnemyGuage; //敵のゲージ
     [SerializeField]private GameObject gaugebutton; //ゲージ技のボタン
     [SerializeField] private GameObject skillButtonPrefab; // 技ボタンのプレハブ
@@ -51,15 +52,21 @@ public class BattleManager : MonoBehaviour
 
     private bool actionSelected = false;
     private bool attackakuction = false;
+    private bool stayturn = false;
 
     private string colorCode;
     private List<string> EnemyName = new List<string>();
     
     private Animator anim;
 
+    private CameraMove cameraMove;
     void Start()
     {
+        saisyonohyouzi(); //邪魔だからオフにしておく
+        cameraMove = Camera.main.GetComponent<CameraMove>(); // メインカメラのスクリプトを取得
+
         colorCode = ColorUtility.ToHtmlStringRGB(Color.red);
+
         oomoto.Add(player);
         oomoto.Add(SecondPlayer);
 
@@ -90,6 +97,13 @@ public class BattleManager : MonoBehaviour
         SetupPlayers();
     }
 
+    public void saisyonohyouzi()
+    {
+        stayturn = !stayturn;
+        BattleLog.SetActive(!BattleLog.activeSelf);
+        attackbotton.SetActive(!attackbotton.activeSelf);
+        escapebotton.SetActive(!escapebotton.activeSelf);
+    }
 
     public void GenerateSkillButtons(Player player)
     {
@@ -293,6 +307,10 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator PlayerTurn(Player player)
     {
+        while(stayturn == true)
+        {
+            yield return null;
+        }
         GaugeManager gaugeManager = player.GetComponent<GaugeManager>();
         gaugeManager.FillGauge(10f);
         battleLog.text = $"{player.name} のターン！";
@@ -323,6 +341,10 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator EnemyTurn(Enemy enemy)
     {
+        while(stayturn == true)
+        {
+            yield return null;
+        }
         battleLog.text = $"{enemy.name} のターン！";
         yield return new WaitForSeconds(2f);
 
@@ -436,6 +458,9 @@ public class BattleManager : MonoBehaviour
             // 敵のPrefabを生成
             GameObject prefab = (GameObject)Resources.Load (BattleData.Instance.enemyName);
             GameObject hab = Instantiate(prefab, enemySpawnPoint.position, enemySpawnPoint.rotation);
+            cameraMove.SetUp(hab.transform);
+            cameraMove.rotationcamera(2f);
+            cameraMove.zoingoutcamera(4f,1f);
             //hab.transform.rotation = Quaternion.Euler(0, 180, 0);
             enemys.Add(hab.GetComponent<Enemy>());
             int EnemyCount = Random.Range(0,3);

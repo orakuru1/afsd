@@ -9,6 +9,12 @@ public class EnemyTrigger : MonoBehaviour
     [SerializeField]private string enemyName = "Goblin"; // 敵の名前
     private int enemyHealth = 100; // 敵の体力
     private bool isstart = true;
+    private CameraMove cameraMove;
+
+    public void SetCamera()
+    {
+        cameraMove.SetUp(this.gameObject.transform);
+    }
     // Start is called before the first frame update
     private void OnCollisionEnter(Collision collision)
     {
@@ -23,7 +29,10 @@ public class EnemyTrigger : MonoBehaviour
 
                 // 戦闘シーンに遷移
                 //SceneManager.LoadScene(battleSceneName);
+                
                 StartCoroutine(BattleData.Instance.LoadBattleScene()); // 非同期ロード
+                SetCamera();
+                cameraMove.zoingcamera(1f,2f,false);
             }
         }
 
@@ -36,7 +45,7 @@ public class EnemyTrigger : MonoBehaviour
     
     void Start()
     {
-
+        cameraMove = Camera.main.GetComponent<CameraMove>(); // メインカメラのスクリプトを取得
     }
 
     // Update is called once per frame
