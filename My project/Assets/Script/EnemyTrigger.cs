@@ -10,7 +10,6 @@ public class EnemyTrigger : MonoBehaviour
     private int enemyHealth = 100; // 敵の体力
     private bool isstart = true;
     private CameraMove cameraMove;
-
     public void SetCamera()
     {
         cameraMove.SetUp(this.gameObject.transform);
@@ -18,9 +17,9 @@ public class EnemyTrigger : MonoBehaviour
     // Start is called before the first frame update
     private void OnCollisionEnter(Collision collision)
     {
-        if(isstart != true)
+        if (collision.collider.CompareTag("Player"))
         {
-            if (collision.collider.CompareTag("Player"))
+            if(BattleData.Instance.isconhurikut())
             {
                 // BattleDataに敵の情報を設定
                 BattleData.Instance.SetEnemyData(enemyName, enemyHealth);
@@ -34,8 +33,11 @@ public class EnemyTrigger : MonoBehaviour
                 SetCamera();
                 cameraMove.zoingcamera(1f,2f,false);
             }
+            else
+            {
+                Debug.Log("バトルに入る処理をしてるよ");
+            }
         }
-
     }
 
     public void TriggerStart()

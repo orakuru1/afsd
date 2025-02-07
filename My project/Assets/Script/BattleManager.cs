@@ -62,7 +62,7 @@ public class BattleManager : MonoBehaviour
     private CameraMove cameraMove;
     void Start()
     {
-        saisyonohyouzi(); //邪魔だからオフにしておく
+        //saisyonohyouzi(); //邪魔だからオフにしておく
         cameraMove = Camera.main.GetComponent<CameraMove>(); // メインカメラのスクリプトを取得
 
         colorCode = ColorUtility.ToHtmlStringRGB(Color.red);

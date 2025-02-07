@@ -22,11 +22,12 @@ public class BattleData : MonoBehaviour
     [SerializeField]private float maxHealth;//一緒になってる
     [SerializeField]private float currentHealth; //HPバーに反映される値　(前のHPとごっちゃになった)
 
+    private bool isplayer = true;
+
     [SerializeField]public Vector3 spawnposition = new Vector3(); //キャラクターが返って来るときの位置
 
     private AsyncOperation asyncLoad;
 
-    private bool isLoading = false;
     private void Awake()
     {
         // シングルトンパターンを実装
@@ -71,11 +72,14 @@ public class BattleData : MonoBehaviour
         MaxXp = MaxXp2;
         currentHealth = currentHealth2;
     }
+    public bool isconhurikut()
+    {
+        return isplayer;
+    }
 
     public IEnumerator LoadBattleScene() //非同期処理で読み込みシーン移動
-    {
-        if (isLoading) yield break; //すでにロード中なら何もしない
-        isLoading = true;
+    {//**********************************本当にこれで最適化できてるか不安だからみる＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+        isplayer = false;
 
         asyncLoad = SceneManager.LoadSceneAsync("BattleScene");
         
@@ -96,7 +100,6 @@ public class BattleData : MonoBehaviour
         }
 
         asyncLoad = null;
-        isLoading = false; //ロード完了後にリセット
     }
     
     public IEnumerator LoadMap()
