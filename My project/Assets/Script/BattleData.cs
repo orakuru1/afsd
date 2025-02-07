@@ -76,6 +76,10 @@ public class BattleData : MonoBehaviour
     {
         return isplayer;
     }
+    public void modorusyori()
+    {
+        isplayer = true;
+    }
 
     public IEnumerator LoadBattleScene() //非同期処理で読み込みシーン移動
     {//**********************************本当にこれで最適化できてるか不安だからみる＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊

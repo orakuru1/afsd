@@ -28,20 +28,25 @@ public class CameraMove : MonoBehaviour
         target = transform;
     }
 
+    public void ChangeOffset(Vector3 vector3)
+    {
+        offset = vector3;
+    }
+
     public void rotationcamera(float duration)
     {
         StartCoroutine(KaiatenCamera(duration));
     }
-    private IEnumerator KaiatenCamera(float duration)
+    private IEnumerator KaiatenCamera(float duration)//左右に開店して、敵を見せる
     {
         isCameraMove = true;
         float elapsedTime = 0f;
-        Vector3 originalOffset = offset;
+        Vector3 originalOffset = offset;// 現在のカメラ位置を保存
         Vector3 targetOffset = (offset += new Vector3(-6f,0f,0f));
 
         while(elapsedTime < duration)
         {
-            offset = Vector3.Lerp(originalOffset, targetOffset, elapsedTime / duration);
+            offset = Vector3.Lerp(originalOffset, targetOffset, elapsedTime / duration);//だんだん回転させる
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -49,7 +54,7 @@ public class CameraMove : MonoBehaviour
         elapsedTime = 0f;
         Vector3 homeOffset = originalOffset += new Vector3(-3f,0f,0f);
 
-        while(elapsedTime < (duration / 2))
+        while(elapsedTime < (duration / 2))//上の処理の２倍の速さでやる
         {
             offset = Vector3.Lerp(targetOffset, originalOffset, elapsedTime / (duration / 2));
             elapsedTime += Time.deltaTime;
@@ -70,12 +75,13 @@ public class CameraMove : MonoBehaviour
         StartCoroutine(ZoomOutCamera(zoomAmount, duration));
     } 
 
-    private IEnumerator ZoomOutCamera(float zoomAmount, float duration)
+    private IEnumerator ZoomOutCamera(float zoomAmount, float duration) //カメラがターゲットから遠ざかる処理
     {
         while(isCameraMove == true)
         {
             yield return null;
         }
+
         float elapsedTime = 0f;
         Vector3 originalOffset = offset; // 現在のカメラ位置を保存
         Vector3 targetOffset = offset.normalized * (zoomAmount + originalOffset.magnitude) + new Vector3(0f,0f,-10f) ; // 適切なズームアウト量を計算
@@ -91,7 +97,7 @@ public class CameraMove : MonoBehaviour
 
         if(battleManager != null)
         {
-            battleManager.saisyonohyouzi();
+            //battleManager.saisyonohyouzi();//**********************************邪魔だから消しておく。本番はオン
         }
         
         //StartCoroutine(SkyCamera());
@@ -112,9 +118,10 @@ public class CameraMove : MonoBehaviour
             yield return null;
         }
 
+        offset = targetOffset;
         elapsedTime = 0f;
         
-        if(isbuck) //最初っから敵に近寄ってるほうがいいのかも
+        if(isbuck) //最初っから敵に近寄ってるほうがいいのかも*******元に戻る処理
         {
             yield return new WaitForSeconds(1f);
 
@@ -125,8 +132,10 @@ public class CameraMove : MonoBehaviour
                 yield return null;
             }
         }
+
+        offset = originalOffset;
     }
-    private IEnumerator SkyCamera()
+    private IEnumerator SkyCamera() //ターン制の基本位置*******使っていない？
     {
         target = teiten;
         Vector3 StartOffset = offset;
@@ -144,11 +153,17 @@ public class CameraMove : MonoBehaviour
 
     void LateUpdate()
     {
+        if(target == null)
+        {
+            target = teiten;
+        }
+
         if (Input.GetMouseButton(1)) // 右クリックで回転を有効にする場合
         {
             float horizontal = Input.GetAxis("Mouse X") * rotationSpeed;
             offset = Quaternion.AngleAxis(horizontal, Vector3.up) * offset;
         }
+
 
         // 目的地の位置を計算
         Vector3 desiredPosition = target.position + offset;

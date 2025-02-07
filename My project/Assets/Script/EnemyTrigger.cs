@@ -19,7 +19,7 @@ public class EnemyTrigger : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            if(BattleData.Instance.isconhurikut())
+            if(BattleData.Instance.isconhurikut())//一回だけ行われる処理
             {
                 // BattleDataに敵の情報を設定
                 BattleData.Instance.SetEnemyData(enemyName, enemyHealth);
@@ -30,8 +30,8 @@ public class EnemyTrigger : MonoBehaviour
                 //SceneManager.LoadScene(battleSceneName);
                 
                 StartCoroutine(BattleData.Instance.LoadBattleScene()); // 非同期ロード
-                SetCamera();
-                cameraMove.zoingcamera(1f,2f,false);
+                SetCamera();//プレイヤーに当たったのをターゲットしてる
+                cameraMove.zoingcamera(1f,2f,false);//カメラがズームする処理
             }
             else
             {

@@ -96,6 +96,7 @@ public class Player : MonoBehaviour
     
     private SpecialSkill specialSkill;
 
+    private CameraMove cameraMove;
 
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
 
@@ -232,7 +233,10 @@ public class Player : MonoBehaviour
             health += 50; //HPアップ
             currentHealth += 50; //バーのHPもアップ
             maxHealth += 50; //最大HPもアップ
-            healthText.text = "healthText" + 50; //テキストの数もアップ
+            if(healthText != null)
+            {
+                healthText.text = "healthText" + 50; //テキストの数もアップ
+            }
             attack += 20; //攻撃力アップ
             defence += 10; //防御力アップ
             XP = 0; //現在の経験値を０に更新　　　　(オーバーした経験値を引き継げるようにするかは考える)
@@ -270,6 +274,7 @@ public class Player : MonoBehaviour
         double ran = Random.Range(1,10); //１～９までのランダム数字(多分)
         if(ran < 4)
         {
+            BattleData.Instance.modorusyori();
             SceneManager.LoadScene("SampleScene"); //元のシーンに戻る
         }
         else
@@ -292,7 +297,7 @@ public class Player : MonoBehaviour
         if (targetEnemy != null) //敵がクリックされてる
         {
             Debug.Log($"攻撃！ {targetEnemy.gameObject.name} を攻撃します。");
-            ExecuteAttack(targetEnemy,skill,player); //選択されてる敵の情報と、生成されたスキルボタンの内容を送る
+            StartCoroutine(ExecuteAttack(targetEnemy,skill,player)); //選択されてる敵の情報と、生成されたスキルボタンの内容を送る
         }
         else
         {
@@ -304,7 +309,7 @@ public class Player : MonoBehaviour
         Invoke(nameof(StopAttack), 0.1f);
         Destroy(panel);
     }
-    private void ExecuteAttack(Enemy target,Skill skill,Player player) //実際に攻撃するところ
+    private IEnumerator ExecuteAttack(Enemy target,Skill skill,Player player) //実際に攻撃するところ
     {
         Debug.Log($"{this.name} は {skill.skillName} を使用！");
 
@@ -316,8 +321,12 @@ public class Player : MonoBehaviour
         }
         else
         {
+            cameraMove.SetUp(target.gameObject.transform);
             battleManager.ClearBattleLog();
             battleManager.AddLog($"{target.gameObject.name}を攻撃!!");
+
+            yield return new WaitForSeconds(1f); //アニメーションとか入れれるかも。
+
             int damage = Random.Range(player.attack + skill.damage + weapon[0].number,player.attack + skill.damage + weapon[0].number); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
             target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
@@ -335,6 +344,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        yield return null;
 
     }
     public void OnSpecialAction(Player player)                    ////////////////スペシャル技///////////////
@@ -509,15 +520,14 @@ public class Player : MonoBehaviour
     }
 
     void Start()
-    {
+    { 
+        cameraMove = Camera.main.GetComponent<CameraMove>();
         //currentHealth = maxHealth;
         healthBarManager = GetComponent<HealthBarManager>(); //自分に追加されてるはずのＨＰバーのスクリプトを使えるようにしてる
         UpdateHealthBar(); //現在のＨＰを反映(最初からＨＰが減ってるときのため)
         anim = GetComponent<Animator>();
-        // デバッグ用: リストにスキルを手動で追加
         //skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
         respawnPosition = transform.position; //初期位置をリスポーン位置として記録
-        
     }              
 
     // Update is called once per frame
