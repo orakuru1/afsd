@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 4518362133102338}
   - component: {fileID: 33084644472669152}
   - component: {fileID: 23305035852080942}
+  - component: {fileID: 7856604670449273593}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
@@ -277,6 +278,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7856604670449273593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076420036850812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c1a37099823cb40aafc284694e3fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDamage: 10
 --- !u!1 &1079146182250078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1703,7 +1717,6 @@ MonoBehaviour:
     price: 100
     BuckSprite: {fileID: 0}
   job: 0
-  player0: {fileID: 3760287559151789196}
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
   health: 127
@@ -1716,16 +1729,18 @@ MonoBehaviour:
   XP: 1000
   MaxXp: 1440
   currentHealth: 127
-  healthSlider: {fileID: 0}
-  healthText: {fileID: 0}
-  smoothSpeed: 0.5
-  fallThreshold: -30
-  respawnUpdateDistance: 1
   gold: 2880
-  sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
   currentGauge: 100
   maxGauge: 100
   sharp: 50
+  sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
+  fallThreshold: -30
+  respawnUpdateDistance: 1
+  smoothSpeed: 0.5
+  healthSlider: {fileID: 0}
+  healthText: {fileID: 0}
+  offset: {x: 0, y: 0, z: 0}
+  rotationSpeed: 5
 --- !u!114 &1253116640013937438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1756,11 +1771,9 @@ MonoBehaviour:
   inJumping: 0
   speed: 3
   sprintSpeed: 6
-  rotationSpeed: 150
   jumpForce: 8
   forwardJumpForce: 6
   backwardJumpForce: 3
-  movespeed: 5
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0
