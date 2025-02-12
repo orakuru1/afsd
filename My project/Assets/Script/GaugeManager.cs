@@ -40,12 +40,13 @@ public class GaugeManager : MonoBehaviour
         if (gaugeInstance != null)
         {
             // キャラクターの位置をスクリーン座標に変換
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2.3f);
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2.1f);
 
             // スクリーン座標がカメラの視野内にあるか確認
             if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
             {
                 gaugeInstance.transform.position = screenPosition;
+                gaugeInstance.SetActive(true);
             }
             else
             {

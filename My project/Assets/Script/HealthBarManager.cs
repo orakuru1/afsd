@@ -56,6 +56,7 @@ public class HealthBarManager : MonoBehaviour
             if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
             {
                 hpBarInstance.transform.position = screenPosition;
+                hpBarInstance.SetActive(true);
             }
             else
             {

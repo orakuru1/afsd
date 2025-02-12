@@ -5,16 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class EnemyTrigger : MonoBehaviour
 {
-    private string battleSceneName = "BattleScene"; // 戦闘シーンの名前
+
     [SerializeField]private string enemyName = "Goblin"; // 敵の名前
     private int enemyHealth = 100; // 敵の体力
     private bool isstart = true;
+    private CameraMove cameraMove;
+    public void SetCamera()
+    {
+        cameraMove.SetUp(this.gameObject.transform);
+    }
     // Start is called before the first frame update
     private void OnCollisionEnter(Collision collision)
     {
-        if(isstart != true)
+        if (collision.collider.CompareTag("Player"))
         {
-            if (collision.collider.CompareTag("Player"))
+            if(BattleData.Instance.isconhurikut())//一回だけ行われる処理
             {
                 // BattleDataに敵の情報を設定
                 BattleData.Instance.SetEnemyData(enemyName, enemyHealth);
@@ -22,11 +27,19 @@ public class EnemyTrigger : MonoBehaviour
                 BattleData.Instance.RePosition(collision.collider.transform.position);
 
                 // 戦闘シーンに遷移
-                SceneManager.LoadScene(battleSceneName);
+                //SceneManager.LoadScene(battleSceneName);
+                
+                StartCoroutine(BattleData.Instance.LoadBattleScene()); // 非同期ロード
+                SetCamera();//プレイヤーに当たったのをターゲットしてる
+                cameraMove.zoingcamera(1f,2f,false);//カメラがズームする処理
+            }
+            else
+            {
+                Debug.Log("バトルに入る処理をしてるよ");
             }
         }
-
     }
+
     public void TriggerStart()
     {
         isstart = false;
@@ -34,7 +47,7 @@ public class EnemyTrigger : MonoBehaviour
     
     void Start()
     {
-        
+        cameraMove = Camera.main.GetComponent<CameraMove>(); // メインカメラのスクリプトを取得
     }
 
     // Update is called once per frame

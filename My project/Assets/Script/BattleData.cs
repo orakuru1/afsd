@@ -1,26 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class BattleData : MonoBehaviour
 {
     public static BattleData Instance { get; private set; }
-
-    //public GameObject enemyPrefab; // 戦闘シーンに持っていく敵のPrefab
-    public string enemyName;       // 敵の名前などの情報
-    public int enemyHealth;        // 敵の体力
-    [SerializeField]private string playername;
-    [SerializeField]private int health; //死んだ処理のHP
-    [SerializeField]private float maxHealth;//一緒になってる
     [SerializeField]private int attack; //攻撃力
     [SerializeField]private int defence; //防御力
     [SerializeField]private int Speed;
     [SerializeField]private int LV; //現在のレベル
+    [SerializeField]private int health; //死んだ処理のHP
+    public int enemyHealth;        // 敵の体力
+
+    public List<string> mainplayers = new List<string>();
+    public string enemyName;       // 敵の名前などの情報
+    [SerializeField]private string playername;
+
     [SerializeField]private double XP; //現在の経験値
     [SerializeField]private double MaxXp; //次のレベルアップの値
+
+    [SerializeField]private float maxHealth;//一緒になってる
     [SerializeField]private float currentHealth; //HPバーに反映される値　(前のHPとごっちゃになった)
+
+    private bool isplayer = true;
+
     [SerializeField]public Vector3 spawnposition = new Vector3(); //キャラクターが返って来るときの位置
-    public List<string> mainplayers = new List<string>();
+
+    private AsyncOperation asyncLoad;
 
     private void Awake()
     {
@@ -66,10 +72,60 @@ public class BattleData : MonoBehaviour
         MaxXp = MaxXp2;
         currentHealth = currentHealth2;
     }
+    public bool isconhurikut()
+    {
+        return isplayer;
+    }
+    public void modorusyori()
+    {
+        isplayer = true;
+    }
+
+    public IEnumerator LoadBattleScene() //非同期処理で読み込みシーン移動
+    {//**********************************本当にこれで最適化できてるか不安だからみる＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
+        isplayer = false;
+
+        asyncLoad = SceneManager.LoadSceneAsync("BattleScene");
+        
+        asyncLoad.allowSceneActivation = false; // シーンの切り替えを一時停止
+
+        while (!asyncLoad.isDone) 
+        {
+            // 90% 以上読み込まれたら切り替え
+            if (asyncLoad.progress >= 0.9f)//0.9で止まる。falseにしてると発動しない。trueで１になる
+            {
+                Resources.UnloadUnusedAssets();
+
+                yield return new WaitForSeconds(1.5f);
+                asyncLoad.allowSceneActivation = true; // シーン遷移を許可
+
+            }
+            yield return null;
+        }
+
+        asyncLoad = null;
+    }
+    
+    public IEnumerator LoadMap()
+    {
+        asyncLoad = SceneManager.LoadSceneAsync("SampleScene");
+        
+        asyncLoad.allowSceneActivation = false; // シーンの切り替えを一時停止
+
+        while (!asyncLoad.isDone)
+        {
+            // 90% 以上読み込まれたら切り替え
+            if (asyncLoad.progress >= 0.9f)
+            {
+                asyncLoad.allowSceneActivation = true; // シーン遷移を許可
+            }
+            yield return null;
+        }
+    }
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
