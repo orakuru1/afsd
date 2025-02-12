@@ -50,7 +50,7 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
             //NowPlayer3 = fast2;
             cameraMove.SetUp(NowPlayer.transform);
             playernames.Add(fast.GetComponent<Player>().pn); //インスタンス化された奴の名前を覚えさせる。名前で判断する仲間の数
-            playernames.Add("otamesi"); //お試しで仲間を増やしてる
+            playernames.Add("mahou"); //お試しで仲間を増やしてる
             players.Add(fast);
             ScriptPlayers.Add(fast.GetComponent<Player>());
             NowPlayer2.GetComponent<EnemyTG>().aaaa();

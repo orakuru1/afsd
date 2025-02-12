@@ -23,7 +23,16 @@ public class EnemyRangedAttack : MonoBehaviour
 
     public void bbbb()
     {
-        player = ChangeCharacter.ScriptPlayers[0].gameObject.transform;
+        //プレイヤーをタグで自動取得
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        if(playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+        else
+        {
+            Debug.Log("見つかりません");
+        }
     }
     
 
@@ -85,6 +94,7 @@ public class EnemyRangedAttack : MonoBehaviour
         lastAttackTime = Time.time; // 攻撃間隔のリセット
 
         Debug.Log("プレイヤーに向けて攻撃しました！");
+        Destroy(projectile, 3f);
     }
 }
 

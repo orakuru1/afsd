@@ -105,25 +105,51 @@ public class chara : MonoBehaviour
             onGround = false;
             inJumping = true;
 
+            //プレイヤーの向いている方向に前進する力を加える
+            if(Input.GetKey(KeyCode.W))
+            {
+                Vector3 forwardJump = transform.forward * forwardJumpForce;
+                rb.AddForce(forwardJump, ForceMode.Impulse);
+            }
+            else if(Input.GetKey(KeyCode.S))
+            {
+                Vector3 forwardJump = transform.forward * forwardJumpForce;
+                rb.AddForce(forwardJump, ForceMode.Impulse);
+            }
+            else if(Input.GetKey(KeyCode.A))
+            {
+                Vector3 forwardJump = transform.forward * forwardJumpForce;
+                rb.AddForce(forwardJump, ForceMode.Impulse);
+            }
+            else if(Input.GetKey(KeyCode.D))
+            {
+                Vector3 forwardJump = transform.forward * forwardJumpForce;
+                rb.AddForce(forwardJump, ForceMode.Impulse);
+            }
+            
+
             anim.SetBool("walking", false);
         }
     }
 
     private void HandleAttack()
     {
-        if (Input.GetMouseButtonDown(0) && !isAttacking)
+        if (Input.GetMouseButtonDown(0) )
         {
-            isAttacking = true;
-            anim.SetTrigger("attack");
+            
+            anim.SetBool("attack",true);
 
             StartCoroutine(ResetAttack());
         }
+
+        
     }
 
     private IEnumerator ResetAttack()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.01f);
         isAttacking = false;
+        anim.SetBool("attack",false);
     }
 
     private void OnCollisionEnter(Collision col)

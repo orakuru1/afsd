@@ -13,7 +13,8 @@ public class EnemyHP : MonoBehaviour
 
     public Slider shieldSlider;  //シールドバー用スライダー
 
-    public float shieldDamageMultiplier = 1.3f; //シールドへのダメージ倍率
+    public float shieldDamageMultiplier = 1.1f; //シールドへのダメージ倍率
+    public float smoothSpeed = 5f;  //スライダーの減少スピード
 
     void Start()
     {
@@ -21,6 +22,19 @@ public class EnemyHP : MonoBehaviour
         currentShield = maxShield;
 
         UpdateHPUI(); // 初期状態のUI更新
+    }
+
+    void Update()
+    {
+        //スライダーをスムーズに更新
+        if(shieldSlider != null)
+        {
+            shieldSlider.value = Mathf.Lerp(shieldSlider.value, (float) currentShield / maxShield, Time.deltaTime * smoothSpeed);
+        }
+        if(hpSlider != null)
+        {
+            hpSlider.value = Mathf.Lerp(hpSlider.value, (float)currentHP / maxHP, Time.deltaTime * smoothSpeed);
+        }
     }
 
     // ダメージを受ける処理

@@ -658,8 +658,10 @@ GameObject:
   - component: {fileID: 5663715490771874123}
   - component: {fileID: -3587727548829927082}
   - component: {fileID: 814358144672151781}
+  - component: {fileID: 3667553809602528564}
+  - component: {fileID: -4017391346922140141}
   m_Layer: 0
-  m_Name: PolyArtWizardStandardMat
+  m_Name: mahou
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -764,18 +766,64 @@ MonoBehaviour:
   skills: []
   weapon: []
   armor: []
+  job: 0
+  Spn: 
   pn: PolyArtWizardStandardMat
   health: 0
   maxHealth: 0
   attack: 0
   defence: 0
   Speed: 0
+  Mp: 0
   LV: 0
   XP: 0
   MaxXp: 0
   currentHealth: 0
   gold: 0
-  sprite: {fileID: 0}
+  currentGauge: 0
+  maxGauge: 0
+  sharp: 0
+  sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
+  fallThreshold: -30
+  respawnUpdateDistance: 1
+  smoothSpeed: 0.5
+  healthSlider: {fileID: 0}
+  healthText: {fileID: 0}
+  offset: {x: 0, y: 0, z: 0}
+  rotationSpeed: 5
+--- !u!114 &3667553809602528564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248815240492774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4bdf1377da18a6449e9718053278347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onGround: 1
+  inJumping: 0
+  speed: 3
+  sprintSpeed: 6
+  jumpForce: 8
+  forwardJumpForce: 6
+  backwardJumpForce: 3
+--- !u!114 &-4017391346922140141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248815240492774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26ab673cbed0be4e80fc63992ec2cd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleSpeed: 1
+  minScaleY: 0.5
 --- !u!1 &1251583507443948
 GameObject:
   m_ObjectHideFlags: 0
