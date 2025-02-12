@@ -7,9 +7,14 @@ public class CameraMove : MonoBehaviour
     public Transform target;       // 追従するキャラクター（例えばプレイヤー）のTransform
     [SerializeField]private Transform teiten;
     public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
+    private Vector3 SavePosition = new Vector3();
+
     public float smoothSpeed = 0.125f; // カメラ追従のスムーズさ
     public float rotationSpeed = 5.0f;
+
     private bool isCameraMove = false;
+    private bool isScene = false;
+
     [SerializeField]private BattleManager battleManager;
     // Start is called before the first frame update
     void Start()
@@ -28,15 +33,23 @@ public class CameraMove : MonoBehaviour
         target = transform;
     }
 
-    public void ChangeOffset(Vector3 vector3)
+    public void CharacterToEnemy(Vector3 PlayerPosition) //カメラの位置をキャラクターの上に変える。スムーズに動けるようにしたい
     {
-        offset = vector3;
+        SavePosition = transform.position;
+        transform.position = PlayerPosition + new Vector3(0f,2.5f,-4f);
+    }
+    public IEnumerator ComeBuckCamera() //位置を元に戻す
+    {
+        yield return new WaitForSeconds(1f);
+        transform.position = SavePosition;
+        target = teiten;
     }
 
     public void rotationcamera(float duration)
     {
         StartCoroutine(KaiatenCamera(duration));
     }
+
     private IEnumerator KaiatenCamera(float duration)//左右に開店して、敵を見せる
     {
         isCameraMove = true;
@@ -99,6 +112,8 @@ public class CameraMove : MonoBehaviour
         {
             //battleManager.saisyonohyouzi();//**********************************邪魔だから消しておく。本番はオン
         }
+
+        isScene = true;
         
         //StartCoroutine(SkyCamera());
     }
@@ -151,11 +166,12 @@ public class CameraMove : MonoBehaviour
         
     }
 
-    void LateUpdate()
+    void LateUpdate()//*******プレイヤーが攻撃した後に２段階でカメラの視点が変わってる。どうしよう
     {
         if(target == null)
         {
-            target = teiten;
+            //  カメラを元に戻す前に何かアニメーションを入れて違和感なくしたい。
+            StartCoroutine(ComeBuckCamera());
         }
 
         if (Input.GetMouseButton(1)) // 右クリックで回転を有効にする場合
@@ -164,12 +180,15 @@ public class CameraMove : MonoBehaviour
             offset = Quaternion.AngleAxis(horizontal, Vector3.up) * offset;
         }
 
+        if(isScene == false)
+        {
+            // 目的地の位置を計算
+            Vector3 desiredPosition = target.position + offset;
+            // スムーズにカメラを移動させる
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition + new Vector3(0f,1f,0f), smoothSpeed);
+            transform.position = smoothedPosition;
+        }
 
-        // 目的地の位置を計算
-        Vector3 desiredPosition = target.position + offset;
-        // スムーズにカメラを移動させる
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
-        transform.position = smoothedPosition;
 
         // カメラをキャラクターの方向に向ける
         transform.LookAt(target);

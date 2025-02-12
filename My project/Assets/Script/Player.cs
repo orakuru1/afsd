@@ -321,7 +321,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            cameraMove.SetUp(target.gameObject.transform);
+            cameraMove.CharacterToEnemy(this.transform.position);
+            cameraMove.SetUp(target.gameObject.transform); //カメラが敵を向くように
             battleManager.ClearBattleLog();
             battleManager.AddLog($"{target.gameObject.name}を攻撃!!");
 
@@ -331,6 +332,11 @@ public class Player : MonoBehaviour
             target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
             eneguage.FillGauge(sharp);
+            
+            yield return new WaitForSeconds(1f);
+
+            StartCoroutine(cameraMove.ComeBuckCamera());
+
             battleManager.ClearBattleLog();
             foreach(var type in ActiveBuffs.Keys)  //バフがたくさんあったらバトルログに入りきらない
             {

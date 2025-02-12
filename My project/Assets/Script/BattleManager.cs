@@ -344,7 +344,8 @@ public class BattleManager : MonoBehaviour
 
         yield return new WaitForSeconds(2f); // デモ用の遅延
 
-        cameraMove.SetUp(enemySpawnPoint);
+        //cameraMove.SetUp(enemySpawnPoint);
+        //cameraMove.ComeBuckCamera();
     }
 
     IEnumerator EnemyTurn(Enemy enemy)

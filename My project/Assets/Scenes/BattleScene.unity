@@ -1515,7 +1515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1947670954}
-  teiten: {fileID: 1947670954}
+  teiten: {fileID: 1760288180}
   offset: {x: 3, y: 1, z: -5}
   smoothSpeed: 0.125
   rotationSpeed: 5
