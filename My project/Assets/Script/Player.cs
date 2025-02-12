@@ -97,6 +97,9 @@ public class Player : MonoBehaviour
     private SpecialSkill specialSkill;
 
     private CameraMove cameraMove;
+    public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
+    public float rotationSpeed = 5.0f;
+
 
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
 
@@ -525,6 +528,15 @@ public class Player : MonoBehaviour
         //Debug.Log("リスポーン位置を更新："　+ respawnPosition);
     }
 
+    void LateUpdate()
+    {
+    if (Input.GetMouseButton(1)) // 右クリックで回転を有効にする場合
+    {
+        float horizontal = Input.GetAxis("Mouse X") * rotationSpeed;
+        offset = Quaternion.AngleAxis(horizontal, Vector3.up) * offset;
+    }
+    }
+
     void Start()
     { 
         cameraMove = Camera.main.GetComponent<CameraMove>();
@@ -539,6 +551,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       
+
         //一定距離移動したらリスポーン位置を更新
         if(isGrounded && Vector3.Distance(respawnPosition, transform.position) >= respawnUpdateDistance)
         {

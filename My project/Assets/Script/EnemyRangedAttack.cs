@@ -34,6 +34,8 @@ public class EnemyRangedAttack : MonoBehaviour
 
     void Update()
     {
+        if(player!=null)
+        {
         // プレイヤーとの距離を計算
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
@@ -59,6 +61,8 @@ public class EnemyRangedAttack : MonoBehaviour
             hpBarCanvas.SetActive(false);
             anim.SetBool("attack", false);
         }
+        }
+
     }
 
     void AimAtPlayer()

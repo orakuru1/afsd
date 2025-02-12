@@ -3,30 +3,54 @@ using UnityEngine.UI;
 
 public class EnemyHP : MonoBehaviour
 {
-    public int maxHP = 100; // 最大HP
+    public int maxHP = 100;    // 最大HP
+    public int maxShield = 50; //最大シールド
     private int currentHP;
+    private int currentShield;
 
     public Slider hpSlider; // HPバー用スライダー
-    public Text hpText; // HPを表示するテキスト
+    public Text hpText;     // HPを表示するテキスト
+
+    public Slider shieldSlider;  //シールドバー用スライダー
+
+    public float shieldDamageMultiplier = 1.3f; //シールドへのダメージ倍率
 
     void Start()
     {
         currentHP = maxHP; // 初期化
+        currentShield = maxShield;
+
         UpdateHPUI(); // 初期状態のUI更新
     }
 
     // ダメージを受ける処理
     public void TakeDamage(int damage)
     {
-        currentHP -= damage;
-        currentHP = Mathf.Clamp(currentHP, 0, maxHP); // HPを0～maxHPに制限
-      
-
-        UpdateHPUI(); // UIを更新
-
-        if (currentHP <= 0)
+        if(currentShield > 0)
         {
-            Die(); // HPが0になったら死亡処理
+            //シールドは通常ダメージの1.3倍受ける
+            int shieldDamage = Mathf.RoundToInt(damage * shieldDamageMultiplier);
+            currentShield -= shieldDamage;
+
+            //シールドがマイナスになった場合、余ったダメージをHPへ
+            if(currentShield < 0)
+            {
+                currentHP += currentShield;  //currentShieldが負の値なので、その分だけHPを減らす
+                currentShield = 0;
+            }
+        }
+        else
+        {
+            currentHP -= damage;
+        }
+
+        currentHP = Mathf.Clamp(currentHP, 0, maxHP); //HPを0～maxHPに制限
+
+        UpdateHPUI(); //UI更新
+
+        if(currentHP <= 0)
+        {
+            Die();
         }
     }
 
@@ -41,6 +65,11 @@ public class EnemyHP : MonoBehaviour
         if (hpText != null)
         {
             hpText.text = $"{currentHP} / {maxHP}"; // HPテキストの更新
+        }
+
+        if(shieldSlider != null)
+        {
+            shieldSlider.value = (float)currentShield / maxShield;
         }
     }
 

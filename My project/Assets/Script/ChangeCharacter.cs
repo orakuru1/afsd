@@ -32,17 +32,22 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
                 playernames.Add(str);
             }
             GameObject playerprefab = (GameObject)Resources.Load(BattleData.Instance.mainplayers[0]);
-            GameObject instance = Instantiate(playerprefab, spawnposition, Quaternion.identity);
+            GameObject instance = Instantiate(playerprefab, spanposition.position, Quaternion.identity);
             NowPlayer = instance;
             cameraMove.SetUp(NowPlayer.transform);
             players.Add(instance);
             ScriptPlayers.Add(instance.GetComponent<Player>());
+            NowPlayer3.GetComponent<EnemyRangedAttack>().bbbb();
             SpawnCharaButton();
         }
         else
         {
             GameObject fast = Instantiate(NowPlayer,spanposition.position,Quaternion.identity);
+            //GameObject fast1 = Instantiate(NowPlayer2,spanposition.position,Quaternion.identity);
+           //GameObject fast2 = Instantiate(NowPlayer3,spanposition.position,Quaternion.identity);
             NowPlayer = fast;
+           // NowPlayer2 = fast1;
+            //NowPlayer3 = fast2;
             cameraMove.SetUp(NowPlayer.transform);
             playernames.Add(fast.GetComponent<Player>().pn); //インスタンス化された奴の名前を覚えさせる。名前で判断する仲間の数
             playernames.Add("otamesi"); //お試しで仲間を増やしてる
