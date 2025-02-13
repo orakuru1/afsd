@@ -36,7 +36,7 @@ public class CameraMove : MonoBehaviour
     public void CharacterToEnemy(Vector3 PlayerPosition) //カメラの位置をキャラクターの上に変える。スムーズに動けるようにしたい
     {
         SavePosition = transform.position;
-        transform.position = PlayerPosition + new Vector3(0f,2.5f,-4f);
+        transform.position = PlayerPosition + new Vector3(0f,2.5f,-3f);
     }
     public IEnumerator ComeBuckCamera() //位置を元に戻す
     {
@@ -110,7 +110,7 @@ public class CameraMove : MonoBehaviour
 
         if(battleManager != null)
         {
-            //battleManager.saisyonohyouzi();//**********************************邪魔だから消しておく。本番はオン
+            battleManager.saisyonohyouzi();//**********************************邪魔だから消しておく。本番はオン
         }
 
         isScene = true;

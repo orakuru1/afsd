@@ -768,7 +768,7 @@ MonoBehaviour:
   armor: []
   job: 0
   Spn: 
-  pn: PolyArtWizardStandardMat
+  pn: mahou
   health: 0
   maxHealth: 0
   attack: 0

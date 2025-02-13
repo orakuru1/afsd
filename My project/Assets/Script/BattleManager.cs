@@ -22,6 +22,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] public Transform panerspawn; // ボタンを配置する親オブジェクト
 
     public Text battleLog;           // バトルログを表示するUI
+    [SerializeField]private Text SulidoText; //誰かのターンテキスト
 
     public GameObject hpBarPrefab; // HPバーのPrefab
 
@@ -55,18 +56,21 @@ public class BattleManager : MonoBehaviour
     private bool stayturn = false;
 
     private string colorCode;
+    private string blueColor;
     private List<string> EnemyName = new List<string>();
     
     private Animator anim;
+    [SerializeField]private Animator SlidoAnimation;
 
     private CameraMove cameraMove;
     
     void Start()
     {
-        //saisyonohyouzi(); //邪魔だからオフにしておく
+        saisyonohyouzi(); //邪魔だからオフにしておく
         cameraMove = Camera.main.GetComponent<CameraMove>(); // メインカメラのスクリプトを取得
 
         colorCode = ColorUtility.ToHtmlStringRGB(Color.red);//カラーの色を設定
+        blueColor = ColorUtility.ToHtmlStringRGB(Color.blue);
 
         oomoto.Add(player);
         oomoto.Add(SecondPlayer);
@@ -283,6 +287,7 @@ public class BattleManager : MonoBehaviour
                 }
                 else if (character is Enemy enemy && enemy.health > 0) // 生存している場合
                 {
+                    SlidoAnimation.SetTrigger("NewTurn");
                     Debug.Log($" {enemy.name} のターン");
                     yield return EnemyTurn(enemy);
                 }
@@ -312,8 +317,17 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
 
+        SulidoText.text = $"<color=#{blueColor}>{player.pn} のターン！</color>";
+
+        SlidoAnimation.ResetTrigger("NewTurn");
+        SlidoAnimation.SetTrigger("NewTurn");
+
+        yield return new WaitForSeconds(0.5f);
+
+        SlidoAnimation.ResetTrigger("NewTurn");
+        SlidoAnimation.SetTrigger("NewTurn");
         GaugeManager gaugeManager = player.GetComponent<GaugeManager>();
-        gaugeManager.FillGauge(10f);
+        gaugeManager.FillGauge(10f); //ゲージを増やす
         battleLog.text = $"{player.name} のターン！";
 
         if(attackbotton.activeSelf == false)
@@ -351,11 +365,23 @@ public class BattleManager : MonoBehaviour
     IEnumerator EnemyTurn(Enemy enemy)
     {
 
-        while(stayturn == true)
+        while(stayturn == true)//アニメーションをしてる間は何もしない
         {
             yield return null;
         }
+
+        SulidoText.text = $"<color=#{colorCode}>{enemy.en} のターン！</color>";
+
+        SlidoAnimation.ResetTrigger("NewTurn"); //誰かのターンのテキストを出す
+        SlidoAnimation.SetTrigger("NewTurn");
+
+        yield return new WaitForSeconds(0.5f);
+
+        SlidoAnimation.ResetTrigger("NewTurn");
+        SlidoAnimation.SetTrigger("NewTurn");
         battleLog.text = $"{enemy.name} のターン！";
+        
+
         yield return new WaitForSeconds(2f);
 
             int playernumber;
@@ -365,8 +391,7 @@ public class BattleManager : MonoBehaviour
             playernumber = Random.Range(0,players.Count);
             targetPlayer = players[playernumber];
         }
-        while(targetPlayer.health <= 0);
-
+        while(targetPlayer.health <= 0);//HPが０の味方には攻撃しない
 
         if(attackbotton.activeSelf == true)
         {
