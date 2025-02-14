@@ -33,6 +33,7 @@ public class EnemyDestroyGuage : MonoBehaviour
             if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
             {
                 Guage.transform.position = screenPosition;
+                Guage.SetActive(true); 
             }
             else
             {

@@ -168,6 +168,7 @@ MonoBehaviour:
   health: 50
   maxHealth: 50
   enemyname: Goblin
+  en: 
   AT: 10
   DF: 10
   Speed: 20

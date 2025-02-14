@@ -19,7 +19,8 @@ public class BattleManager : MonoBehaviour
     public Transform enemySpawnPoint0; // 敵を生成する位置
     public Transform enemySpawnPoint1; // 敵を生成する位置
     public Transform hpBarParent; // HPバーの親（Canvas）
-    [SerializeField] public Transform panerspawn; // ボタンを配置する親オブジェクト
+    [SerializeField]private Transform panerspawn; // ボタンを配置する親オブジェクト
+    [SerializeField]private Transform LevelupPanel;
 
     public Text battleLog;           // バトルログを表示するUI
     [SerializeField]private Text SulidoText; //誰かのターンテキスト
@@ -34,6 +35,7 @@ public class BattleManager : MonoBehaviour
 
     private List<GameObject> PlayerObject = new List<GameObject>(); //プレイヤーのオブジェクトのほう
     private List<GameObject> insta = new List<GameObject>();
+    private List<GameObject> LvLog = new List<GameObject>();
     private GameObject Instance;    //キャラクター生成用
     private GameObject guagebutton;
     private GameObject panelTransform;
@@ -45,11 +47,10 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject attackbotton; // 技選択UIパネル
     [SerializeField] private GameObject escapebotton; // 技選択UIパネル
     [SerializeField]private GameObject GuageBar;
+    [SerializeField]private GameObject LevelupLog;
 
-    private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
-    [SerializeField]private Player player;            // プレイヤーのスクリプト
+    [SerializeField]private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
     [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
-    [SerializeField]private Player SecondPlayer;
 
     private bool actionSelected = false;
     private bool attackakuction = false;
@@ -71,9 +72,6 @@ public class BattleManager : MonoBehaviour
 
         colorCode = ColorUtility.ToHtmlStringRGB(Color.red);//カラーの色を設定
         blueColor = ColorUtility.ToHtmlStringRGB(Color.blue);
-
-        oomoto.Add(player);
-        oomoto.Add(SecondPlayer);
 
         //EnemyName.Add("Goblin");
         //EnemyName.Add("suraimu");
@@ -157,6 +155,7 @@ public class BattleManager : MonoBehaviour
         fadeImage.color = new Color(0, 0, 0, 1); // 最終的に完全に暗くする
     }
 
+/*
     void SyncPlayerStats() //昔のオブザーバーを使ったステータス更新　=>　今は使ってない
     {
         player.health = ScriptPlayer.health;
@@ -176,6 +175,7 @@ public class BattleManager : MonoBehaviour
 
         // 必要に応じて他の値も同期
     }
+*/
 
     void CreateHealthBarFor(GameObject character)//HPばーを生成
     {
@@ -295,7 +295,6 @@ public class BattleManager : MonoBehaviour
                 // バトル終了条件を確認
                 if (IsBattleOver())
                 {
-                    StartCoroutine(EndBattleSequence());
                     yield break;
                 }
             }
@@ -409,7 +408,17 @@ public class BattleManager : MonoBehaviour
         {
             // 敵の行動処理を実装
             int damage = Random.Range(enemy.AT - 5, enemy.AT + 5);
-            damage -= (targetPlayer.armor[0].number + targetPlayer.defence);
+            if(targetPlayer.armor.Count == 0)
+            {
+                Debug.Log("防具ないよ");
+                damage -= targetPlayer.defence;
+            }
+            else
+            {
+                Debug.Log("防具あるよ");
+                damage -= (targetPlayer.armor[0].number + targetPlayer.defence);
+            }
+            
             if (damage < 0) damage = 0;
 
             // 攻撃演出をここでいれたい
@@ -458,19 +467,6 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         anim.SetBool("attack", false);
         //Debug.Log($"{enemy.name} の攻撃アニメーションが再生されます！");
-    }
-
-    void EndBattle2(bool isPlayerWin)
-    {
-        if (isPlayerWin)
-        {
-            battleLog.text += "\nプレイヤーの勝利！";
-        }
-        else
-        {
-            StartCoroutine(EndBattleSequence());
-            battleLog.text += "\nプレイヤーの敗北...";
-        }
     }
 
     void SetupBattle()//キャラクターや敵を生成
@@ -526,18 +522,14 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void EndBattle()//勝ったとき
+
+    private IEnumerator RastLog()//+************************************************
     {
-        // BattleDataの情報をリセット（必要に応じて）
-        BattleData.Instance.modorusyori();
-
-        foreach(Player player in players)
-        {
-            player.RemoveBuffe();
-        }
-
-        StatusOver();
-        BattleData.Instance.SetEnemyData( "", 0);
+        yield return new WaitForSeconds(1f);
+        battleLog.text = $"\nあなたたちの勝ちでーす";
+        battleLog.text += $"\nあなたたちの勝ちでーす";
+        battleLog.text += $"\nあなたたちの勝ちでーす";
+        yield return new WaitForSeconds(1f);
 
         // フィールドシーンに戻る
         SceneManager.LoadScene("GAMEMAPP");
@@ -553,15 +545,34 @@ public class BattleManager : MonoBehaviour
     {
         foreach(Player player in players)
         {
-            if(player.pn == "RPGHeroHP")
+            switch (player.job)//************************************リストより重いが,早い。アイテム等の処理は使うとよいだろう
             {
-                player.SetSpecialSkill(player.gameObject.AddComponent<AOESpecial>());
-            }
-            else if(player.pn == "otamesi")
-            {
-                player.SetSpecialSkill(player.gameObject.AddComponent<HealAllSpecial>());
+                case Job.None:
+                    break;
+                case Job.Worrier:
+                    player.SetSpecialSkill(player.gameObject.AddComponent<AOESpecial>());
+                    break;
+                case Job.Magic:
+                    player.SetSpecialSkill(player.gameObject.AddComponent<HealAllSpecial>());
+                    break;
             }
         }
+    }
+
+    public IEnumerator LevelUp(string beforeStr, string afterStr, string StatsName)
+    {
+        foreach(GameObject GO in LvLog)
+        {
+            Destroy(GO);
+        }
+        yield return null;
+
+        Debug.Log("レベルアップされた奴ら");
+        GameObject Log = Instantiate(LevelupLog, LevelupPanel);
+        LvLog.Add(Log);
+        Text LVLog = Log.GetComponent<Text>();
+        LVLog.text = $"{StatsName}は{beforeStr} => {afterStr}";
+        yield return null;
     }
     
     public void StatusOver()//ステータスの更新処理******いずれ他の更新処理に変えたい
@@ -588,6 +599,37 @@ public class BattleManager : MonoBehaviour
                     player2.job = player.job;
                 }
             }
+        }
+    }
+
+    public void EndBattle()//勝ったとき***************************************
+    {
+        // BattleDataの情報をリセット（必要に応じて）
+        BattleData.Instance.modorusyori();
+
+        foreach(Player player in players)
+        {
+            player.RemoveBuffe();
+        }
+
+        StatusOver();
+        BattleData.Instance.SetEnemyData( "", 0);
+
+        //勝ったときのログ
+        StartCoroutine(RastLog());
+
+    }
+
+    void EndBattle2(bool isPlayerWin)//死んだとき
+    {
+        if (isPlayerWin)
+        {
+            battleLog.text += "\nプレイヤーの勝利！";
+        }
+        else
+        {
+            StartCoroutine(EndBattleSequence());
+            battleLog.text += "\nプレイヤーの敗北...";
         }
     }
 

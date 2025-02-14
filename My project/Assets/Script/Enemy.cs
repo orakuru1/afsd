@@ -94,8 +94,8 @@ public class Enemy : MonoBehaviour
     private void Die(Player player)
     {
         // 敵が死亡する処理（例: エフェクトやスコアの増加など）
-        player.LevelUp(EXP);
         player.GetGolrd(DropGorld);
+        player.LevelUp(EXP);
         Destroy(this.gameObject);
     }
     // Start is called before the first frame update
