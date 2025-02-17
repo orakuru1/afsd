@@ -75,6 +75,7 @@ public class Player : MonoBehaviour
     [SerializeField]public Sprite sprite;
 
     //*************************ここまでプレイヤーのステータス
+
     public static bool attackmotion = false;
     public static bool damagemotion = false;
     public static bool diemotion = false;
@@ -99,7 +100,6 @@ public class Player : MonoBehaviour
     private CameraMove cameraMove;
     public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
     public float rotationSpeed = 5.0f;
-
 
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
 
@@ -238,12 +238,19 @@ public class Player : MonoBehaviour
         int prevSpeed = Speed;
         int prevMp = Mp;
         int prevLV = LV;
+        bool islevelup = false;
 
         XP += experience; //今の経験値に送られてきた経験値の計算
-        battleManager.AddLog($"{pn}は{experience}の経験値を得た!");
-        
-        if(XP >= MaxXp) //レベルアップに達しているかどうか
+
+        if(battleManager != null)
         {
+            battleManager.AddLog($"{pn}は{experience}の経験値を得た!");
+        }
+
+        
+        while(XP >= MaxXp) //レベルアップに達しているかどうか
+        {
+            islevelup = true;
             health += 50; //HPアップ
             currentHealth += 50; //バーのHPもアップ
             maxHealth += 50; //最大HPもアップ
@@ -280,7 +287,14 @@ public class Player : MonoBehaviour
                     break;
             }
 
-            
+            XP = (int)AfterXp;
+
+        }
+
+        if(battleManager != null && islevelup == true)
+        {
+            battleManager.ItaDeret();
+            Debug.Log("afewdfa");
             if (LV > prevLV) StartCoroutine(battleManager.LevelUp(prevLV.ToString(), LV.ToString(), $"{pn}のレベル"));
             if (health > prevHealth) StartCoroutine(battleManager.LevelUp(prevHealth.ToString(), health.ToString(), "体力"));
             if (maxHealth > prevMaxHealth) StartCoroutine(battleManager.LevelUp(prevMaxHealth.ToString(), maxHealth.ToString(), "最大値"));
@@ -288,17 +302,14 @@ public class Player : MonoBehaviour
             if (defence > prevDefence) StartCoroutine(battleManager.LevelUp(prevDefence.ToString(), defence.ToString(), "防御力"));
             if (Speed > prevSpeed) StartCoroutine(battleManager.LevelUp(prevSpeed.ToString(), Speed.ToString(), "速度"));
             if (Mp > prevMp) StartCoroutine(battleManager.LevelUp(prevMp.ToString(), Mp.ToString(), "魔力"));
-
-            if(AfterXp >= 0)
-            {
-                Debug.Log("繰り越し");
-                LevelUp((int)AfterXp);
-            }
-
         }
 
         //OnStatsUpdated?.Invoke(); // 通知を送信
-        battleManager.StatusOver();
+        if(battleManager != null)
+        {
+            battleManager.StatusOver();
+        }
+
         UpdateHealthBar();
 
         //BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);

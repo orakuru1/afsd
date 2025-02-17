@@ -20,7 +20,6 @@ public class BattleManager : MonoBehaviour
     public Transform enemySpawnPoint1; // 敵を生成する位置
     public Transform hpBarParent; // HPバーの親（Canvas）
     [SerializeField]private Transform panerspawn; // ボタンを配置する親オブジェクト
-    [SerializeField]private Transform LevelupPanel;
 
     public Text battleLog;           // バトルログを表示するUI
     [SerializeField]private Text SulidoText; //誰かのターンテキスト
@@ -35,7 +34,7 @@ public class BattleManager : MonoBehaviour
 
     private List<GameObject> PlayerObject = new List<GameObject>(); //プレイヤーのオブジェクトのほう
     private List<GameObject> insta = new List<GameObject>();
-    private List<GameObject> LvLog = new List<GameObject>();
+    [SerializeField]private List<GameObject> LvLog = new List<GameObject>();
     private GameObject Instance;    //キャラクター生成用
     private GameObject guagebutton;
     private GameObject panelTransform;
@@ -48,6 +47,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject escapebotton; // 技選択UIパネル
     [SerializeField]private GameObject GuageBar;
     [SerializeField]private GameObject LevelupLog;
+    [SerializeField]private GameObject LevelupPanel;
+    [SerializeField]private GameObject transparentButton;
 
     [SerializeField]private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
     [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
@@ -67,6 +68,8 @@ public class BattleManager : MonoBehaviour
     
     void Start()
     {
+        transparentButton.SetActive(false);
+        LevelupPanel.SetActive(false);
         saisyonohyouzi(); //邪魔だからオフにしておく
         cameraMove = Camera.main.GetComponent<CameraMove>(); // メインカメラのスクリプトを取得
 
@@ -106,6 +109,13 @@ public class BattleManager : MonoBehaviour
         BattleLog.SetActive(!BattleLog.activeSelf);
         attackbotton.SetActive(!attackbotton.activeSelf);
         escapebotton.SetActive(!escapebotton.activeSelf);
+    }
+
+    public void LevelUpButton()
+    {
+        stayturn = !stayturn;
+        transparentButton.SetActive(!transparentButton.activeSelf);
+        LevelupPanel.SetActive(!LevelupPanel.activeSelf);
     }
 
     public void GenerateSkillButtons(Player player)//プレイヤーのスキルを生成
@@ -311,6 +321,7 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator PlayerTurn(Player player)
     {
+
         while(stayturn == true)
         {
             yield return null;
@@ -318,13 +329,12 @@ public class BattleManager : MonoBehaviour
 
         SulidoText.text = $"<color=#{blueColor}>{player.pn} のターン！</color>";
 
-        SlidoAnimation.ResetTrigger("NewTurn");
-        SlidoAnimation.SetTrigger("NewTurn");
+        SlidoAnimation.SetBool("TurnBool", true);
 
         yield return new WaitForSeconds(0.5f);
 
-        SlidoAnimation.ResetTrigger("NewTurn");
-        SlidoAnimation.SetTrigger("NewTurn");
+        SlidoAnimation.SetBool("TurnBool", false);
+
         GaugeManager gaugeManager = player.GetComponent<GaugeManager>();
         gaugeManager.FillGauge(10f); //ゲージを増やす
         battleLog.text = $"{player.name} のターン！";
@@ -363,7 +373,6 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator EnemyTurn(Enemy enemy)
     {
-
         while(stayturn == true)//アニメーションをしてる間は何もしない
         {
             yield return null;
@@ -371,13 +380,12 @@ public class BattleManager : MonoBehaviour
 
         SulidoText.text = $"<color=#{colorCode}>{enemy.en} のターン！</color>";
 
-        SlidoAnimation.ResetTrigger("NewTurn"); //誰かのターンのテキストを出す
-        SlidoAnimation.SetTrigger("NewTurn");
+        SlidoAnimation.SetBool("TurnBool", true);
 
         yield return new WaitForSeconds(0.5f);
 
-        SlidoAnimation.ResetTrigger("NewTurn");
-        SlidoAnimation.SetTrigger("NewTurn");
+        SlidoAnimation.SetBool("TurnBool", false);
+
         battleLog.text = $"{enemy.name} のターン！";
         
 
@@ -559,20 +567,39 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public IEnumerator LevelUp(string beforeStr, string afterStr, string StatsName)
+    public IEnumerator LevelUp(string beforeStr, string afterStr, string StatsName)//レベルアップしたときの特別なログ
     {
-        foreach(GameObject GO in LvLog)
-        {
-            Destroy(GO);
-        }
-        yield return null;
+        stayturn = true;
+        Debug.Log("レベルアップした奴ら");
+        LevelupPanel.SetActive(true);
+        transparentButton.SetActive(true);
 
-        Debug.Log("レベルアップされた奴ら");
-        GameObject Log = Instantiate(LevelupLog, LevelupPanel);
+        GameObject Log = Instantiate(LevelupLog, LevelupPanel.transform);
         LvLog.Add(Log);
         Text LVLog = Log.GetComponent<Text>();
-        LVLog.text = $"{StatsName}は{beforeStr} => {afterStr}";
+        LVLog.text = $"{StatsName}は{beforeStr} => {afterStr}に上がった！";
         yield return null;
+    }
+    public void ItaDeret()
+    {
+        Debug.Log("削除処理開始");
+
+        Debug.Log(LvLog.Count);
+        foreach (GameObject GO in LvLog)
+        {
+            if (GO != null)
+            {
+                Debug.Log($"削除: {GO.name}");
+                Destroy(GO);
+            }
+            else
+            {
+                Debug.LogWarning("すでにnullになっています");
+            }
+        }
+
+        LvLog.Clear(); // リストもクリア
+        Debug.Log("削除処理完了");
     }
     
     public void StatusOver()//ステータスの更新処理******いずれ他の更新処理に変えたい

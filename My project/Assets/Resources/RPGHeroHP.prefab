@@ -1719,16 +1719,16 @@ MonoBehaviour:
   job: 1
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
-  health: 244
-  maxHealth: 840
-  attack: 170
-  defence: 80
-  Speed: 100
+  health: 1574
+  maxHealth: 2170
+  attack: 930
+  defence: 270
+  Speed: 111
   Mp: 0
-  LV: 20
-  XP: 0
-  MaxXp: 10
-  currentHealth: 244
+  LV: 39
+  XP: 20
+  MaxXp: 35.83180799999999
+  currentHealth: 1574
   gold: 2880
   currentGauge: 100
   maxGauge: 100

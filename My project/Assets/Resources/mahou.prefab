@@ -775,18 +775,18 @@ MonoBehaviour:
   job: 2
   Spn: "\u7BC4\u56F2\u653B\u6483"
   pn: mahou
-  health: 150
-  maxHealth: 250
-  attack: 120
-  defence: 40
-  Speed: 1000
-  Mp: 30
-  LV: 2
-  XP: 100
-  MaxXp: 120
-  currentHealth: 150
+  health: 2750
+  maxHealth: 2850
+  attack: 1160
+  defence: 560
+  Speed: 120
+  Mp: 1070
+  LV: 54
+  XP: 43
+  MaxXp: 51.59780351999998
+  currentHealth: 2750
   gold: 0
-  currentGauge: 10
+  currentGauge: 100
   maxGauge: 100
   sharp: 10
   sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
