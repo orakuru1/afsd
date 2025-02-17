@@ -5,9 +5,14 @@ using UnityEngine.UI;
 public class GaugeManager : MonoBehaviour
 {
     public GameObject gaugeInstance; // HPバーのインスタンス
+
     private Slider hpSlider;
+
     private Transform characterTransform; // キャラクターのTransform
+
     public Player player; // プレイヤーキャラクターを参照
+
+    private Animator GBA;
 
     void Start()
     {
@@ -58,13 +63,18 @@ public class GaugeManager : MonoBehaviour
         //FillGauge(Time.deltaTime * fillRate);
     }
 
+    public void GBASet(Animator animator)
+    {
+        GBA = animator;
+    }
+
     // ゲージを増やす処理
     public void FillGauge(float amount)
     {
         player.currentGauge += amount;
 
         // ゲージを最大値に制限
-        if (player.currentGauge > player.maxGauge)
+        if (player.currentGauge >= player.maxGauge)
         {
             player.currentGauge = player.maxGauge;
         }
@@ -75,6 +85,20 @@ public class GaugeManager : MonoBehaviour
             hpSlider.value = player.currentGauge;
             Debug.Log(hpSlider.value);
         }
+    }
+    public IEnumerator Animation()
+    {
+
+        if (player.currentGauge >= player.maxGauge)
+        {
+            yield return new WaitForSeconds(0.5f);
+            GBA.SetBool("SpecialBool", true);
+        }
+        else
+        {
+            GBA.SetBool("SpecialBool", false);
+        }
+        
     }
     private void OnDestroy()
     {

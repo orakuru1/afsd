@@ -111,7 +111,7 @@ public class BattleManager : MonoBehaviour
         escapebotton.SetActive(!escapebotton.activeSelf);
     }
 
-    public void LevelUpButton()
+    public void LevelUpButton()//レベルアップ時にターンを止めて非表示
     {
         stayturn = !stayturn;
         transparentButton.SetActive(!transparentButton.activeSelf);
@@ -139,6 +139,8 @@ public class BattleManager : MonoBehaviour
     {
         guagebutton = Instantiate(gaugebutton,panerspawn);
         player.SetUpSPN(guagebutton);
+
+        player.GetComponent<GaugeManager>().GBASet(guagebutton.GetComponent<Animator>());
         //guagebutton.GetComponentInChildren<Text>().text =  ;
 
         Button btn = guagebutton.GetComponent<Button>();
@@ -164,28 +166,6 @@ public class BattleManager : MonoBehaviour
 
         fadeImage.color = new Color(0, 0, 0, 1); // 最終的に完全に暗くする
     }
-
-/*
-    void SyncPlayerStats() //昔のオブザーバーを使ったステータス更新　=>　今は使ってない
-    {
-        player.health = ScriptPlayer.health;
-        player.maxHealth = ScriptPlayer.maxHealth;
-        player.currentHealth = ScriptPlayer.currentHealth;
-        player.attack = ScriptPlayer.attack;
-        player.defence = ScriptPlayer.defence;
-        player.LV = ScriptPlayer.LV;
-        player.XP = ScriptPlayer.XP;
-        player.MaxXp = ScriptPlayer.MaxXp;
-        
-        if(player.LV == 2 && player.XP == 0)
-        {
-            player.skills = ScriptPlayer.skills;
-            player.skills.Add(new Skill { skillName = "ice", damage = 20, description = "A ball of fire that burns enemies." });
-        }        
-
-        // 必要に応じて他の値も同期
-    }
-*/
 
     void CreateHealthBarFor(GameObject character)//HPばーを生成
     {
@@ -354,6 +334,7 @@ public class BattleManager : MonoBehaviour
 
         GenerateSkillButtons(player);
         GenerateGuageButtons(player);
+        StartCoroutine(gaugeManager.Animation());
 
         // ボタンが押されるまで待機
         actionSelected = false; // 初期化
@@ -371,7 +352,7 @@ public class BattleManager : MonoBehaviour
         //cameraMove.ComeBuckCamera();
     }
 
-    IEnumerator EnemyTurn(Enemy enemy)
+    IEnumerator EnemyTurn(Enemy enemy)//敵のターン
     {
         while(stayturn == true)//アニメーションをしてる間は何もしない
         {
@@ -443,13 +424,13 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    void OnActionSelected(string action)
+    void OnActionSelected(string action)//ボタンを押されるまでターンを止める
     {
         Debug.Log($"選択されたアクション: {action}");
         actionSelected = true; // ボタンが押されたことを通知
     }
 
-    public void OnActionSelected()
+    public void OnActionSelected()//ボタンが押されるまでターンを止める
     {
         attackakuction = true; // ボタンが押されたことを通知
         if(attackbotton.activeSelf == true)
