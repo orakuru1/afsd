@@ -38,11 +38,11 @@ public class CameraMove : MonoBehaviour
     public void CharacterToEnemy(Vector3 PlayerPosition) //カメラの位置をキャラクターの上に変える。スムーズに動けるようにしたい
     {
         SavePosition = transform.position;
-        transform.position = PlayerPosition + new Vector3(0f,2.5f,-4f);
+        transform.position = PlayerPosition + new Vector3(0f,2.5f,-3f);
     }
     public IEnumerator ComeBuckCamera() //位置を元に戻す
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.7f);
         transform.position = SavePosition;
         target = teiten;
     }
@@ -112,7 +112,7 @@ public class CameraMove : MonoBehaviour
 
         if(battleManager != null)
         {
-            //battleManager.saisyonohyouzi();//**********************************邪魔だから消しておく。本番はオン
+            battleManager.saisyonohyouzi();//**********************************邪魔だから消しておく。本番はオン
         }
 
         isScene = true;
@@ -126,7 +126,7 @@ public class CameraMove : MonoBehaviour
         Vector3 originalOffset = offset; //元のカメラの距離を保存
         Vector3 targetOffset = offset.normalized * zoomAmount; //最終的な目的地     単位ベクトル（長さ１の距離）に目的までの距離を掛ける,元の方向を向いてるまま すでに指定して相対的な位置
 
-        targetOffset += new Vector3(0f,2f,0f);
+        targetOffset += new Vector3(0f,1f,0f);
 
         while (elapsedTime < duration)
         {

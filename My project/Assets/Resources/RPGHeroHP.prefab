@@ -1716,19 +1716,19 @@ MonoBehaviour:
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
     BuckSprite: {fileID: 0}
-  job: 0
+  job: 1
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
-  health: 147
-  maxHealth: 650
-  attack: 70
-  defence: 50
-  Speed: 100
+  health: 2170
+  maxHealth: 2170
+  attack: 930
+  defence: 270
+  Speed: 111
   Mp: 0
-  LV: 17
-  XP: 650
-  MaxXp: 1728
-  currentHealth: 147
+  LV: 39
+  XP: 20
+  MaxXp: 35.83180799999999
+  currentHealth: 2170
   gold: 2880
   currentGauge: 0
   maxGauge: 100

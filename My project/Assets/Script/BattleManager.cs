@@ -19,9 +19,10 @@ public class BattleManager : MonoBehaviour
     public Transform enemySpawnPoint0; // 敵を生成する位置
     public Transform enemySpawnPoint1; // 敵を生成する位置
     public Transform hpBarParent; // HPバーの親（Canvas）
-    [SerializeField] public Transform panerspawn; // ボタンを配置する親オブジェクト
+    [SerializeField]private Transform panerspawn; // ボタンを配置する親オブジェクト
 
     public Text battleLog;           // バトルログを表示するUI
+    [SerializeField]private Text SulidoText; //誰かのターンテキスト
 
     public GameObject hpBarPrefab; // HPバーのPrefab
 
@@ -33,6 +34,7 @@ public class BattleManager : MonoBehaviour
 
     private List<GameObject> PlayerObject = new List<GameObject>(); //プレイヤーのオブジェクトのほう
     private List<GameObject> insta = new List<GameObject>();
+    [SerializeField]private List<GameObject> LvLog = new List<GameObject>();
     private GameObject Instance;    //キャラクター生成用
     private GameObject guagebutton;
     private GameObject panelTransform;
@@ -44,32 +46,35 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject attackbotton; // 技選択UIパネル
     [SerializeField] private GameObject escapebotton; // 技選択UIパネル
     [SerializeField]private GameObject GuageBar;
+    [SerializeField]private GameObject LevelupLog;
+    [SerializeField]private GameObject LevelupPanel;
+    [SerializeField]private GameObject transparentButton;
 
-    private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
-    [SerializeField]private Player player;            // プレイヤーのスクリプト
+    [SerializeField]private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
     [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
-    [SerializeField]private Player SecondPlayer;
 
     private bool actionSelected = false;
     private bool attackakuction = false;
     private bool stayturn = false;
 
     private string colorCode;
+    private string blueColor;
     private List<string> EnemyName = new List<string>();
     
     private Animator anim;
+    [SerializeField]private Animator SlidoAnimation;
 
     private CameraMove cameraMove;
     
     void Start()
     {
-        //saisyonohyouzi(); //邪魔だからオフにしておく
+        transparentButton.SetActive(false);
+        LevelupPanel.SetActive(false);
+        saisyonohyouzi(); //邪魔だからオフにしておく
         cameraMove = Camera.main.GetComponent<CameraMove>(); // メインカメラのスクリプトを取得
 
         colorCode = ColorUtility.ToHtmlStringRGB(Color.red);//カラーの色を設定
-
-        oomoto.Add(player);
-        oomoto.Add(SecondPlayer);
+        blueColor = ColorUtility.ToHtmlStringRGB(Color.blue);
 
         //EnemyName.Add("Goblin");
         //EnemyName.Add("suraimu");
@@ -106,6 +111,13 @@ public class BattleManager : MonoBehaviour
         escapebotton.SetActive(!escapebotton.activeSelf);
     }
 
+    public void LevelUpButton()//レベルアップ時にターンを止めて非表示
+    {
+        stayturn = !stayturn;
+        transparentButton.SetActive(!transparentButton.activeSelf);
+        LevelupPanel.SetActive(!LevelupPanel.activeSelf);
+    }
+
     public void GenerateSkillButtons(Player player)//プレイヤーのスキルを生成
     {
         //GameObject button = Instantiate(skillpanel)
@@ -127,6 +139,8 @@ public class BattleManager : MonoBehaviour
     {
         guagebutton = Instantiate(gaugebutton,panerspawn);
         player.SetUpSPN(guagebutton);
+
+        player.GetComponent<GaugeManager>().GBASet(guagebutton.GetComponent<Animator>());
         //guagebutton.GetComponentInChildren<Text>().text =  ;
 
         Button btn = guagebutton.GetComponent<Button>();
@@ -151,26 +165,6 @@ public class BattleManager : MonoBehaviour
         }
 
         fadeImage.color = new Color(0, 0, 0, 1); // 最終的に完全に暗くする
-    }
-
-    void SyncPlayerStats() //昔のオブザーバーを使ったステータス更新　=>　今は使ってない
-    {
-        player.health = ScriptPlayer.health;
-        player.maxHealth = ScriptPlayer.maxHealth;
-        player.currentHealth = ScriptPlayer.currentHealth;
-        player.attack = ScriptPlayer.attack;
-        player.defence = ScriptPlayer.defence;
-        player.LV = ScriptPlayer.LV;
-        player.XP = ScriptPlayer.XP;
-        player.MaxXp = ScriptPlayer.MaxXp;
-        
-        if(player.LV == 2 && player.XP == 0)
-        {
-            player.skills = ScriptPlayer.skills;
-            player.skills.Add(new Skill { skillName = "ice", damage = 20, description = "A ball of fire that burns enemies." });
-        }        
-
-        // 必要に応じて他の値も同期
     }
 
     void CreateHealthBarFor(GameObject character)//HPばーを生成
@@ -283,6 +277,7 @@ public class BattleManager : MonoBehaviour
                 }
                 else if (character is Enemy enemy && enemy.health > 0) // 生存している場合
                 {
+                    SlidoAnimation.SetTrigger("NewTurn");
                     Debug.Log($" {enemy.name} のターン");
                     yield return EnemyTurn(enemy);
                 }
@@ -290,7 +285,6 @@ public class BattleManager : MonoBehaviour
                 // バトル終了条件を確認
                 if (IsBattleOver())
                 {
-                    StartCoroutine(EndBattleSequence());
                     yield break;
                 }
             }
@@ -307,13 +301,22 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator PlayerTurn(Player player)
     {
+
         while(stayturn == true)
         {
             yield return null;
         }
 
+        SulidoText.text = $"<color=#{blueColor}>{player.pn} のターン！</color>";
+
+        SlidoAnimation.SetBool("TurnBool", true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        SlidoAnimation.SetBool("TurnBool", false);
+
         GaugeManager gaugeManager = player.GetComponent<GaugeManager>();
-        gaugeManager.FillGauge(10f);
+        gaugeManager.FillGauge(10f); //ゲージを増やす
         battleLog.text = $"{player.name} のターン！";
 
         if(attackbotton.activeSelf == false)
@@ -331,6 +334,7 @@ public class BattleManager : MonoBehaviour
 
         GenerateSkillButtons(player);
         GenerateGuageButtons(player);
+        StartCoroutine(gaugeManager.Animation());
 
         // ボタンが押されるまで待機
         actionSelected = false; // 初期化
@@ -348,14 +352,24 @@ public class BattleManager : MonoBehaviour
         //cameraMove.ComeBuckCamera();
     }
 
-    IEnumerator EnemyTurn(Enemy enemy)
+    IEnumerator EnemyTurn(Enemy enemy)//敵のターン
     {
-
-        while(stayturn == true)
+        while(stayturn == true)//アニメーションをしてる間は何もしない
         {
             yield return null;
         }
+
+        SulidoText.text = $"<color=#{colorCode}>{enemy.en} のターン！</color>";
+
+        SlidoAnimation.SetBool("TurnBool", true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        SlidoAnimation.SetBool("TurnBool", false);
+
         battleLog.text = $"{enemy.name} のターン！";
+        
+
         yield return new WaitForSeconds(2f);
 
             int playernumber;
@@ -365,8 +379,7 @@ public class BattleManager : MonoBehaviour
             playernumber = Random.Range(0,players.Count);
             targetPlayer = players[playernumber];
         }
-        while(targetPlayer.health <= 0);
-
+        while(targetPlayer.health <= 0);//HPが０の味方には攻撃しない
 
         if(attackbotton.activeSelf == true)
         {
@@ -384,7 +397,17 @@ public class BattleManager : MonoBehaviour
         {
             // 敵の行動処理を実装
             int damage = Random.Range(enemy.AT - 5, enemy.AT + 5);
-            damage -= (targetPlayer.armor[0].number + targetPlayer.defence);
+            if(targetPlayer.armor.Count == 0)
+            {
+                Debug.Log("防具ないよ");
+                damage -= targetPlayer.defence;
+            }
+            else
+            {
+                Debug.Log("防具あるよ");
+                damage -= (targetPlayer.armor[0].number + targetPlayer.defence);
+            }
+            
             if (damage < 0) damage = 0;
 
             // 攻撃演出をここでいれたい
@@ -401,13 +424,13 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    void OnActionSelected(string action)
+    void OnActionSelected(string action)//ボタンを押されるまでターンを止める
     {
         Debug.Log($"選択されたアクション: {action}");
         actionSelected = true; // ボタンが押されたことを通知
     }
 
-    public void OnActionSelected()
+    public void OnActionSelected()//ボタンが押されるまでターンを止める
     {
         attackakuction = true; // ボタンが押されたことを通知
         if(attackbotton.activeSelf == true)
@@ -433,19 +456,6 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         anim.SetBool("attack", false);
         //Debug.Log($"{enemy.name} の攻撃アニメーションが再生されます！");
-    }
-
-    void EndBattle2(bool isPlayerWin)
-    {
-        if (isPlayerWin)
-        {
-            battleLog.text += "\nプレイヤーの勝利！";
-        }
-        else
-        {
-            StartCoroutine(EndBattleSequence());
-            battleLog.text += "\nプレイヤーの敗北...";
-        }
     }
 
     void SetupBattle()//キャラクターや敵を生成
@@ -501,18 +511,14 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void EndBattle()//勝ったとき
+
+    private IEnumerator RastLog()//+************************************************
     {
-        // BattleDataの情報をリセット（必要に応じて）
-        BattleData.Instance.modorusyori();
-
-        foreach(Player player in players)
-        {
-            player.RemoveBuffe();
-        }
-
-        StatusOver();
-        BattleData.Instance.SetEnemyData( "", 0);
+        yield return new WaitForSeconds(1f);
+        battleLog.text = $"\nあなたたちの勝ちでーす";
+        battleLog.text += $"\nあなたたちの勝ちでーす";
+        battleLog.text += $"\nあなたたちの勝ちでーす";
+        yield return new WaitForSeconds(1f);
 
         // フィールドシーンに戻る
         SceneManager.LoadScene("GAMEMAPP");
@@ -528,15 +534,53 @@ public class BattleManager : MonoBehaviour
     {
         foreach(Player player in players)
         {
-            if(player.pn == "RPGHeroHP")
+            switch (player.job)//************************************リストより重いが,早い。アイテム等の処理は使うとよいだろう
             {
-                player.SetSpecialSkill(player.gameObject.AddComponent<AOESpecial>());
-            }
-            else if(player.pn == "otamesi")
-            {
-                player.SetSpecialSkill(player.gameObject.AddComponent<HealAllSpecial>());
+                case Job.None:
+                    break;
+                case Job.Worrier:
+                    player.SetSpecialSkill(player.gameObject.AddComponent<AOESpecial>());
+                    break;
+                case Job.Magic:
+                    player.SetSpecialSkill(player.gameObject.AddComponent<HealAllSpecial>());
+                    break;
             }
         }
+    }
+
+    public IEnumerator LevelUp(string beforeStr, string afterStr, string StatsName)//レベルアップしたときの特別なログ
+    {
+        stayturn = true;
+        Debug.Log("レベルアップした奴ら");
+        LevelupPanel.SetActive(true);
+        transparentButton.SetActive(true);
+
+        GameObject Log = Instantiate(LevelupLog, LevelupPanel.transform);
+        LvLog.Add(Log);
+        Text LVLog = Log.GetComponent<Text>();
+        LVLog.text = $"{StatsName}は{beforeStr} => {afterStr}に上がった！";
+        yield return null;
+    }
+    public void ItaDeret()
+    {
+        Debug.Log("削除処理開始");
+
+        Debug.Log(LvLog.Count);
+        foreach (GameObject GO in LvLog)
+        {
+            if (GO != null)
+            {
+                Debug.Log($"削除: {GO.name}");
+                Destroy(GO);
+            }
+            else
+            {
+                Debug.LogWarning("すでにnullになっています");
+            }
+        }
+
+        LvLog.Clear(); // リストもクリア
+        Debug.Log("削除処理完了");
     }
     
     public void StatusOver()//ステータスの更新処理******いずれ他の更新処理に変えたい
@@ -563,6 +607,37 @@ public class BattleManager : MonoBehaviour
                     player2.job = player.job;
                 }
             }
+        }
+    }
+
+    public void EndBattle()//勝ったとき***************************************
+    {
+        // BattleDataの情報をリセット（必要に応じて）
+        BattleData.Instance.modorusyori();
+
+        foreach(Player player in players)
+        {
+            player.RemoveBuffe();
+        }
+
+        StatusOver();
+        BattleData.Instance.SetEnemyData( "", 0);
+
+        //勝ったときのログ
+        StartCoroutine(RastLog());
+
+    }
+
+    void EndBattle2(bool isPlayerWin)//死んだとき
+    {
+        if (isPlayerWin)
+        {
+            battleLog.text += "\nプレイヤーの勝利！";
+        }
+        else
+        {
+            StartCoroutine(EndBattleSequence());
+            battleLog.text += "\nプレイヤーの敗北...";
         }
     }
 

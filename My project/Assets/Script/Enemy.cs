@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     public float health = 50; //HP
     public float maxHealth = 50f; //UIのHP
     [SerializeField]private string enemyname;
+    public string en;
     [SerializeField]public int AT;
     [SerializeField]public int DF;
     [SerializeField]public int Speed;
@@ -93,8 +94,8 @@ public class Enemy : MonoBehaviour
     private void Die(Player player)
     {
         // 敵が死亡する処理（例: エフェクトやスコアの増加など）
-        player.LevelUp(EXP);
         player.GetGolrd(DropGorld);
+        player.LevelUp(EXP);
         Destroy(this.gameObject);
     }
     // Start is called before the first frame update

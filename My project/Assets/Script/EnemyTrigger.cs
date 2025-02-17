@@ -31,7 +31,7 @@ public class EnemyTrigger : MonoBehaviour
                 
                 StartCoroutine(BattleData.Instance.LoadBattleScene()); // 非同期ロード
                 SetCamera();//プレイヤーに当たったのをターゲットしてる
-                cameraMove.zoingcamera(1f,2f,false);//カメラがズームする処理
+                cameraMove.zoingcamera(0f,2f,false);//カメラがズームする処理
             }
             else
             {

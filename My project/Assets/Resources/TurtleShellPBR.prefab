@@ -610,6 +610,7 @@ MonoBehaviour:
   health: 50
   maxHealth: 50
   enemyname: TurtleShellPBR
+  en: "\u4E80"
   AT: 100
   DF: 50
   Speed: 20

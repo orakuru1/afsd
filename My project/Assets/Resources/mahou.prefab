@@ -655,8 +655,8 @@ GameObject:
   - component: {fileID: 4463868907105534}
   - component: {fileID: 95538263452871118}
   - component: {fileID: 136306802490482818}
-  - component: {fileID: 5663715490771874123}
   - component: {fileID: -3587727548829927082}
+  - component: {fileID: 5663715490771874123}
   - component: {fileID: 814358144672151781}
   - component: {fileID: 3667553809602528564}
   - component: {fileID: -4017391346922140141}
@@ -719,22 +719,6 @@ CapsuleCollider:
   m_Height: 1.882848
   m_Direction: 1
   m_Center: {x: 0, y: 0.98, z: 0}
---- !u!114 &5663715490771874123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1248815240492774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f63b0a6621dd018449e368aa141dde4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PattackMotion: 0
-  PdamageMotion: 0
-  PdieMotion: 0
-  dietime: 0
 --- !u!54 &-3587727548829927082
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -751,6 +735,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &5663715490771874123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248815240492774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f63b0a6621dd018449e368aa141dde4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PattackMotion: 0
+  PdamageMotion: 0
+  PdieMotion: 0
+  dietime: 0
 --- !u!114 &814358144672151781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -763,26 +763,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3ac4d1415e0124f9eb7a202294fd69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skills: []
+  skills:
+  - skillName: ggg
+    damage: 3
+    description: 
+    buffType: 0
+    buffValue: 0
+    buffDuration: 0
   weapon: []
   armor: []
-  job: 0
-  Spn: 
-  pn: PolyArtWizardStandardMat
-  health: 0
-  maxHealth: 0
-  attack: 0
-  defence: 0
-  Speed: 0
-  Mp: 0
-  LV: 0
-  XP: 0
-  MaxXp: 0
-  currentHealth: 0
+  job: 2
+  Spn: "\u7BC4\u56F2\u653B\u6483"
+  pn: mahou
+  health: 2950
+  maxHealth: 2950
+  attack: 1200
+  defence: 580
+  Speed: 160
+  Mp: 1110
+  LV: 56
+  XP: 29
+  MaxXp: 74.30083706879996
+  currentHealth: 2950
   gold: 0
-  currentGauge: 0
-  maxGauge: 0
-  sharp: 0
+  currentGauge: 100
+  maxGauge: 100
+  sharp: 10
   sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
   fallThreshold: -30
   respawnUpdateDistance: 1

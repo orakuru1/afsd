@@ -75,6 +75,7 @@ public class Player : MonoBehaviour
     [SerializeField]public Sprite sprite;
 
     //*************************ここまでプレイヤーのステータス
+
     public static bool attackmotion = false;
     public static bool damagemotion = false;
     public static bool diemotion = false;
@@ -101,7 +102,6 @@ public class Player : MonoBehaviour
     private CameraMove cameraMove;
     public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
     public float rotationSpeed = 5.0f;
-
 
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
     private Vector3 battleStartPosition; //戦闘開始位置初め
@@ -233,21 +233,43 @@ public class Player : MonoBehaviour
 
     public void LevelUp(int experience) //経験値習得     
     {
+        Debug.Log("経験値きたー");
+        float prevHealth = health;
+        float prevMaxHealth = maxHealth;
+        int prevAttack = attack;
+        int prevDefence = defence;
+        int prevSpeed = Speed;
+        int prevMp = Mp;
+        int prevLV = LV;
+        bool islevelup = false;
+
         XP += experience; //今の経験値に送られてきた経験値の計算
-        if(XP >= MaxXp) //レベルアップに達しているかどうか
+
+        if(battleManager != null)
         {
+            battleManager.AddLog($"{pn}は{experience}の経験値を得た!");
+        }
+
+        
+        while(XP >= MaxXp) //レベルアップに達しているかどうか
+        {
+            islevelup = true;
             health += 50; //HPアップ
             currentHealth += 50; //バーのHPもアップ
             maxHealth += 50; //最大HPもアップ
+
             if(healthText != null)
             {
                 healthText.text = "healthText" + 50; //テキストの数もアップ
             }
+
             attack += 20; //攻撃力アップ
             defence += 10; //防御力アップ
+            double AfterXp = XP - MaxXp;
             XP = 0; //現在の経験値を０に更新　　　　(オーバーした経験値を引き継げるようにするかは考える)
             MaxXp *= 1.2; //次のレベルアップまでを更新する
             LV += 1; //現在のレベルを上げる
+
             switch(job)
             {
                 case(Job.None):
@@ -267,9 +289,30 @@ public class Player : MonoBehaviour
                     attack += 10;
                     break;
             }
+
+            XP = (int)AfterXp;
+
         }
+
+        if(battleManager != null && islevelup == true)
+        {
+            battleManager.ItaDeret();
+            Debug.Log("afewdfa");
+            if (LV > prevLV) StartCoroutine(battleManager.LevelUp(prevLV.ToString(), LV.ToString(), $"{pn}のレベル"));
+            if (health > prevHealth) StartCoroutine(battleManager.LevelUp(prevHealth.ToString(), health.ToString(), "体力"));
+            if (maxHealth > prevMaxHealth) StartCoroutine(battleManager.LevelUp(prevMaxHealth.ToString(), maxHealth.ToString(), "最大値"));
+            if (attack > prevAttack) StartCoroutine(battleManager.LevelUp(prevAttack.ToString(), attack.ToString(), "攻撃力"));
+            if (defence > prevDefence) StartCoroutine(battleManager.LevelUp(prevDefence.ToString(), defence.ToString(), "防御力"));
+            if (Speed > prevSpeed) StartCoroutine(battleManager.LevelUp(prevSpeed.ToString(), Speed.ToString(), "速度"));
+            if (Mp > prevMp) StartCoroutine(battleManager.LevelUp(prevMp.ToString(), Mp.ToString(), "魔力"));
+        }
+
         //OnStatsUpdated?.Invoke(); // 通知を送信
-        battleManager.StatusOver();
+        if(battleManager != null)
+        {
+            battleManager.StatusOver();
+        }
+
         UpdateHealthBar();
 
         //BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);
@@ -334,12 +377,23 @@ public class Player : MonoBehaviour
 
             yield return new WaitForSeconds(1f); //アニメーションとか入れれるかも。
 
-            int damage = Random.Range(player.attack + skill.damage + weapon[0].number,player.attack + skill.damage + weapon[0].number); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
+            int damage = 0;
+            if(player.weapon.Count == 0)
+            {
+                Debug.Log("武器はないよ");
+                damage = Random.Range(player.attack + skill.damage, player.attack + skill.damage);
+            }
+            else
+            {
+                Debug.Log("武器はあるよ");
+                damage = Random.Range(player.attack + skill.damage + weapon[0].number, player.attack + skill.damage + weapon[0].number); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
+            }
+
             target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
             eneguage.FillGauge(sharp);
             
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1f);//ここに敵にダメージを与えるアニメーションが終わるまでやらないループを作りたい
 
             StartCoroutine(cameraMove.ComeBuckCamera());
 
@@ -381,6 +435,7 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damage) //自分のダメージを受ける処理
     {
+        Debug.Log(this.gameObject);
         StartCoroutine("MDamage");
         health -= damage; //HPにダメージを食らう
         if (health < 0) health = 0; //０より下になった時に０にする

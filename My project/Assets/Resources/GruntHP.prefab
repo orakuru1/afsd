@@ -931,6 +931,7 @@ MonoBehaviour:
   health: 50
   maxHealth: 50
   enemyname: GruntHP
+  en: "\u30AA\u30FC\u30AF"
   AT: 50
   DF: 50
   Speed: 10
