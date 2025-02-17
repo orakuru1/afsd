@@ -64,6 +64,7 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
             BattleData.Instance.currentplayers(playernames);
             SpawnCharaButton();
         }
+        NowPlayer.name = "Player";
 
     }
 

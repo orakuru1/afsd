@@ -104,6 +104,7 @@ public class Player : MonoBehaviour
 
 
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
+    private Vector3 battleStartPosition; //戦闘開始位置初め
 
     //public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
     private Color color;
@@ -502,6 +503,17 @@ public class Player : MonoBehaviour
         {
             isGrounded = true;
         }
+        if(collision.gameObject.CompareTag("Enemy"))
+        {
+            //敵にぶつかったら戦闘位置を保存
+            battleStartPosition = transform.position;
+            PlayerPrefs.SetFloat("BattleStartX", battleStartPosition.x);
+            PlayerPrefs.SetFloat("BattleStartY", battleStartPosition.y); 
+            PlayerPrefs.SetFloat("BattleStartZ", battleStartPosition.z);
+            PlayerPrefs.Save();
+
+            Debug.Log("戦闘開始：現在の位置を保存:" + battleStartPosition);             
+        }
     }
 
     //地面から離れた時の処理
@@ -541,14 +553,7 @@ public class Player : MonoBehaviour
 
     public void SaveRespawnPosition()
     {
-        Debug.Log("セーブ位置" + respawnPosition);
-
-        if(respawnPosition == Vector3.zero)
-        {
-            respawnPosition = transform.position;
-            Debug.Log("警告：：：：0のため");
-        }
-
+        respawnPosition = transform.position;
         PlayerPrefs.SetFloat("RespawnX", respawnPosition.x);
         PlayerPrefs.SetFloat("RespawnY", respawnPosition.y);
         PlayerPrefs.SetFloat("RespawnZ", respawnPosition.z);
