@@ -581,7 +581,7 @@ public class Player : MonoBehaviour
     void Start()
     { 
         //セーブデータがあればロード、なければ初期位置をリスポーン地点に
-    
+        
         
         LoadRespawnPosition();
         transform.position = respawnPosition; //セーブ位置から開
