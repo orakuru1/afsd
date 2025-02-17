@@ -12,6 +12,8 @@ public class CameraMove : MonoBehaviour
     public float smoothSpeed = 0.125f; // カメラ追従のスムーズさ
     public float rotationSpeed = 5.0f;
 
+    private float rotationX = 0f; //上下回転の角度
+    private float rotationY = 0f; //左右回転の角度
     private bool isCameraMove = false;
     private bool isScene = false;
 
@@ -19,7 +21,7 @@ public class CameraMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rotationY = transform.eulerAngles.y; //初期角度を設定
     }
 
     // Update is called once per frame
@@ -176,8 +178,23 @@ public class CameraMove : MonoBehaviour
 
         if (Input.GetMouseButton(1)) // 右クリックで回転を有効にする場合
         {
-            float horizontal = Input.GetAxis("Mouse X") * rotationSpeed;
-            offset = Quaternion.AngleAxis(horizontal, Vector3.up) * offset;
+           float horizontal = Input.GetAxis("Mouse X") * rotationSpeed; //左右回転
+           float vertical = Input.GetAxis("Mouse Y") * rotationSpeed; //上下回転
+
+           //横回転(Y軸回転)
+           offset = Quaternion.AngleAxis(horizontal, Vector3.up) * offset;
+
+           //縦回転(X軸回転)
+           Vector3 right = Vector3.Cross(Vector3.up, offset); //カメラの右方向
+           offset = Quaternion.AngleAxis(-vertical, right) * offset;
+
+           //上下の角度制限(90度以上に開店しないように)
+           float angleX = Vector3.Angle(offset, Vector3.up);
+           if(angleX < 40f) //真上を向かないよう制限
+              offset = Quaternion.AngleAxis(40f - angleX, right) * offset;
+           if(angleX > 90f)
+              offset = Quaternion.AngleAxis(90f - angleX, right) * offset;
+
         }
 
         if(isScene == false)

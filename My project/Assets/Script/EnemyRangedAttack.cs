@@ -39,10 +39,21 @@ public class EnemyRangedAttack : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+
+        //bbbb();
     }
 
     void Update()
     {
+        if(player == null || player.gameObject.tag != "Player")
+        {
+            bbbb();
+        }
+        if(player == null)
+        {
+            return; // プレイヤーがいない場合、処理を中断
+        }
+
         if(player!=null)
         {
         // プレイヤーとの距離を計算

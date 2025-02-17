@@ -16,11 +16,19 @@ public class Playersccan : MonoBehaviour
     {
         //Animatorコンポーネント取得
         animator = GetComponent<Animator>();
+
+        //プレイヤーをタグで探す
+        FindPlayer(); //初回プレイヤー検索
     }
 
     // Update is called once per frame
     void Update()
     {
+        //毎フレームプレイヤーを再検索
+        if(player == null || player.gameObject.tag != "Player")
+        {
+            FindPlayer();
+        }
         if(player == null)
         {
             return; // プレイヤーがいない場合、処理を中断
@@ -45,6 +53,16 @@ public class Playersccan : MonoBehaviour
         else{
             //歩くアニメーションを停止
             animator.SetBool("walking", false);
+        }
+    }
+
+    //プレイヤーを探すメソッド
+    private void FindPlayer()
+    {
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if(playerObj != null)
+        {
+            player = playerObj.transform;
         }
     }
 }
