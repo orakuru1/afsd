@@ -1719,23 +1719,25 @@ MonoBehaviour:
   job: 0
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
-  health: 167
+  health: 147
   maxHealth: 650
   attack: 70
   defence: 50
   Speed: 100
   Mp: 0
   LV: 17
-  XP: 0
+  XP: 650
   MaxXp: 1728
-  currentHealth: 167
+  currentHealth: 147
   gold: 2880
-  currentGauge: 100
+  currentGauge: 0
   maxGauge: 100
   sharp: 50
   sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
   fallThreshold: -30
   respawnUpdateDistance: 1
+  saveButton: {fileID: 0}
+  loadButton: {fileID: 0}
   smoothSpeed: 0.5
   healthSlider: {fileID: 0}
   healthText: {fileID: 0}

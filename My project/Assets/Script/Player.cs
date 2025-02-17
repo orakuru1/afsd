@@ -83,6 +83,8 @@ public class Player : MonoBehaviour
 
     public float fallThreshold = -30.0f; //落下とみなすY座標のしきい値
     public float respawnUpdateDistance = 1.0f; //リスポーン位置を更新する間隔（メートル単位）
+    public Button saveButton; //セーブボタンをUIから設定できるようにする
+    public Button loadButton;
     public float smoothSpeed = 0.5f; //HPバーが減る速度（小さいほど遅い）
     private float targetSliderValue; //スライダーの目標値
 
@@ -525,7 +527,7 @@ public class Player : MonoBehaviour
     void UpdateRespawnposition()
     {
         respawnPosition = transform.position;
-        //Debug.Log("リスポーン位置を更新："　+ respawnPosition);
+        Debug.Log("リスポーン位置を更新："　+ respawnPosition);
     }
 
     void LateUpdate()
@@ -537,8 +539,61 @@ public class Player : MonoBehaviour
     }
     }
 
+    public void SaveRespawnPosition()
+    {
+        Debug.Log("セーブ位置" + respawnPosition);
+
+        if(respawnPosition == Vector3.zero)
+        {
+            respawnPosition = transform.position;
+            Debug.Log("警告：：：：0のため");
+        }
+
+        PlayerPrefs.SetFloat("RespawnX", respawnPosition.x);
+        PlayerPrefs.SetFloat("RespawnY", respawnPosition.y);
+        PlayerPrefs.SetFloat("RespawnZ", respawnPosition.z);
+        PlayerPrefs.Save();
+        Debug.Log("リスポーン位置セーブ完了!!" + respawnPosition);
+    }
+
+    public void LoadRespawnPosition()
+    {
+        if(PlayerPrefs.HasKey("RespawnX") && PlayerPrefs.HasKey("RespawnY") && PlayerPrefs.HasKey("RespawnZ"))
+        {
+            float x = PlayerPrefs.GetFloat("RespawnX");
+            float y = PlayerPrefs.GetFloat("RespawnY");
+            float z = PlayerPrefs.GetFloat("RespawnZ");
+            respawnPosition = new Vector3(x,y,z);
+            Debug.Log("リスポーン位置ロードやった" + respawnPosition);
+        }
+        else
+        {
+            respawnPosition = transform.position;
+            Debug.Log("セーブデータねーぞ!!");
+        }
+    }
+
     void Start()
     { 
+        //セーブデータがあればロード、なければ初期位置をリスポーン地点に
+    
+        
+        LoadRespawnPosition();
+        transform.position = respawnPosition; //セーブ位置から開
+        
+        //ボタンが設定されている場合、クリック時の処理を追加
+        if(saveButton != null)
+        {
+            saveButton.onClick.AddListener(SaveRespawnPosition);
+        }
+
+        //ロードボタンが設定されている場合、クリック時の処理を追加
+        if(loadButton != null)
+        {
+            loadButton.onClick.AddListener(LoadRespawnPosition);
+        }
+
+
         cameraMove = Camera.main.GetComponent<CameraMove>();
         //currentHealth = maxHealth;
         healthBarManager = GetComponent<HealthBarManager>(); //自分に追加されてるはずのＨＰバーのスクリプトを使えるようにしてる
@@ -553,12 +608,12 @@ public class Player : MonoBehaviour
     {
        
 
-        //一定距離移動したらリスポーン位置を更新
+        //地面にいるときだけリスポーン位置を更新
         if(isGrounded && Vector3.Distance(respawnPosition, transform.position) >= respawnUpdateDistance)
         {
             UpdateRespawnposition();
         }
-        //現在の座標を確認
+        //落下したらリスポーン
         if(transform.position.y < fallThreshold)
         {
             Respawn();
