@@ -45,10 +45,11 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject skillpanel;
     [SerializeField] private GameObject attackbotton; // 技選択UIパネル
     [SerializeField] private GameObject escapebotton; // 技選択UIパネル
-    [SerializeField]private GameObject GuageBar;
-    [SerializeField]private GameObject LevelupLog;
+    [SerializeField]private GameObject GuageBar; //味方のゲージ
+    [SerializeField]private GameObject LevelupLog; 
     [SerializeField]private GameObject LevelupPanel;
-    [SerializeField]private GameObject transparentButton;
+    [SerializeField]private GameObject transparentButton; //透明なボタン
+    [SerializeField]private GameObject BrackGraund;
 
     [SerializeField]private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
     [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
@@ -87,6 +88,7 @@ public class BattleManager : MonoBehaviour
 
         foreach(GameObject player in PlayerObject) //プレイヤーのhpバー
         {
+            CreateGraund(player);
             CreateHealthBarFor(player);
             CreateGuageBar(player);
         } 
@@ -95,6 +97,7 @@ public class BattleManager : MonoBehaviour
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy"); //findを使わないようにできるよ
         foreach (GameObject enemy in enemies)
         {
+            CreateGraund(enemy);
             CreateHealthBarFor(enemy);    //ゲージ技の生成もここでやる。次回予定
             GenerateEnemyGuageButton(enemy);
         }
@@ -165,6 +168,22 @@ public class BattleManager : MonoBehaviour
         }
 
         fadeImage.color = new Color(0, 0, 0, 1); // 最終的に完全に暗くする
+    }
+
+    void CreateGraund(GameObject character) //背景
+    {
+        GameObject bg = Instantiate(BrackGraund, hpBarParent);
+
+        BGController bgc = character.AddComponent<BGController>();
+
+        bgc.BG = bg;
+        Player playerComponent = character.GetComponent<Player>();
+
+        if (playerComponent != null)
+        {
+            bgc.player = playerComponent;
+        }
+
     }
 
     void CreateHealthBarFor(GameObject character)//HPばーを生成

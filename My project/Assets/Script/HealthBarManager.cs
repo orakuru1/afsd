@@ -23,12 +23,6 @@ public class HealthBarManager : MonoBehaviour
 
         // キャラクターのTransformを取得
         characterTransform = this.transform;
-
-        // すでに設定済みのplayerを使用し、自動取得をスキップ
-        if (player == null)
-        {
-            player = GetComponent<Player>();
-        }
         
         // プレイヤーの初期HPをHPバーに反映
         if (player != null)
@@ -41,16 +35,37 @@ public class HealthBarManager : MonoBehaviour
     void Update()
     {
         // キャラクターの位置に応じてHPバーの位置を更新
-        if (hpBarInstance != null)
+        if (hpBarInstance != null && player != null)
         {
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(characterTransform.position + Vector3.up * 2.0f); //
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(characterTransform.position + Vector3.up * 2.0f); 
+            hpBarInstance.transform.position = screenPosition;
+        }
+        else
+        {
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(characterTransform.position + Vector3.up * 2.1f); 
             hpBarInstance.transform.position = screenPosition;
         }
         
-        if (hpBarInstance != null)
+        if (hpBarInstance != null && player != null)
         {
             // キャラクターの位置をスクリーン座標に変換
             Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2.0f);
+
+            // スクリーン座標がカメラの視野内にあるか確認
+            if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
+            {
+                hpBarInstance.transform.position = screenPosition;
+                hpBarInstance.SetActive(true);
+            }
+            else
+            {
+                hpBarInstance.SetActive(false); // カメラ背面の場合は非表示
+            }
+        }
+        else
+        {
+            // キャラクターの位置をスクリーン座標に変換
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2.2f);
 
             // スクリーン座標がカメラの視野内にあるか確認
             if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
