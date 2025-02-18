@@ -558,7 +558,7 @@ public class Player : MonoBehaviour
         {
             isGrounded = true;
         }
-        if(collision.gameObject.CompareTag("Enemy"))
+    /*    if(collision.gameObject.CompareTag("Enemy"))
         {
             //敵にぶつかったら戦闘位置を保存
             battleStartPosition = transform.position;
@@ -568,7 +568,7 @@ public class Player : MonoBehaviour
             PlayerPrefs.Save();
 
             Debug.Log("戦闘開始：現在の位置を保存:" + battleStartPosition);             
-        }
+        }*/
     }
 
     //地面から離れた時の処理
