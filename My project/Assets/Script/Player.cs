@@ -594,7 +594,7 @@ public class Player : MonoBehaviour
     void UpdateRespawnposition()
     {
         respawnPosition = transform.position;
-        Debug.Log("リスポーン位置を更新："　+ respawnPosition);
+       // Debug.Log("リスポーン位置を更新："　+ respawnPosition);
     }
 
     void LateUpdate()

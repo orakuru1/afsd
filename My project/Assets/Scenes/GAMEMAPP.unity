@@ -2326,7 +2326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8b8e10e926d61e45a234692a90a4ad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 3000
+  maxHP: 150
   maxShield: 50
   hpSlider: {fileID: 1036073383}
   hpText: {fileID: 1720577714}
@@ -6474,7 +6474,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 23
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
