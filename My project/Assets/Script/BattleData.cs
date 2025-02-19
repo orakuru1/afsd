@@ -84,6 +84,16 @@ public class BattleData : MonoBehaviour
     public IEnumerator LoadBattleScene() //非同期処理で読み込みシーン移動
     {//**********************************本当にこれで最適化できてるか不安だからみる＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
         isplayer = false;
+        
+        Vector3 respawnPosition; //リスポーン位置を記録する変数
+
+        GameObject p = GameObject.Find("Player");
+        
+        respawnPosition = p.transform.position;
+        PlayerPrefs.SetFloat("RespawnX", respawnPosition.x);
+        PlayerPrefs.SetFloat("RespawnY", respawnPosition.y);
+        PlayerPrefs.SetFloat("RespawnZ", respawnPosition.z);
+        PlayerPrefs.Save();
 
         asyncLoad = SceneManager.LoadSceneAsync("BattleScene");
         

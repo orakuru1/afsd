@@ -636,10 +636,13 @@ public class Player : MonoBehaviour
     void Start()
     { 
         //セーブデータがあればロード、なければ初期位置をリスポーン地点に
+        if(BattleData.Instance.isconhurikut())
+        {
+            LoadRespawnPosition();
+            transform.position = respawnPosition; //セーブ位置から開
         
+        }
         
-        LoadRespawnPosition();
-        transform.position = respawnPosition; //セーブ位置から開
         
         //ボタンが設定されている場合、クリック時の処理を追加
         if(saveButton != null)
