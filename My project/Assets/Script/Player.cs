@@ -14,6 +14,7 @@ public class Skill //攻撃する表示のスキルたち、４個ぐらいか�
     public BuffType buffType; // 付与するバフの種類
     public int buffValue; // バフの上昇値
     public int buffDuration; // バフの持続ターン数
+    public ParticleSystem particle;
 }
 [System.Serializable]
 public class Weapon  //防具や武器のステータス・・・・・・0番が武器として機能している。１番が防具として機能している
@@ -367,6 +368,7 @@ public class Player : MonoBehaviour
             battleManager.ClearBattleLog();
             player.ApplyBuff(skill.buffType, skill.buffValue, skill.buffDuration);
             battleManager.AddLog(skill.buffType+"で"+skill.buffValue+"の効果がアップした!");
+            Instantiate(skill.particle, this.gameObject.transform);
         }
         else
         {
@@ -374,6 +376,7 @@ public class Player : MonoBehaviour
             cameraMove.SetUp(target.gameObject.transform); //カメラが敵を向くように
             battleManager.ClearBattleLog();
             battleManager.AddLog($"{target.gameObject.name}を攻撃!!");
+            Instantiate(skill.particle, target.transform);
 
             yield return new WaitForSeconds(1f); //アニメーションとか入れれるかも。
 
