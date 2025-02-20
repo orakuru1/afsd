@@ -1771,8 +1771,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onGround: 1
   inJumping: 0
-  speed: 5
-  sprintSpeed: 10
+  speed: 10
+  sprintSpeed: 20
   jumpForce: 8
   forwardJumpForce: 6
   backwardJumpForce: 3

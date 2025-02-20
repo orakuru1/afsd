@@ -71,7 +71,7 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
     // Update is called once per frame
     void Update()
     {
-        
+        NowPlayer.name = "Player";
     }
 
     public void PlayerNameAdd(string playername)
