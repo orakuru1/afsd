@@ -770,6 +770,8 @@ MonoBehaviour:
     buffType: 0
     buffValue: 0
     buffDuration: 0
+    particle: {fileID: 8371754213060712399, guid: 79982ac38eb1a044a83ced518865a3e2,
+      type: 3}
   weapon: []
   armor: []
   job: 2
@@ -818,6 +820,7 @@ MonoBehaviour:
   jumpForce: 8
   forwardJumpForce: 6
   backwardJumpForce: 3
+  prepar: {fileID: 0}
 --- !u!114 &-4017391346922140141
 MonoBehaviour:
   m_ObjectHideFlags: 0

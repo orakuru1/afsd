@@ -1672,18 +1672,24 @@ MonoBehaviour:
     buffType: 0
     buffValue: 0
     buffDuration: 0
+    particle: {fileID: 4715361061038710620, guid: 87f8ee6ce2b831042bacf5899a5b9d33,
+      type: 3}
   - skillName: ice
     damage: 20
     description: A ball of fire that burns enemies.
     buffType: 0
     buffValue: 0
     buffDuration: 0
+    particle: {fileID: 8371754213060712399, guid: 79982ac38eb1a044a83ced518865a3e2,
+      type: 3}
   - skillName: attackbuff
     damage: 20
     description: A ball of fire that burns enemies.
     buffType: 1
     buffValue: 30
     buffDuration: 3
+    particle: {fileID: 597322414690159659, guid: 4786b0e7c24d6a244b2f1f036d0e8222,
+      type: 3}
   weapon:
   - equipName: "\u9244\u306E\u5263"
     number: 30
@@ -1776,6 +1782,7 @@ MonoBehaviour:
   jumpForce: 8
   forwardJumpForce: 6
   backwardJumpForce: 3
+  prepar: {fileID: 6887158025349920571, guid: 0ef719ae23085394f8f2b6980fc44c28, type: 3}
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0
