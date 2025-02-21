@@ -18,6 +18,7 @@ public class Skill //攻撃する表示のスキルたち、４個ぐらいか�
     public int CDamage;//継続ダメージの確率 Continuous Damage
     public int CDuration;//継続ダメージの確率
     public int CProbability;//継続ダメージの確率
+    public ParticleSystem particle;
 }
 
 [System.Serializable]
@@ -396,6 +397,7 @@ public class Player : MonoBehaviour
             battleManager.ClearBattleLog();
             player.ApplyBuff(skill.buffType, skill.buffValue, skill.buffDuration);
             battleManager.AddLog(skill.buffType+"で"+skill.buffValue+"の効果がアップした!");
+            Instantiate(skill.particle, this.gameObject.transform);
         }
         else
         {
@@ -404,6 +406,7 @@ public class Player : MonoBehaviour
             cameraMove.SetUp(target.gameObject.transform); //カメラが敵を向くように
             battleManager.ClearBattleLog();
             battleManager.AddLog($"{target.gameObject.name}を攻撃!!");
+            Instantiate(skill.particle, target.transform);
 
             yield return new WaitForSeconds(1f); //アニメーションとか入れれるかも。
 
@@ -632,7 +635,7 @@ public class Player : MonoBehaviour
     void UpdateRespawnposition()
     {
         respawnPosition = transform.position;
-        Debug.Log("リスポーン位置を更新："　+ respawnPosition);
+       // Debug.Log("リスポーン位置を更新："　+ respawnPosition);
     }
 
     void LateUpdate()
@@ -679,6 +682,7 @@ public class Player : MonoBehaviour
             LoadRespawnPosition();
             transform.position = respawnPosition; //セーブ位置から開
         }
+        
         
         //ボタンが設定されている場合、クリック時の処理を追加
         if(saveButton != null)

@@ -6,7 +6,7 @@ public class chara : MonoBehaviour
 {
     [SerializeField] public bool onGround = true;
     [SerializeField] public bool inJumping = false;
-
+    static public bool run = false;
     private Rigidbody rb;
     private Animator anim;
 
@@ -23,6 +23,7 @@ public class chara : MonoBehaviour
     private bool isAttacking = false; // 攻撃状態を追跡
     private Transform cameraTransform; // カメラのTransformを取得
 
+    public ParticleSystem prepar;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -30,6 +31,7 @@ public class chara : MonoBehaviour
 
         // メインカメラのTransformを取得
         cameraTransform = Camera.main.transform;
+        run = false;
     }
 
     void Update()
@@ -38,8 +40,11 @@ public class chara : MonoBehaviour
         {
             HandleMovement();
             HandleJump();
+            if (!run)
+            {
+                RunEffect();
+            }
         }
-
         HandleAttack(); // 攻撃処理は常に確認
     }
 
@@ -91,7 +96,8 @@ public class chara : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
-
+        
+        
         // アニメーション設定
         anim.SetBool("walking", isMoving);
         anim.SetBool("dassyu", isSprinting);
@@ -158,6 +164,15 @@ public class chara : MonoBehaviour
         {
             onGround = true;
             inJumping = false;
+        }
+    }
+    
+    private void RunEffect()
+    {
+        if (!run && Input.GetKey(KeyCode.W) ||Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.D))
+        {
+            Instantiate(prepar, this.gameObject.transform);
+            run = true;
         }
     }
 }

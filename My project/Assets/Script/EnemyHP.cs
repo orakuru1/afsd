@@ -15,6 +15,7 @@ public class EnemyHP : MonoBehaviour
 
     public float shieldDamageMultiplier = 1.1f; //シールドへのダメージ倍率
     public float smoothSpeed = 5f;  //スライダーの減少スピード
+    public DefeatTextManager defeatTextManager;
 
     void Start()
     {
@@ -22,6 +23,8 @@ public class EnemyHP : MonoBehaviour
         currentShield = maxShield;
 
         UpdateHPUI(); // 初期状態のUI更新
+
+       
     }
 
     void Update()
@@ -92,5 +95,9 @@ public class EnemyHP : MonoBehaviour
     {
         Debug.Log("敵が倒れた！");
         Destroy(gameObject); // 敵オブジェクトを削除
+        if(defeatTextManager != null)
+        {
+            defeatTextManager.ShowDefeatText();
+        }
     }
 }
