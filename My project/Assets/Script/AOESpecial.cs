@@ -14,7 +14,7 @@ public class AOESpecial : SpecialSkill
 
         foreach (Enemy enemy in BattleManager.enemys)
         {
-            enemy.TakeDamage((player.attack * 2 + player.weapon[0].number), player);
+            enemy.SupecialDamage((player.attack * 2 + player.weapon[0].number), player);
             EnemyDestroyGuage eneguage = enemy.GetComponent<EnemyDestroyGuage>();
             eneguage.FillGauge(player.sharp*2);
         }

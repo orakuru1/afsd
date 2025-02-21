@@ -7,10 +7,12 @@ public class HealthBarManager : MonoBehaviour
 {
 
     public GameObject hpBarInstance; // HPバーのインスタンス
+    
     private Slider hpSlider;
 
-    private Transform characterTransform; // キャラクターのTransform
     public Player player; // プレイヤーキャラクターを参照
+
+    private Vector3 worldPosition = new Vector3();
 
     // Start is called before the first frame update
     void Start()
@@ -22,68 +24,46 @@ public class HealthBarManager : MonoBehaviour
         }
 
         // キャラクターのTransformを取得
-        characterTransform = this.transform;
         
         // プレイヤーの初期HPをHPバーに反映
         if (player != null)
         {
             UpdateHealth(player.currentHealth, player.maxHealth);
         }
+
+        if (hpBarInstance != null && player == null)
+        {
+            hpBarInstance.transform.localScale = new Vector3(0.07f,0.1f,0f);
+        }
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         // キャラクターの位置に応じてHPバーの位置を更新
         if (hpBarInstance != null && player != null)
         {
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(characterTransform.position + Vector3.up * 2.0f); 
-            hpBarInstance.transform.position = screenPosition;
+            worldPosition = new Vector3(0f,2f,0f) + transform.position;
         }
         else
         {
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(characterTransform.position + Vector3.up * 2.1f); 
-            hpBarInstance.transform.position = screenPosition;
-        }
-        
-        if (hpBarInstance != null && player != null)
-        {
-            // キャラクターの位置をスクリーン座標に変換
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2.0f);
-
-            // スクリーン座標がカメラの視野内にあるか確認
-            if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
-            {
-                hpBarInstance.transform.position = screenPosition;
-                hpBarInstance.SetActive(true);
-            }
-            else
-            {
-                hpBarInstance.SetActive(false); // カメラ背面の場合は非表示
-            }
-        }
-        else
-        {
-            // キャラクターの位置をスクリーン座標に変換
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2.2f);
-
-            // スクリーン座標がカメラの視野内にあるか確認
-            if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
-            {
-                hpBarInstance.transform.position = screenPosition;
-                hpBarInstance.SetActive(true);
-            }
-            else
-            {
-                hpBarInstance.SetActive(false); // カメラ背面の場合は非表示
-            }
+            worldPosition = new Vector3(0.1f,2.3f,0f) + transform.position;
         }
 
-        if (hpSlider.value <= hpSlider.maxValue * 0.25f)
+        hpBarInstance.transform.position = worldPosition;
+
+
+
+        if (hpSlider.value <= hpSlider.maxValue * 0.25f)//HPが２５％以下なら赤色にする
         {
             hpSlider.fillRect.GetComponent<Image>().color = Color.red;
         }
+        else
+        {
+            hpSlider.fillRect.GetComponent<Image>().color = Color.green; // 通常は緑
+        }
     }
+
 
     public void UpdateHealth(float currentHealth, float maxHealth)
     {

@@ -7,46 +7,31 @@ public class BGController : MonoBehaviour
     public GameObject BG; 
     public Player player;
 
+    private Vector3 worldPosition = new Vector3();
+
     void Start()
     {
-            Vector3 scale = BG.transform.localScale; 
-            scale.x = 0.6f; 
-            BG.transform.localScale = scale; 
-
+        if (BG != null && player == null)
+        {
+            BG.transform.localScale = new Vector3(0.075f,0.07f,0f);
+        }
     }
     
-    void Update()
+    void LateUpdate()
     {
-        
         if (BG != null && player != null)
         {
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(-0.1f,1f,0) * 2.1f);
-
-            if (screenPosition.z > 0) 
-            {
-                BG.transform.position = screenPosition;
-                BG.SetActive(true);
-            }
-            else
-            {
-                BG.SetActive(false);
-            }
+            worldPosition = new Vector3(-0.21f,2.1f,0f) + transform.position;
         }
         else
         {
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(-0.2f,1f,0) * 2.4f);
-
-            if (screenPosition.z > 0) 
-            {
-                BG.transform.position = screenPosition;
-                BG.SetActive(true);
-            }
-            else
-            {
-                BG.SetActive(false);
-            }
+            worldPosition = new Vector3(-0.2f,2.4f,0f) + transform.position;
         }
+
+        BG.transform.position = worldPosition;
+
     }
+
 
     private void OnDestroy()
     {

@@ -24,7 +24,7 @@ public class ArrowManager : MonoBehaviour
         if (currentTarget != null)
         {
             // ターゲットのワールド座標をスクリーン座標に変換
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(currentTarget.position + Vector3.up * 4.0f);
+            Vector3 screenPosition = Camera.main.WorldToScreenPoint(currentTarget.position + Vector3.up * 1f);
 
             // 矢印をターゲットの上に配置
             arrow.position = screenPosition;

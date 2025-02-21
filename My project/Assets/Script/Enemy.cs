@@ -6,14 +6,16 @@ using UnityEngine.UI;
 public class Enemy : MonoBehaviour
 {
     private EnemyCounter enemyCounter;
+    public Element element;
     public float health = 50; //HP
     public float maxHealth = 50f; //UIのHP
     [SerializeField]private string enemyname;
     public string en;
+    [SerializeField]public string Race;
     [SerializeField]public int AT;
     [SerializeField]public int DF;
     [SerializeField]public int Speed;
-    
+    [SerializeField] int DropGorld;
     [SerializeField]private int EXP = 50; //経験値
     public float currentHealth;
 
@@ -21,10 +23,13 @@ public class Enemy : MonoBehaviour
 
     public static Enemy selectedEnemy; // 選択された敵を記録する静的変数
     private BattleManager battleManager;
+
     private ArrowManager arrowManager;
+
     [SerializeField]private Player player;
-    [SerializeField] int DropGorld;
+
     private bool isBurst = false;
+
     Animator anim;
     void OnMouseDown()
     {
@@ -33,9 +38,14 @@ public class Enemy : MonoBehaviour
         Debug.Log($"{gameObject.name} が選択されました。");
     }
 
-    public void TakeDamage(int damage,Player player)
+    public void TakeDamage(float damage,Player player, Skill skill)
     {
+
+
+        Debug.Log(damage);
         damage -= DF;
+        Debug.Log(damage);
+
         if(damage < 0) damage = 0;
         battleManager.hyouzi(damage);
 
@@ -45,6 +55,24 @@ public class Enemy : MonoBehaviour
         if (currentHealth < 0) currentHealth = 0;
         UpdateHealthBar();
         StartCoroutine("PlayDamageAnimation");
+        if (currentHealth <= 0)
+        {
+            Die(player);
+        }
+    }
+
+    public void SupecialDamage(int damage, Player player)//スペシャル技用ダメージ+++++独自の効果を作る
+    {
+        battleManager.hyouzi(damage);
+
+        health -= damage;
+        Debug.Log(health);
+        currentHealth -= damage;
+
+        if (currentHealth < 0) currentHealth = 0;
+        UpdateHealthBar();
+        StartCoroutine("PlayDamageAnimation");
+
         if (currentHealth <= 0)
         {
             Die(player);

@@ -8,11 +8,11 @@ public class GaugeManager : MonoBehaviour
 
     private Slider hpSlider;
 
-    private Transform characterTransform; // キャラクターのTransform
-
     public Player player; // プレイヤーキャラクターを参照
 
     private Animator GBA;
+
+    private Vector3 worldPosition = new Vector3();
 
     void Start()
     {
@@ -23,41 +23,17 @@ public class GaugeManager : MonoBehaviour
             hpSlider.value = player.currentGauge;
         }
 
-        characterTransform = this.transform;
-
-        if (player != null) //すでにたまってるゲージ分を最初に反映されるようにする
-        {
-            //UpdateHealth(player.currentHealth, player.maxHealth);
-        }
     }
 
-    void Update()
+    void LateUpdate()
     {
-        // キャラクターの位置に応じてHPバーの位置を更新
-        /*
         if (gaugeInstance != null)
         {
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(characterTransform.position + Vector3.up * 4.0f); 
-            gaugeInstance.transform.position = screenPosition;
+            worldPosition = new Vector3(0f,2.2f,0f) + transform.position;
         }
-        */
-        
-        if (gaugeInstance != null)
-        {
-            // キャラクターの位置をスクリーン座標に変換
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2.1f);
 
-            // スクリーン座標がカメラの視野内にあるか確認
-            if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
-            {
-                gaugeInstance.transform.position = screenPosition;
-                gaugeInstance.SetActive(true);
-            }
-            else
-            {
-                gaugeInstance.SetActive(false); // カメラ背面の場合は非表示
-            }
-        }
+        gaugeInstance.transform.position = worldPosition;
+
 
         // ゲージを自動で増加
         //FillGauge(Time.deltaTime * fillRate);
@@ -92,7 +68,11 @@ public class GaugeManager : MonoBehaviour
         if (player.currentGauge >= player.maxGauge)
         {
             yield return new WaitForSeconds(0.5f);
-            GBA.SetBool("SpecialBool", true);
+            if(GBA != null)
+            {
+                GBA.SetBool("SpecialBool", true);
+            }
+
         }
         else
         {

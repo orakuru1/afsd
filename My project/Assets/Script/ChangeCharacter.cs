@@ -8,24 +8,36 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
     [SerializeField]private GameObject NowPlayer2; //一時しのぎ
     [SerializeField]private GameObject NowPlayer3; //一時しのぎ
     [SerializeField]private GameObject NowPlayer;
-    [SerializeField]private Transform spanposition;
-    [SerializeField]private  List<GameObject> players = new List<GameObject>();
-    [SerializeField]public static List<Player> ScriptPlayers = new List<Player>();
     [SerializeField]private GameObject ChangeButton;
-    [SerializeField]private Transform ButtonParent;
-    [SerializeField]private List<Sprite> sprite = new List<Sprite>();
-    [SerializeField]private List<string> playernames = new List<string>();
-    private List<GameObject> buttons = new List<GameObject>();
-    [SerializeField]private Vector3 spawnposition = new Vector3();
     [SerializeField]private GameObject targetcamera;
+    [SerializeField]private  List<GameObject> players = new List<GameObject>();
+    private List<GameObject> buttons = new List<GameObject>();
+
+    [SerializeField]private Transform spanposition;
+    [SerializeField]private Transform ButtonParent;
+
+    [SerializeField]public static List<Player> ScriptPlayers = new List<Player>();
+
+    [SerializeField]private List<Sprite> sprite = new List<Sprite>();
+
+    [SerializeField]private Image FadeImage;
+    
+    [SerializeField]private List<string> playernames = new List<string>();
+
+    [SerializeField]private Vector3 spawnposition = new Vector3();
+
     private CameraMove cameraMove;
 
     void Start()
     {
+        BattleData.Instance.SetImage(FadeImage);
+        
         cameraMove = targetcamera.GetComponent<CameraMove>();
 
         if(BattleData.Instance.mainplayers.Count != 0)
         {
+            StartCoroutine(BattleData.Instance.FadeOutBluck(1.5f));//元のシーンに戻ってくるときの演出
+
             spawnposition = BattleData.Instance.spawnposition;
             foreach(string str in BattleData.Instance.mainplayers)
             {
