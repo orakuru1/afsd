@@ -197,7 +197,8 @@ public class BattleManager : MonoBehaviour
     public void BuckSpecial() //スペシャルボタンを押す前に非表示にする
     {
         guagebutton.SetActive(!guagebutton.activeSelf);
-        panelTransform.SetActive(!panelTransform.activeSelf);
+        attackbotton.SetActive(!attackbotton.activeSelf);
+        escapebotton.SetActive(!escapebotton.activeSelf);
     }
 
     public IEnumerator FadeOut(float duration)    // フェードアウト（画面が暗くなる）
@@ -413,6 +414,8 @@ public class BattleManager : MonoBehaviour
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
         }
+        GenerateGuageButtons(player);
+        StartCoroutine(gaugeManager.Animation());
 
         attackakuction = false;
 
@@ -421,9 +424,8 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
 
+        StopCoroutine(gaugeManager.Animation());
         GenerateSkillButtons(player);
-        GenerateGuageButtons(player);
-        StartCoroutine(gaugeManager.Animation());
 
         // ボタンが押されるまで待機
         actionSelected = false; // 初期化
@@ -535,6 +537,7 @@ public class BattleManager : MonoBehaviour
         {
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
+            guagebutton.SetActive(!guagebutton.activeSelf);
         }
     }
 
