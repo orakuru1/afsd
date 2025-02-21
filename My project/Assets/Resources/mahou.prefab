@@ -820,7 +820,7 @@ MonoBehaviour:
   jumpForce: 8
   forwardJumpForce: 6
   backwardJumpForce: 3
-  prepar: {fileID: 0}
+  prepar: {fileID: 6887158025349920571, guid: 0ef719ae23085394f8f2b6980fc44c28, type: 3}
 --- !u!114 &-4017391346922140141
 MonoBehaviour:
   m_ObjectHideFlags: 0
