@@ -12,16 +12,15 @@ public class CameraMove : MonoBehaviour
     public float smoothSpeed = 0.125f; // カメラ追従のスムーズさ
     public float rotationSpeed = 2.5f;
 
-    private float rotationX = 0f; //上下回転の角度
-    private float rotationY = 0f; //左右回転の角度
     private bool isCameraMove = false;
     private bool isScene = false;
 
     [SerializeField]private BattleManager battleManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        rotationY = transform.eulerAngles.y; //初期角度を設定
+
     }
 
     // Update is called once per frame
@@ -112,7 +111,9 @@ public class CameraMove : MonoBehaviour
 
         if(battleManager != null)
         {
-            battleManager.saisyonohyouzi();//**********************************邪魔だから消しておく。本番はオン
+            battleManager.stayturn = false;
+            battleManager.setlog();
+            battleManager.CharaUitrue();
         }
 
         isScene = true;

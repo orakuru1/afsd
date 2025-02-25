@@ -442,7 +442,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.58
-  m_Center: {x: 0, y: 0.53, z: 0}
+  m_Center: {x: 0, y: 0.38, z: 0}
 --- !u!114 &8530981158749530106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,17 +486,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d34d6ad80f8d8e4885d1e9c24e11bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  element: 2
   health: 50
   maxHealth: 50
   enemyname: "\u30B4\u30D6\u30EA\u30F3"
   en: "\u30B4\u30D6\u30EA\u30F3"
+  Race: 
   AT: 10
-  DF: 0
+  DF: 100
   Speed: 0
+  DropGorld: 0
   EXP: 50
   currentHealth: 0
   player: {fileID: 0}
-  DropGorld: 0
+  isBurst: 0
+  CDamage: []
 --- !u!114 &-2765727064167282361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,6 +575,7 @@ MonoBehaviour:
   maxHealth: 0
   currentHealth: 0
   spawnposition: {x: 0, y: 0, z: 0}
+  FadeImage: {fileID: 0}
 --- !u!1 &8531952689402511763
 GameObject:
   m_ObjectHideFlags: 0

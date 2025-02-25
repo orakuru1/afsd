@@ -31,6 +31,7 @@ public class chara : MonoBehaviour
 
         // メインカメラのTransformを取得
         cameraTransform = Camera.main.transform;
+        run = false;
     }
 
     void Update()

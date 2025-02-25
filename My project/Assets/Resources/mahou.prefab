@@ -765,29 +765,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skills:
-  - skillName: ggg
+  - skillName: "\u3064\u3089\u3089"
     damage: 3
     description: 
     buffType: 0
     buffValue: 0
     buffDuration: 0
+    element: 3
+    CDamage: 3
+    CDuration: 3
+    CProbability: 100
     particle: {fileID: 8371754213060712399, guid: 79982ac38eb1a044a83ced518865a3e2,
       type: 3}
   weapon: []
   armor: []
+  Continue: []
   job: 2
+  element: 3
   Spn: "\u7BC4\u56F2\u653B\u6483"
   pn: mahou
-  health: 2950
-  maxHealth: 2950
-  attack: 1200
-  defence: 580
-  Speed: 160
-  Mp: 1110
-  LV: 56
-  XP: 29
-  MaxXp: 74.30083706879996
-  currentHealth: 2950
+  Race: "\u9B54\u6CD5"
+  health: 3000
+  maxHealth: 3000
+  attack: 50
+  defence: 590
+  Speed: 180
+  Mp: 1130
+  LV: 57
+  XP: 54
+  MaxXp: 89.16100448255996
+  currentHealth: 3000
   gold: 0
   currentGauge: 100
   maxGauge: 100
@@ -795,13 +802,14 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 8417ff651ef929f4da545267e0ac155e, type: 3}
   fallThreshold: -30
   respawnUpdateDistance: 1
+  smoothSpeed: 0.5
+  rotationSpeed: 5
+  CDamage: []
   saveButton: {fileID: 0}
   loadButton: {fileID: 0}
-  smoothSpeed: 0.5
   healthSlider: {fileID: 0}
   healthText: {fileID: 0}
   offset: {x: 0, y: 0, z: 0}
-  rotationSpeed: 5
 --- !u!114 &3667553809602528564
 MonoBehaviour:
   m_ObjectHideFlags: 0

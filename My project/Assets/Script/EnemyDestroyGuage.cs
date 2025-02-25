@@ -5,10 +5,19 @@ using UnityEngine.UI;
 public class EnemyDestroyGuage : MonoBehaviour
 {
     [SerializeField]private GameObject Guage;
+
     [SerializeField]private float currentGauge = 0f;
     [SerializeField]private float maxGauge = 100f;
+
     [SerializeField]private Slider slider;
+
     private Enemy enemy;
+
+    private Vector3 worldPosition = new Vector3();
+
+    private Collider Characollider;
+
+    private float objectHeight;
 
     void Start()
     {
@@ -18,28 +27,22 @@ public class EnemyDestroyGuage : MonoBehaviour
             slider = Guage.GetComponentInChildren<Slider>(); //スライダーをいじれるようにした
             slider.maxValue = maxGauge;
             slider.value = currentGauge;
+            Guage.transform.localScale = new Vector3(0.07f,0.07f,0f);
         }
+
+        Characollider = GetComponent<Collider>();
+        objectHeight = Characollider.bounds.size.y;
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if (Guage != null)
         {
-            // キャラクターの位置をスクリーン座標に変換
-            Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2.5f);
-
-            // スクリーン座標がカメラの視野内にあるか確認
-            if (screenPosition.z > 0) // Z座標が0以下だとカメラの背面になる
-            {
-                Guage.transform.position = screenPosition;
-                Guage.SetActive(true); 
-            }
-            else
-            {
-                Guage.SetActive(false); // カメラ背面の場合は非表示
-            }
+            worldPosition = new Vector3(0.1f, objectHeight + 0.3f,0f) + transform.position;
         }
+
+        Guage.transform.position = worldPosition;
 
     }
     public void FillGauge(float amount)
@@ -53,7 +56,7 @@ public class EnemyDestroyGuage : MonoBehaviour
         }
         if(currentGauge >= maxGauge)
         {
-            enemy.ChangeBurst();
+            enemy.isBurst = true;
         }
 
         // SliderのUIに反映

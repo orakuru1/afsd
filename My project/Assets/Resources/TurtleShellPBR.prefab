@@ -594,7 +594,7 @@ CapsuleCollider:
   m_Radius: 0.6
   m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0.6, z: 0}
+  m_Center: {x: 0, y: 0.27, z: 0}
 --- !u!114 &8459566878870605169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -607,17 +607,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d34d6ad80f8d8e4885d1e9c24e11bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  element: 3
   health: 50
   maxHealth: 50
   enemyname: TurtleShellPBR
   en: "\u4E80"
+  Race: 
   AT: 100
   DF: 50
   Speed: 20
+  DropGorld: 0
   EXP: 50
   currentHealth: 50
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
-  DropGorld: 0
 --- !u!114 &3436241718584592849
 MonoBehaviour:
   m_ObjectHideFlags: 0

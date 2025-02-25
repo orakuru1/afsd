@@ -443,7 +443,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1931298151966786}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.056, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -483,10 +483,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.7
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.6, z: 0}
+  m_Radius: 0.49
+  m_Height: 1.18
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.48, z: 0}
 --- !u!114 &8169121135567844313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,16 +499,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d34d6ad80f8d8e4885d1e9c24e11bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  element: 0
   health: 50
   maxHealth: 50
   enemyname: SlimePBR
+  en: 
+  Race: 
   AT: 75
   DF: 50
   Speed: 10
+  DropGorld: 0
   EXP: 50
   currentHealth: 50
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
-  DropGorld: 0
 --- !u!114 &4198137525506542743
 MonoBehaviour:
   m_ObjectHideFlags: 0

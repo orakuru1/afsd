@@ -206,7 +206,6 @@ GameObject:
   - component: {fileID: 33084644472669152}
   - component: {fileID: 23305035852080942}
   - component: {fileID: 7856604670449273593}
-  - component: {fileID: 8164558617233137633}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
@@ -292,19 +291,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDamage: 150
---- !u!65 &8164558617233137633
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1076420036850812}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.34595177, y: 1.4528031, z: 0.06556256}
-  m_Center: {x: -0.000000010724975, y: -0.5163905, z: 0.00000055296135}
 --- !u!1 &1079146182250078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1576,7 +1562,6 @@ GameObject:
   - component: {fileID: 3760287559151789196}
   - component: {fileID: 1253116640013937438}
   - component: {fileID: 2803325598252015711}
-  - component: {fileID: 5878806488644425581}
   m_Layer: 0
   m_Name: RPGHeroHP
   m_TagString: Player
@@ -1632,10 +1617,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.96
+  m_Height: 1.89
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.91, z: 0}
 --- !u!54 &-5875718603974644040
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1687,6 +1672,10 @@ MonoBehaviour:
     buffType: 0
     buffValue: 0
     buffDuration: 0
+    element: 2
+    CDamage: 10
+    CDuration: 3
+    CProbability: 100
     particle: {fileID: 4715361061038710620, guid: 87f8ee6ce2b831042bacf5899a5b9d33,
       type: 3}
   - skillName: ice
@@ -1695,6 +1684,10 @@ MonoBehaviour:
     buffType: 0
     buffValue: 0
     buffDuration: 0
+    element: 0
+    CDamage: 0
+    CDuration: 0
+    CProbability: 0
     particle: {fileID: 8371754213060712399, guid: 79982ac38eb1a044a83ced518865a3e2,
       type: 3}
   - skillName: attackbuff
@@ -1703,6 +1696,10 @@ MonoBehaviour:
     buffType: 1
     buffValue: 30
     buffDuration: 3
+    element: 0
+    CDamage: 0
+    CDuration: 0
+    CProbability: 0
     particle: {fileID: 597322414690159659, guid: 4786b0e7c24d6a244b2f1f036d0e8222,
       type: 3}
   weapon:
@@ -1737,35 +1734,37 @@ MonoBehaviour:
     description: "\u9632\u5FA1\u529B\u304C\u5411\u4E0A\u3059\u308B\u76FE"
     price: 100
     BuckSprite: {fileID: 0}
+  Continue: []
   job: 1
+  element: 3
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
-  health: 2380
-  maxHealth: 2380
-  attack: 1050
-  defence: 300
-  Speed: 111
+  Race: "\u5263\u58EB"
+  health: 3920
+  maxHealth: 3920
+  attack: 0
+  defence: 520
+  Speed: 1111
   Mp: 0
-  LV: 42
-  XP: 39
-  MaxXp: 61.91736422399997
-  currentHealth: 2380
+  LV: 64
+  XP: 211
+  MaxXp: 221.86111067404357
+  currentHealth: 3920
   gold: 2880
-  currentGauge: 30
+  currentGauge: 100
   maxGauge: 100
-  sharp: 50
+  sharp: 100
   sprite: {fileID: 21300000, guid: d8eb1772fbef05c4f98c59a2698d9d21, type: 3}
   fallThreshold: -30
   respawnUpdateDistance: 1
+  smoothSpeed: 0.5
+  rotationSpeed: 5
+  CDamage: []
   saveButton: {fileID: 0}
   loadButton: {fileID: 0}
-  smoothSpeed: 0.5
-  healthSlider: {fileID: 613616688714125148, guid: 0369c5c771798de4994fd9304d4b2aff,
-    type: 3}
-  healthText: {fileID: 7946798750249054020, guid: 4f446589f8d8bf843931a4b99a3ffea9,
-    type: 3}
+  healthSlider: {fileID: 0}
+  healthText: {fileID: 0}
   offset: {x: 0, y: 0, z: 0}
-  rotationSpeed: 5
 --- !u!114 &1253116640013937438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1796,25 +1795,10 @@ MonoBehaviour:
   inJumping: 0
   speed: 10
   sprintSpeed: 20
-  jumpForce: 10
+  jumpForce: 8
   forwardJumpForce: 6
   backwardJumpForce: 3
   prepar: {fileID: 6887158025349920571, guid: 0ef719ae23085394f8f2b6980fc44c28, type: 3}
---- !u!114 &5878806488644425581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1556040939566342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a949f81487d9c44e95d99e7c8119736, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 100
-  currentHP: 100
-  CharacterName: 
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0

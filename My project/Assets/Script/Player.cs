@@ -14,8 +14,13 @@ public class Skill //攻撃する表示のスキルたち、４個ぐらいか�
     public BuffType buffType; // 付与するバフの種類
     public int buffValue; // バフの上昇値
     public int buffDuration; // バフの持続ターン数
+    public Element element;//属性の種類
+    public float CDamage;//継続ダメージ Continuous Damage
+    public float CDuration;//継続ダメージの継続数
+    public float CProbability;//継続ダメージの確率
     public ParticleSystem particle;
 }
+
 [System.Serializable]
 public class Weapon  //防具や武器のステータス・・・・・・0番が武器として機能している。１番が防具として機能している
 {
@@ -25,6 +30,7 @@ public class Weapon  //防具や武器のステータス・・・・・・0番�
     public int price; //装備の値段
     public Sprite BuckSprite;
 }
+
 [System.Serializable]
 public class Armor
 {
@@ -34,6 +40,7 @@ public class Armor
     public int price; //装備の値段
     public Sprite BuckSprite;
 }
+
 public enum BuffType//*****************見た目がわかりやすく可読性が増すであろう。数字などで管理しているときは使ってみてもよい。多くなりすぎるとやばい。switch分
 {
     None,       // バフなし
@@ -41,6 +48,7 @@ public enum BuffType//*****************見た目がわかりやすく可読性�
     DefenseUp,  // 防御力アップ
     SpeedUp     // スピードアップ
 }
+
 public enum Job
 {
     None,
@@ -49,31 +57,46 @@ public enum Job
     Seef
 }
 
+public enum Element
+{
+    None,
+    Variable,
+    Fire,
+    Water,
+    Grass
+}
+
 public class Player : MonoBehaviour
 {
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト
+
     public List<Weapon> weapon = new List<Weapon>(); //装備が入ってるリスト
+
     public List<Armor> armor = new List<Armor>(); //装備が入ってるリスト
 
+    public List<float> Continue = new List<float>(); //継続ダメージ
+
     [Header("ステータスここから")]
-    [SerializeField]public Job job; //役職
+    public Job job; //役職
+    public Element element;
     [SerializeField]private string Spn;
-    [SerializeField]public string pn;
-    [SerializeField]public float health; //死んだ処理のHP
-    [SerializeField]public float maxHealth;//一緒になってる
-    [SerializeField] public int attack; //攻撃力
-    [SerializeField] public int defence; //防御力
-    [SerializeField] public int Speed;
-    [SerializeField] public int Mp;
-    [SerializeField] public int LV; //現在のレベル
-    [SerializeField] public double XP; //現在の経験値
-    [SerializeField] public double MaxXp; //次のレベルアップの値
-    [SerializeField]public float currentHealth; //HPバーに反映される値　(前のHPとごっちゃになった)
-    [SerializeField]public int gold; // プレイヤーの初期ゴールド
-    [SerializeField]public float currentGauge; // 現在のゲージ値
-    [SerializeField]public float maxGauge;
+    public string pn;
+    public string Race;
+    public float health; //死んだ処理のHP
+    public float maxHealth;//一緒になってる
+    public int attack; //攻撃力
+    public int defence; //防御力
+    public int Speed;
+    public int Mp;
+    public int LV; //現在のレベル
+    public double XP; //現在の経験値
+    public double MaxXp; //次のレベルアップの値
+    public float currentHealth; //HPバーに反映される値　(前のHPとごっちゃになった)
+    public int gold; // プレイヤーの初期ゴールド
+    public float currentGauge; // 現在のゲージ値
+    public float maxGauge;
     public float sharp;
-    [SerializeField]public Sprite sprite;
+    public Sprite sprite;
 
     //*************************ここまでプレイヤーのステータス
 
@@ -85,10 +108,13 @@ public class Player : MonoBehaviour
 
     public float fallThreshold = -30.0f; //落下とみなすY座標のしきい値
     public float respawnUpdateDistance = 1.0f; //リスポーン位置を更新する間隔（メートル単位）
-    public Button saveButton; //セーブボタンをUIから設定できるようにする
-    public Button loadButton;
     public float smoothSpeed = 0.5f; //HPバーが減る速度（小さいほど遅い）
     private float targetSliderValue; //スライダーの目標値
+    public float rotationSpeed = 5.0f;
+    public List<float> CDamage = new List<float>();//継続ダメージ中
+
+    public Button saveButton; //セーブボタンをUIから設定できるようにする
+    public Button loadButton;
 
     private Animator anim; //アニメション
     public Slider healthSlider; //HPバー
@@ -96,21 +122,57 @@ public class Player : MonoBehaviour
 
     private HealthBarManager healthBarManager; //HPバーを管理するスクリプト
 
+    private BGController bGController;
+
+    private GaugeManager gaugeManager;
+
     private BattleManager battleManager; //ターン制バトルを管理するスクリプト
     
     private SpecialSkill specialSkill;
 
     private CameraMove cameraMove;
-    public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
-    public float rotationSpeed = 5.0f;
 
+    public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
     private Vector3 battleStartPosition; //戦闘開始位置初め
+
 
     //public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
     private Color color;
     private Dictionary<BuffType, int> ActiveBuffs = new Dictionary<BuffType, int>();
     private Dictionary<BuffType, int> ActiveBuffs2 = new Dictionary<BuffType, int>();//dictionaryとenumのコンビは相性がいいと思います
+
+    public void AddCProbalitiy(float current)//継続ダメージが発生
+    {
+        CDamage.Add(current);
+    }
+    
+    public void ContinueCheck()//継続ダメージを食らって１ターンごとに減って。無くならせることができるようになった。
+    // 同じ属性だったら上書きするか？ステータスのデバフは？継続ダメージを食らっていたらUIに表示するのもあり。プレイヤーには実装していない。
+    {
+        if(CDamage.Count == 0) return;
+
+        List<int> RemoveBox = new List<int>();
+
+        for(int i = CDamage.Count -3; i >= 0; i -= 3)
+        {
+            TakeDamage(CDamage[i + 1]);
+            CDamage[i + 2] --;
+
+            if(CDamage[i + 2] <= 0)
+            {
+                RemoveBox.Add(i);
+            }
+        }
+
+        foreach(int con in RemoveBox)
+        {
+            CDamage.RemoveAt(con + 2);
+            CDamage.RemoveAt(con + 1);
+            CDamage.RemoveAt(con);
+        }
+    }
+
     public void ApplyBuff(BuffType buffType, int value, int duration)
     {
         if (buffType == BuffType.None) return; // バフなしなら処理しない
@@ -198,7 +260,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-    public void SetSpecialSkill(SpecialSkill skill) //継承元の親だけでいい
+    public void SetSpecialSkill(SpecialSkill skill) //継承元の親だけでいい************************スキルの属性や継続ダメージを作るためにスキルをいじる
     {
         specialSkill = skill;
         skill.Initialize(this,battleManager);
@@ -332,6 +394,7 @@ public class Player : MonoBehaviour
             Debug.Log("逃げられなかった!");
         }
     }
+
     public void Attack(Skill skill,Player player,GameObject panel) //プレイヤーの攻撃処理
     {
         attackmotion = true;
@@ -359,8 +422,10 @@ public class Player : MonoBehaviour
         Invoke(nameof(StopAttack), 0.1f);
         Destroy(panel);
     }
+
     private IEnumerator ExecuteAttack(Enemy target,Skill skill,Player player) //実際に攻撃するところ
     {
+        battleManager.stayturn = true;
         Debug.Log($"{this.name} は {skill.skillName} を使用！");
 
         if (skill.buffType != BuffType.None) // バフがある場合
@@ -372,6 +437,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            battleManager.PlayerUIFalse();
             cameraMove.CharacterToEnemy(this.transform.position);
             cameraMove.SetUp(target.gameObject.transform); //カメラが敵を向くように
             battleManager.ClearBattleLog();
@@ -384,19 +450,34 @@ public class Player : MonoBehaviour
             if(player.weapon.Count == 0)
             {
                 Debug.Log("武器はないよ");
-                damage = Random.Range(player.attack + skill.damage, player.attack + skill.damage);
+                damage = Random.Range(player.attack + skill.damage - 5, player.attack + skill.damage + 5);
             }
             else
             {
                 Debug.Log("武器はあるよ");
-                damage = Random.Range(player.attack + skill.damage + weapon[0].number, player.attack + skill.damage + weapon[0].number); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
+                damage = Random.Range(player.attack + skill.damage + weapon[0].number - 5, player.attack + skill.damage + weapon[0].number + 5); //自分の攻撃力とスキルのダメージと武器のダメージをランダムで幅を出そうとしてる
             }
 
-            target.GetComponent<Enemy>()?.TakeDamage(damage,player); //敵に攻撃を送ってる
+            //yield return new WaitForSeconds(skill.duration); *****************スキルにアニメーションの時間を入れて、その分だけ止める処理
+            Debug.Log(damage);
+            float GetElement = BattleData.Instance.GetElementalMultiplier(skill.element, target.element);
+            Debug.Log(Mathf.Floor(damage * GetElement));
+
+            target.GetComponent<Enemy>()?.TakeDamage(Mathf.Floor(damage * GetElement),player,skill); //敵に攻撃を送ってる
+            
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
             eneguage.FillGauge(sharp);
+
+            if(BattleData.Instance.IsCurentDamage(skill.CProbability) && skill.element != Element.None)//確率で継続ダメージ
+            {
+                Debug.Log("継続ダメージ発動!");
+                target.AddCProbalitiy((int)skill.element);
+                target.AddCProbalitiy(skill.CDamage);
+                target.AddCProbalitiy(skill.CDuration);
+                BattleManager.LastAttackPlayer = player;
+            }
             
-            yield return new WaitForSeconds(1f);//ここに敵にダメージを与えるアニメーションが終わるまでやらないループを作りたい
+            yield return new WaitForSeconds(0.8f);
 
             StartCoroutine(cameraMove.ComeBuckCamera());
 
@@ -413,6 +494,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        battleManager.stayturn = false;
 
         yield return null;
 
@@ -436,7 +519,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage) //自分のダメージを受ける処理
+    public void TakeDamage(float damage) //自分のダメージを受ける処理
     {
         Debug.Log(this.gameObject);
         StartCoroutine("MDamage");
@@ -643,7 +726,6 @@ public class Player : MonoBehaviour
         {
             LoadRespawnPosition();
             transform.position = respawnPosition; //セーブ位置から開
-        
         }
         
         
@@ -663,6 +745,9 @@ public class Player : MonoBehaviour
         cameraMove = Camera.main.GetComponent<CameraMove>();
         //currentHealth = maxHealth;
         healthBarManager = GetComponent<HealthBarManager>(); //自分に追加されてるはずのＨＰバーのスクリプトを使えるようにしてる
+        bGController = GetComponent<BGController>();
+        gaugeManager = GetComponent<GaugeManager>();
+
         UpdateHealthBar(); //現在のＨＰを反映(最初からＨＰが減ってるときのため)
         anim = GetComponent<Animator>();
         //skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
