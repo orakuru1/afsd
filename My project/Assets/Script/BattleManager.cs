@@ -484,8 +484,9 @@ public class BattleManager : MonoBehaviour
             float GetElement = BattleData.Instance.GetElementalMultiplier(enemy.element, targetPlayer.element); //属性確認
             Debug.Log(damage);
             Debug.Log(Mathf.Floor(damage * GetElement));
+            Instantiate(enemy.AEfect, targetPlayer.transform);
 
-            if(targetPlayer.armor.Count == 0)
+            if (targetPlayer.armor.Count == 0)
             {
                 Debug.Log("防具ないよ");
                 damage -= targetPlayer.defence;

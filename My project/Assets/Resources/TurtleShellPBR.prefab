@@ -618,8 +618,11 @@ MonoBehaviour:
   Speed: 20
   DropGorld: 0
   EXP: 50
+  AEfect: {fileID: 6832070047915410894, guid: 0f3fb1427af06fc468db378704ea1cd0, type: 3}
   currentHealth: 50
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
+  isBurst: 0
+  CDamage: []
 --- !u!114 &3436241718584592849
 MonoBehaviour:
   m_ObjectHideFlags: 0
