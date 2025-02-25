@@ -14,6 +14,10 @@ public class HealthBarManager : MonoBehaviour
 
     private Vector3 worldPosition = new Vector3();
 
+    private Collider Characollider;
+
+    private float objectHeight;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +39,9 @@ public class HealthBarManager : MonoBehaviour
         {
             hpBarInstance.transform.localScale = new Vector3(0.07f,0.1f,0f);
         }
+
+        Characollider = GetComponent<Collider>();
+        objectHeight = Characollider.bounds.size.y;
     }
 
     // Update is called once per frame
@@ -43,11 +50,11 @@ public class HealthBarManager : MonoBehaviour
         // キャラクターの位置に応じてHPバーの位置を更新
         if (hpBarInstance != null && player != null)
         {
-            worldPosition = new Vector3(0f,2f,0f) + transform.position;
+            worldPosition = new Vector3(0f, objectHeight + 0.1f,0f) + transform.position;
         }
         else
         {
-            worldPosition = new Vector3(0.1f,2.3f,0f) + transform.position;
+            worldPosition = new Vector3(0.1f, objectHeight + 0.1f,0f) + transform.position;
         }
 
         hpBarInstance.transform.position = worldPosition;

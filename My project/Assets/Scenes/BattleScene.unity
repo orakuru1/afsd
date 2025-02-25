@@ -1262,6 +1262,7 @@ MonoBehaviour:
   transparentButton: {fileID: 2083594662}
   BrackGraund: {fileID: 2645369457355118942, guid: 4f11cb04d117c694fab7d15c298d7822,
     type: 3}
+  EnemyTarget: {fileID: 1945721941}
   oomoto:
   - {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
   - {fileID: 814358144672151781, guid: ccd8c3b89aa02e943a08ab9238a8a70c, type: 3}

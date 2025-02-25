@@ -15,9 +15,9 @@ public class Skill //攻撃する表示のスキルたち、４個ぐらいか�
     public int buffValue; // バフの上昇値
     public int buffDuration; // バフの持続ターン数
     public Element element;//属性の種類
-    public int CDamage;//継続ダメージの確率 Continuous Damage
-    public int CDuration;//継続ダメージの確率
-    public int CProbability;//継続ダメージの確率
+    public float CDamage;//継続ダメージ Continuous Damage
+    public float CDuration;//継続ダメージの継続数
+    public float CProbability;//継続ダメージの確率
     public ParticleSystem particle;
 }
 
@@ -69,8 +69,12 @@ public enum Element
 public class Player : MonoBehaviour
 {
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト
+
     public List<Weapon> weapon = new List<Weapon>(); //装備が入ってるリスト
+
     public List<Armor> armor = new List<Armor>(); //装備が入ってるリスト
+
+    public List<float> Continue = new List<float>(); //継続ダメージ
 
     [Header("ステータスここから")]
     public Job job; //役職
@@ -107,6 +111,7 @@ public class Player : MonoBehaviour
     public float smoothSpeed = 0.5f; //HPバーが減る速度（小さいほど遅い）
     private float targetSliderValue; //スライダーの目標値
     public float rotationSpeed = 5.0f;
+    public List<float> CDamage = new List<float>();//継続ダメージ中
 
     public Button saveButton; //セーブボタンをUIから設定できるようにする
     public Button loadButton;
@@ -136,6 +141,37 @@ public class Player : MonoBehaviour
     private Color color;
     private Dictionary<BuffType, int> ActiveBuffs = new Dictionary<BuffType, int>();
     private Dictionary<BuffType, int> ActiveBuffs2 = new Dictionary<BuffType, int>();//dictionaryとenumのコンビは相性がいいと思います
+
+    public void AddCProbalitiy(float current)//継続ダメージが発生
+    {
+        CDamage.Add(current);
+    }
+    
+    public void ContinueCheck()//継続ダメージを食らって１ターンごとに減って。無くならせることができるようになった。
+    // 同じ属性だったら上書きするか？ステータスのデバフは？継続ダメージを食らっていたらUIに表示するのもあり。プレイヤーには実装していない。
+    {
+        if(CDamage.Count == 0) return;
+
+        List<int> RemoveBox = new List<int>();
+
+        for(int i = CDamage.Count -3; i >= 0; i -= 3)
+        {
+            TakeDamage(CDamage[i + 1]);
+            CDamage[i + 2] --;
+
+            if(CDamage[i + 2] <= 0)
+            {
+                RemoveBox.Add(i);
+            }
+        }
+
+        foreach(int con in RemoveBox)
+        {
+            CDamage.RemoveAt(con + 2);
+            CDamage.RemoveAt(con + 1);
+            CDamage.RemoveAt(con);
+        }
+    }
 
     public void ApplyBuff(BuffType buffType, int value, int duration)
     {
@@ -431,6 +467,15 @@ public class Player : MonoBehaviour
             
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
             eneguage.FillGauge(sharp);
+
+            if(BattleData.Instance.IsCurentDamage(skill.CProbability) && skill.element != Element.None)//確率で継続ダメージ
+            {
+                Debug.Log("継続ダメージ発動!");
+                target.AddCProbalitiy((int)skill.element);
+                target.AddCProbalitiy(skill.CDamage);
+                target.AddCProbalitiy(skill.CDuration);
+                BattleManager.LastAttackPlayer = player;
+            }
             
             yield return new WaitForSeconds(0.8f);
 

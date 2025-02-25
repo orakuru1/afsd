@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6869318551580310034}
   - component: {fileID: 6653749733020860316}
   - component: {fileID: 8603648588655565146}
+  - component: {fileID: 2376334045222228747}
   m_Layer: 5
   m_Name: StatusUp
   m_TagString: Untagged
@@ -80,3 +81,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u30EC\u30D9\u30EB\u30A2\u30C3\u30D7\u3057\u307E\u3057\u305F\uFF01\uFF01\uFF01"
+--- !u!114 &2376334045222228747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438685511225803540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf1faad9c1f6a3c43a6193d55b8e2626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  fullText: 
+  delay: 0.1

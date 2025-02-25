@@ -14,6 +14,10 @@ public class GaugeManager : MonoBehaviour
 
     private Vector3 worldPosition = new Vector3();
 
+    private Collider Characollider;
+
+    private float objectHeight;
+
     void Start()
     {
         if (gaugeInstance != null)
@@ -23,13 +27,17 @@ public class GaugeManager : MonoBehaviour
             hpSlider.value = player.currentGauge;
         }
 
+        Characollider = GetComponent<Collider>();
+        objectHeight = Characollider.bounds.size.y;
+
     }
 
     void LateUpdate()
     {
+
         if (gaugeInstance != null)
         {
-            worldPosition = new Vector3(0f,2.2f,0f) + transform.position;
+            worldPosition = new Vector3(0f, objectHeight + 0.3f, 0f) + transform.position;
         }
 
         gaugeInstance.transform.position = worldPosition;

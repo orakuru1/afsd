@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
 public class BattleData : MonoBehaviour
 {
     public static BattleData Instance { get; private set; }
@@ -193,6 +194,23 @@ public class BattleData : MonoBehaviour
         if(attack == Element.Grass && defender == Element.Fire) return 0.8f;
 
         return 1f;
+    }
+
+    public void GetCurentDamage(Dictionary<Element, float> damageD, Dictionary<Element, float> DurationD, Element Type, float Damage, float duratin, float probability)
+    {
+        if(Type == Element.None) return;
+
+        float ran = Random.Range(0,100); //0～99
+        if(probability <= ran) return;
+        
+    }
+
+    public bool IsCurentDamage(float probability)
+    {
+        float ran = Random.Range(0,100); //0～99
+        if(probability <= ran) return false;
+
+        return true;
     }
 
     void Start()

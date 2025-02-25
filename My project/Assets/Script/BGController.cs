@@ -9,23 +9,30 @@ public class BGController : MonoBehaviour
 
     private Vector3 worldPosition = new Vector3();
 
+    private Collider Characollider;
+
+    private float objectHeight;
+
     void Start()
     {
         if (BG != null && player == null)
         {
             BG.transform.localScale = new Vector3(0.075f,0.07f,0f);
         }
+
+        Characollider = GetComponent<Collider>();
+        objectHeight = Characollider.bounds.size.y;
     }
     
     void LateUpdate()
     {
         if (BG != null && player != null)
         {
-            worldPosition = new Vector3(-0.21f,2.1f,0f) + transform.position;
+            worldPosition = new Vector3(-0.21f, objectHeight + 0.2f,0f) + transform.position;
         }
         else
         {
-            worldPosition = new Vector3(-0.2f,2.4f,0f) + transform.position;
+            worldPosition = new Vector3(-0.2f, objectHeight + 0.2f,0f) + transform.position;
         }
 
         BG.transform.position = worldPosition;

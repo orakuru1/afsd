@@ -22,15 +22,22 @@ public class Enemy : MonoBehaviour
     private HealthBarManager healthBarManager;
 
     public static Enemy selectedEnemy; // 選択された敵を記録する静的変数
+
     private BattleManager battleManager;
 
     private ArrowManager arrowManager;
 
     [SerializeField]private Player player;
 
-    private bool isBurst = false;
+    public bool isBurst = false;
 
     Animator anim;
+
+    //public Dictionary<Element, float> CDamage = new Dictionary<Element, float>();
+    //public Dictionary<Element, float> CDuration = new Dictionary<Element, float>();
+
+    public List<float> CDamage = new List<float>();
+
     void OnMouseDown()
     {
         // 敵がクリックされたときに、この敵を選択状態にする
@@ -38,13 +45,14 @@ public class Enemy : MonoBehaviour
         Debug.Log($"{gameObject.name} が選択されました。");
     }
 
+    public void AddCProbalitiy(float current)
+    {
+        CDamage.Add(current);
+    }
+
     public void TakeDamage(float damage,Player player, Skill skill)
     {
-
-
-        Debug.Log(damage);
         damage -= DF;
-        Debug.Log(damage);
 
         if(damage < 0) damage = 0;
         battleManager.hyouzi(damage);
@@ -54,6 +62,7 @@ public class Enemy : MonoBehaviour
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
         UpdateHealthBar();
+
         StartCoroutine("PlayDamageAnimation");
         if (currentHealth <= 0)
         {
@@ -68,14 +77,63 @@ public class Enemy : MonoBehaviour
         health -= damage;
         Debug.Log(health);
         currentHealth -= damage;
-
         if (currentHealth < 0) currentHealth = 0;
+
         UpdateHealthBar();
+
         StartCoroutine("PlayDamageAnimation");
 
         if (currentHealth <= 0)
         {
             Die(player);
+        }
+    }
+
+    public void ContinueDamage(float damage)
+    {
+        battleManager.AddLog($"{en}は{damage}の継続ダメージを受けた!");
+
+        health -= damage;
+        Debug.Log(health);
+        currentHealth -= damage;
+        if (currentHealth < 0) currentHealth = 0;
+        Debug.Log($"{damage}の継続ダメージ！");
+
+        UpdateHealthBar();
+
+        StartCoroutine("PlayDamageAnimation");
+
+        if (currentHealth <= 0)
+        {
+            Die(BattleManager.LastAttackPlayer);//誰が継続ダメージを送ってきたのかの判別ができない
+        }
+    }
+
+    public IEnumerator ContinueCheck()//継続ダメージを食らって１ターンごとに減って。無くならせることができるようになった。
+    // 同じ属性だったら上書きするか？ステータスのデバフは？継続ダメージを食らっていたらUIに表示するのもあり。プレイヤーには実装していない。
+    {
+        if(CDamage.Count == 0) yield break;
+
+        List<int> RemoveBox = new List<int>();
+
+        for(int i = CDamage.Count -3; i >= 0; i -= 3)
+        {
+            ContinueDamage(CDamage[i + 1]);
+            CDamage[i + 2] --;
+
+            if(CDamage[i + 2] <= 0)
+            {
+                RemoveBox.Add(i);
+            }
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        foreach(int con in RemoveBox)
+        {
+            CDamage.RemoveAt(con + 2);
+            CDamage.RemoveAt(con + 1);
+            CDamage.RemoveAt(con);
         }
     }
 
@@ -92,31 +150,6 @@ public class Enemy : MonoBehaviour
         {
             healthBarManager.UpdateHealth(currentHealth, maxHealth);
         }
-    }
-
-    public void ChangeBurst()
-    {
-        if(isBurst != true)
-        {
-            isBurst = true;
-        }
-        else
-        {
-            isBurst = false;
-        }
-    }
-    public bool IsTurn()
-    {
-        if(isBurst != false)
-        {
-            ChangeBurst();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
     }
 
     private void Die(Player player)

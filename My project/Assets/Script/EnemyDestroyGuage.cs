@@ -15,6 +15,10 @@ public class EnemyDestroyGuage : MonoBehaviour
 
     private Vector3 worldPosition = new Vector3();
 
+    private Collider Characollider;
+
+    private float objectHeight;
+
     void Start()
     {
         enemy = GetComponent<Enemy>();
@@ -25,6 +29,9 @@ public class EnemyDestroyGuage : MonoBehaviour
             slider.value = currentGauge;
             Guage.transform.localScale = new Vector3(0.07f,0.07f,0f);
         }
+
+        Characollider = GetComponent<Collider>();
+        objectHeight = Characollider.bounds.size.y;
     }
 
     // Update is called once per frame
@@ -32,7 +39,7 @@ public class EnemyDestroyGuage : MonoBehaviour
     {
         if (Guage != null)
         {
-            worldPosition = new Vector3(0.1f,2.45f,0f) + transform.position;
+            worldPosition = new Vector3(0.1f, objectHeight + 0.3f,0f) + transform.position;
         }
 
         Guage.transform.position = worldPosition;
@@ -49,7 +56,7 @@ public class EnemyDestroyGuage : MonoBehaviour
         }
         if(currentGauge >= maxGauge)
         {
-            enemy.ChangeBurst();
+            enemy.isBurst = true;
         }
 
         // SliderのUIに反映

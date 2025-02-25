@@ -764,20 +764,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skills:
-  - skillName: ggg
+  - skillName: "\u3064\u3089\u3089"
     damage: 3
     description: 
     buffType: 0
     buffValue: 0
     buffDuration: 0
-    element: 4
-    CDamage: 0
-    CDuration: 0
-    CProbability: 0
+    element: 3
+    CDamage: 3
+    CDuration: 3
+    CProbability: 100
     particle: {fileID: 8371754213060712399, guid: 79982ac38eb1a044a83ced518865a3e2,
       type: 3}
   weapon: []
   armor: []
+  Continue: []
   job: 2
   element: 3
   Spn: "\u7BC4\u56F2\u653B\u6483"
@@ -802,6 +803,7 @@ MonoBehaviour:
   respawnUpdateDistance: 1
   smoothSpeed: 0.5
   rotationSpeed: 5
+  CDamage: []
   saveButton: {fileID: 0}
   loadButton: {fileID: 0}
   healthSlider: {fileID: 0}
