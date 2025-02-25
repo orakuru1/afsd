@@ -103,7 +103,7 @@ public class EnemyRangedAttack : MonoBehaviour
         rb.velocity = direction * projectileSpeed;
 
         lastAttackTime = Time.time; // 攻撃間隔のリセット
-
+        
         Debug.Log("プレイヤーに向けて攻撃しました！");
         Destroy(projectile, 3f);
     }

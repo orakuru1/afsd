@@ -10,7 +10,7 @@ public class CameraMove : MonoBehaviour
     private Vector3 SavePosition = new Vector3();
 
     public float smoothSpeed = 0.125f; // カメラ追従のスムーズさ
-    public float rotationSpeed = 5.0f;
+    public float rotationSpeed = 2.5f;
 
     private float rotationX = 0f; //上下回転の角度
     private float rotationY = 0f; //左右回転の角度
@@ -49,10 +49,10 @@ public class CameraMove : MonoBehaviour
 
     public void rotationcamera(float duration)
     {
-        StartCoroutine(KaiatenCamera(duration));
+        StartCoroutine(KaitenCamera(duration));
     }
 
-    private IEnumerator KaiatenCamera(float duration)//左右に開店して、敵を見せる
+    private IEnumerator KaitenCamera(float duration)//左右に開店して、敵を見せる
     {
         isCameraMove = true;
         float elapsedTime = 0f;
