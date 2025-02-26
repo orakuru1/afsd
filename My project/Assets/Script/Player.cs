@@ -525,7 +525,7 @@ public class Player : MonoBehaviour
         StartCoroutine("MDamage");
         health -= damage; //HPにダメージを食らう
         if (health < 0) health = 0; //０より下になった時に０にする
-
+        
         currentHealth -= damage; //ＨＰばーも減らす
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // HPを範囲内に制限
 
@@ -610,11 +610,13 @@ public class Player : MonoBehaviour
     void StopDamage()
     {
         damagemotion = false;
+        anim.SetBool("gethit", damagemotion);
     }
 
     IEnumerator MDamage()
     {
         damagemotion = true;
+        anim.SetBool("gethit",damagemotion);
         yield return new WaitForSeconds(4f);
     }
 
@@ -757,7 +759,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
 
         //地面にいるときだけリスポーン位置を更新
         if(isGrounded && Vector3.Distance(respawnPosition, transform.position) >= respawnUpdateDistance)
