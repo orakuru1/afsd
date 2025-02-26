@@ -26,6 +26,9 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
 
     [SerializeField]private Vector3 spawnposition = new Vector3();
 
+    [SerializeField]private Slider hpSlider;
+    [SerializeField]private Text playerNameText;
+
     private CameraMove cameraMove;
 
     void Start()
