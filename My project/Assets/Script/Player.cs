@@ -68,6 +68,7 @@ public enum Element
 
 public class Player : MonoBehaviour
 {
+    #region 変数の宣言
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト
 
     public List<Weapon> weapon = new List<Weapon>(); //装備が入ってるリスト
@@ -135,12 +136,13 @@ public class Player : MonoBehaviour
     public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
     private Vector3 battleStartPosition; //戦闘開始位置初め
-
+    private Vector3 DefaultPosition;
 
     //public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
     private Color color;
     private Dictionary<BuffType, int> ActiveBuffs = new Dictionary<BuffType, int>();
     private Dictionary<BuffType, int> ActiveBuffs2 = new Dictionary<BuffType, int>();//dictionaryとenumのコンビは相性がいいと思います
+    #endregion
 
     public void AddCProbalitiy(float current)//継続ダメージが発生
     {
@@ -173,6 +175,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    #region バフ管理
     public void ApplyBuff(BuffType buffType, int value, int duration)
     {
         if (buffType == BuffType.None) return; // バフなしなら処理しない
@@ -260,6 +263,9 @@ public class Player : MonoBehaviour
             }
         }
     }
+    #endregion 
+
+    #region セットアップ
     public void SetSpecialSkill(SpecialSkill skill) //継承元の親だけでいい************************スキルの属性や継続ダメージを作るためにスキルをいじる
     {
         specialSkill = skill;
@@ -278,7 +284,9 @@ public class Player : MonoBehaviour
     {
         gold += StealGorld; //お金の計算
     }
+    #endregion
 
+    #region 経験値、お金
     public bool SpendGold(int amount) //ショップで買う時の処理
     {
         if (gold >= amount) //お金が値段より持ってるかどうか
@@ -380,7 +388,9 @@ public class Player : MonoBehaviour
 
         //BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);
     }
+    #endregion
 
+    #region 逃げる、攻撃
     public void escape() //逃げるボタンを押されたときの処理
     {
         double ran = Random.Range(1,10); //１～９までのランダム数字(多分)
@@ -434,12 +444,10 @@ public class Player : MonoBehaviour
             player.ApplyBuff(skill.buffType, skill.buffValue, skill.buffDuration);
             battleManager.AddLog(skill.buffType+"で"+skill.buffValue+"の効果がアップした!");
             Instantiate(skill.particle, this.gameObject.transform);
+            yield return new WaitForSeconds(2f);
         }
         else
         {
-            battleManager.PlayerUIFalse();
-            cameraMove.CharacterToEnemy(this.transform.position);
-            cameraMove.SetUp(target.gameObject.transform); //カメラが敵を向くように
             battleManager.ClearBattleLog();
             battleManager.AddLog($"{target.gameObject.name}を攻撃!!");
             Instantiate(skill.particle, target.transform);
@@ -463,7 +471,8 @@ public class Player : MonoBehaviour
             float GetElement = BattleData.Instance.GetElementalMultiplier(skill.element, target.element);
             Debug.Log(Mathf.Floor(damage * GetElement));
 
-            target.GetComponent<Enemy>()?.TakeDamage(Mathf.Floor(damage * GetElement),player,skill); //敵に攻撃を送ってる
+            yield return StartCoroutine(target.GetComponent<Enemy>()?.TakeDamage(Mathf.Floor(damage * GetElement),player,skill)); //敵に攻撃を送ってる
+            //敵のダメージを受けるアニメーションが終わるまで、止まるようにする。
             
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
             eneguage.FillGauge(sharp);
@@ -479,7 +488,7 @@ public class Player : MonoBehaviour
             
             yield return new WaitForSeconds(0.8f);
 
-            StartCoroutine(cameraMove.ComeBuckCamera());
+            //StartCoroutine(cameraMove.ComeBuckCamera());
 
             battleManager.ClearBattleLog();
             foreach(var type in ActiveBuffs.Keys)  //バフがたくさんあったらバトルログに入りきらない
@@ -518,7 +527,9 @@ public class Player : MonoBehaviour
             Debug.Log("エネルギーが足りません");
         }
     }
+    #endregion
 
+    #region ダメージ処理
     public void TakeDamage(float damage) //自分のダメージを受ける処理
     {
         Debug.Log(this.gameObject);
@@ -570,8 +581,19 @@ public class Player : MonoBehaviour
             healthBarManager.UpdateHealth(currentHealth, maxHealth); //違うスクリプトでHPバーを更新してる
         }
     }
+    #endregion
 
     
+    public void CameraToPlayer()
+    {
+        DefaultPosition = transform.position;
+        transform.position = new Vector3(0f, transform.position.y, transform.position.z); 
+    }
+
+    public void PlayerToCamera()
+    {
+        transform.position = DefaultPosition;
+    }
 
     void UpdateHealthUI(bool instant = false)
     {

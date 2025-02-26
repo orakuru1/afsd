@@ -495,7 +495,7 @@ MonoBehaviour:
   AT: 10
   DF: 100
   Speed: 0
-  DropGorld: 0
+  DropGorld: 10
   EXP: 50
   currentHealth: 0
   player: {fileID: 0}

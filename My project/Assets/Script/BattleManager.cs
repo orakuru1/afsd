@@ -11,32 +11,32 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class BattleManager : MonoBehaviour
 {
 
+    #region 変数の宣言
     public static List<Enemy> enemys = new List<Enemy>(); //エネミーのenemyスクリプト
-    public static List<Player> players = new List<Player>(); //プレイヤーのplayerスクリプト
-    public static Player LastAttackPlayer;
+
     public List<object> AllCharacter = new List<object>();
 
+    public Transform pointcamera; // 定点カメラ
     public Transform enemySpawnPoint; // 敵を生成する位置
     public Transform enemySpawnPoint0; // 敵を生成する位置
     public Transform enemySpawnPoint1; // 敵を生成する位置
     public Transform hpBarParent; // HPバーの親（Canvas）
     [SerializeField]private Transform panerspawn; // ボタンを配置する親オブジェクト
+    [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();
 
     public Text battleLog;           // バトルログを表示するUI
     [SerializeField]private Text SulidoText; //誰かのターンテキスト
 
-    public GameObject hpBarPrefab; // HPバーのPrefab
-
     public TextMeshProUGUI gameOverText; // 対象のTextコンポーネント
 
     public Image fadeImage; // フェード用のImage
-    
-    [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();
 
     private List<GameObject> PlayerObject = new List<GameObject>(); //プレイヤーのオブジェクトのほう
     private List<GameObject> insta = new List<GameObject>();
     private List<GameObject> Uis = new List<GameObject>(); //HPやゲージなどのUI
     private List<GameObject> PlayerUis = new List<GameObject>(); //PlayerのHPやゲージなどのUI
+    private List<GameObject> EnemyUis = new List<GameObject>(); //EnemyのHPやゲージなどのUI
+    public GameObject hpBarPrefab; // HPバーのPrefab
     [SerializeField]private List<GameObject> LvLog = new List<GameObject>();
     private GameObject Instance;    //キャラクター生成用
     private GameObject guagebutton;
@@ -55,6 +55,9 @@ public class BattleManager : MonoBehaviour
     [SerializeField]private GameObject BrackGraund;//暗くなる画像
     [SerializeField]private GameObject EnemyTarget;//ターゲットUI
 
+    public static List<Player> players = new List<Player>(); //プレイヤーのplayerスクリプト
+    public static Player LastAttackPlayer;
+    private Player ActionPlayer;
     [SerializeField]private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
     [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
 
@@ -71,6 +74,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField]private Animator SlidoAnimation;
 
     private CameraMove cameraMove;
+    #endregion
     
     void Start()
     {
@@ -117,11 +121,13 @@ public class BattleManager : MonoBehaviour
         SetupPlayers();
     }
 
+    #region 表示・非表示
     public void setlog()
     {
         EnemyTarget.SetActive(!EnemyTarget.activeSelf);
         BattleLog.SetActive(!BattleLog.activeSelf);
     }
+
     public void saisyonohyouzi()//最初の画面を見やすくするため
     {
         EnemyTarget.SetActive(!EnemyTarget.activeSelf);
@@ -153,7 +159,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void PlayerUIFalse()
+    public void PlayerUIFalse()//プレイヤーのUI非表示
     {
         foreach(GameObject Ui in PlayerUis)
         {
@@ -161,7 +167,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void PlayerUITrue()
+    public void PlayerUITrue()//プレイヤーのUI表示
     {
         foreach(GameObject Ui in PlayerUis)
         {
@@ -169,6 +175,60 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    public void EnemyUIFalse()//エネミーのUI非表示
+    {
+        foreach(GameObject Ui in EnemyUis)
+        {
+            Ui.SetActive(false);
+        }
+    }
+
+    public void EnemyUITrue()//エネミーのUI表示
+    {
+        foreach(GameObject Ui in EnemyUis)
+        {
+            Ui.SetActive(true);
+        }
+    }
+
+    public void PlayerObjectFalse(Player player)
+    {
+        foreach(Player pl in players)
+        {
+            if(pl != player)
+            {
+                pl.gameObject.SetActive(false);
+            }
+            else if(!player.gameObject.activeSelf)
+            {
+                player.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    public void PlayerObjectTrue()
+    {
+        foreach(Player pl in players)
+        {
+            pl.gameObject.SetActive(true);
+        }
+    }
+    
+    public void BuckSpecial() //スペシャルボタンを押す前に非表示にする
+    {
+        guagebutton.SetActive(!guagebutton.activeSelf);
+        attackbotton.SetActive(!attackbotton.activeSelf);
+        escapebotton.SetActive(!escapebotton.activeSelf);
+    }
+
+    private void ShowPlayerAndGameOver()
+    {
+        // "GAME OVER" テキストを表示
+        gameOverText.gameObject.SetActive(true);
+    }
+    #endregion
+
+    #region UIの生成・動き
     public void GenerateSkillButtons(Player player)//プレイヤーのスキルを生成
     {
         //GameObject button = Instantiate(skillpanel)
@@ -196,13 +256,6 @@ public class BattleManager : MonoBehaviour
 
         Button btn = guagebutton.GetComponent<Button>();
         btn.onClick.AddListener(() => player.OnSpecialAction(player));
-    }
-
-    public void BuckSpecial() //スペシャルボタンを押す前に非表示にする
-    {
-        guagebutton.SetActive(!guagebutton.activeSelf);
-        attackbotton.SetActive(!attackbotton.activeSelf);
-        escapebotton.SetActive(!escapebotton.activeSelf);
     }
 
     public IEnumerator FadeOut(float duration)    // フェードアウト（画面が暗くなる）
@@ -241,13 +294,9 @@ public class BattleManager : MonoBehaviour
         {
             ElementText.text = ConvertToVertical(enemyComponent.Race);
             bg.AddComponent<LookUI>();
+            EnemyUis.Add(bg);
         }
 
-    }
-
-    string ConvertToVertical(string input)
-    {
-        return string.Join("\n", input.ToCharArray()); // 文字ごとに改行を追加
     }
 
     void CreateHealthBarFor(GameObject character)//HPばーを生成
@@ -269,6 +318,7 @@ public class BattleManager : MonoBehaviour
         else
         {
             hpBar.AddComponent<LookUI>();
+            EnemyUis.Add(hpBar);
         }
     }
 
@@ -297,8 +347,12 @@ public class BattleManager : MonoBehaviour
         enemyguage.SetObject(gameObject);
 
         gameObject.AddComponent<LookUI>();
-    }
 
+        EnemyUis.Add(gameObject);
+    }
+    #endregion
+
+    #region Logの追加
     public void ClearBattleLog() // 空文字列でテキストをクリア
     {
         battleLog.text = ""; 
@@ -309,6 +363,18 @@ public class BattleManager : MonoBehaviour
         battleLog.text += $"\n{message}";
     }
 
+    string ConvertToVertical(string input)
+    {
+        return string.Join("\n", input.ToCharArray()); // 文字ごとに改行を追加
+    }
+
+    public void hyouzi(float damage) //上におんなじのがあったわ
+    {
+        battleLog.text += $"\nプレイヤーが敵に{damage}のダメージ！";
+    }
+    #endregion
+
+    #region メインループバトル
     private IEnumerator StartBattle() //ここを経由する必要全然ないかも
     {
         battleLog.text = "戦闘開始！";
@@ -373,11 +439,6 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void hyouzi(float damage) //上におんなじのがあったわ
-    {
-        battleLog.text += $"\nプレイヤーが敵に{damage}のダメージ！";
-    }
-
     IEnumerator PlayerTurn(Player player)
     {
         while(stayturn == true || LebelupStay == true)//待機中
@@ -387,9 +448,19 @@ public class BattleManager : MonoBehaviour
 
         SulidoText.text = $"<color=#{blueColor}>{player.pn} のターン！</color>";
         yield return new WaitForSeconds(0.35f);
+        PlayerUIFalse();
+        PlayerObjectFalse(player);//プレイヤーの表示非表示をやってるから、重くなるかも。いつか、変える。
+        cameraMove.SetUp(pointcamera);
+        if(ActionPlayer != null)
+        {
+            Debug.Log("位置移動");
+            ActionPlayer.PlayerToCamera();  
+        }
+        ActionPlayer = player;
+        cameraMove.PlayerTurnCamera();
+        player.CameraToPlayer();
 
         SlidoAnimation.SetBool("TurnBool", true);
-        PlayerUITrue();
 
         yield return new WaitForSeconds(0.5f);
 
@@ -444,6 +515,13 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
 
         SlidoAnimation.SetBool("TurnBool", true);
+        cameraMove.SetUp(enemySpawnPoint);
+        cameraMove.EnemyToCamera();
+        if(ActionPlayer != null)
+        {
+            ActionPlayer.PlayerToCamera();
+        }
+        PlayerObjectTrue();
         PlayerUITrue();
 
         yield return new WaitForSeconds(0.5f);
@@ -511,8 +589,6 @@ public class BattleManager : MonoBehaviour
 
             yield return new WaitForSeconds(2f); // 遅延
         }
-
-
     }
 
     void OnActionSelected(string action)//ボタンを押されるまでターンを止める
@@ -530,6 +606,55 @@ public class BattleManager : MonoBehaviour
             escapebotton.SetActive(!escapebotton.activeSelf);
             guagebutton.SetActive(!guagebutton.activeSelf);
         }
+    }
+
+    void SetupPlayers()//プレイヤーにスペシャル技を付与
+    {
+        foreach(Player player in players)
+        {
+            switch (player.job)//************************************リストより重いが,早い。アイテム等の処理は使うとよいだろう
+            {
+                case Job.None:
+                    break;
+                case Job.Worrier:
+                    player.SetSpecialSkill(player.gameObject.AddComponent<AOESpecial>());
+                    break;
+                case Job.Magic:
+                    player.SetSpecialSkill(player.gameObject.AddComponent<HealAllSpecial>());
+                    break;
+            }
+        }
+    }
+
+    public IEnumerator LevelUp(string beforeStr, string afterStr, string StatsName)//レベルアップしたときの特別なログ
+    {
+        LebelupStay = true;
+        LevelupPanel.SetActive(true);
+        transparentButton.SetActive(true);
+
+        GameObject Log = Instantiate(LevelupLog, LevelupPanel.transform);
+        LvLog.Add(Log);
+        Text LVLog = Log.GetComponent<Text>();
+        Log.GetComponent<TextAnimation>().SetText($"{StatsName}は{beforeStr} => {afterStr}に上がった！", LVLog);
+        //LVLog.text = $"{StatsName}は{beforeStr} => {afterStr}に上がった！";
+        yield return null;
+    }
+
+    public void ItaDeret()
+    {
+        foreach (GameObject GO in LvLog)
+        {
+            if (GO != null)
+            {
+                Destroy(GO);
+            }
+            else
+            {
+                Debug.LogWarning("すでにnullになっています");
+            }
+        }
+
+        LvLog.Clear(); // リストもクリア
     }
 
     bool IsBattleOver()
@@ -550,6 +675,35 @@ public class BattleManager : MonoBehaviour
         //Debug.Log($"{enemy.name} の攻撃アニメーションが再生されます！");
     }
 
+    public void StatusOver()//ステータスの更新処理******いずれ他の更新処理に変えたい
+    {
+        foreach(Player player in players)
+        {
+            foreach(Player player2 in oomoto)
+            {
+                if(player.pn == player2.pn)
+                {
+                    Debug.Log(player.pn);
+                    player2.health = player.health;
+                    player2.currentHealth = player.currentHealth;
+                    player2.maxHealth = player.maxHealth;
+                    player2.attack = player.attack;
+                    player2.defence = player.defence;
+                    player2.Speed = player.Speed;
+                    player2.Mp = player.Mp;
+                    player2.LV = player.LV;
+                    player2.XP = player.XP;
+                    player2.MaxXp = player.MaxXp;
+                    player2.gold = player.gold;
+                    player2.currentGauge = player.currentGauge;
+                    player2.job = player.job;
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region キャラクター生成
     void SetupBattle()//キャラクターや敵を生成
     {
         if(BattleData.Instance.mainplayers[0] != null)
@@ -602,8 +756,9 @@ public class BattleManager : MonoBehaviour
             */
         }
     }
+    #endregion
 
-
+    #region バトル終了処理
     private IEnumerator RastLog()//+************************************************
     {
         while(stayturn == true || LebelupStay == true)
@@ -623,86 +778,6 @@ public class BattleManager : MonoBehaviour
         //SceneManager.LoadScene("GAMEMAPP");
     }
 
-    private void ShowPlayerAndGameOver()
-    {
-        // "GAME OVER" テキストを表示
-        gameOverText.gameObject.SetActive(true);
-    }
-
-    void SetupPlayers()//プレイヤーにスペシャル技を付与
-    {
-        foreach(Player player in players)
-        {
-            switch (player.job)//************************************リストより重いが,早い。アイテム等の処理は使うとよいだろう
-            {
-                case Job.None:
-                    break;
-                case Job.Worrier:
-                    player.SetSpecialSkill(player.gameObject.AddComponent<AOESpecial>());
-                    break;
-                case Job.Magic:
-                    player.SetSpecialSkill(player.gameObject.AddComponent<HealAllSpecial>());
-                    break;
-            }
-        }
-    }
-
-    public IEnumerator LevelUp(string beforeStr, string afterStr, string StatsName)//レベルアップしたときの特別なログ
-    {
-        LebelupStay = true;
-        LevelupPanel.SetActive(true);
-        transparentButton.SetActive(true);
-
-        GameObject Log = Instantiate(LevelupLog, LevelupPanel.transform);
-        LvLog.Add(Log);
-        Text LVLog = Log.GetComponent<Text>();
-        Log.GetComponent<TextAnimation>().SetText($"{StatsName}は{beforeStr} => {afterStr}に上がった！", LVLog);
-        //LVLog.text = $"{StatsName}は{beforeStr} => {afterStr}に上がった！";
-        yield return null;
-    }
-    public void ItaDeret()
-    {
-        foreach (GameObject GO in LvLog)
-        {
-            if (GO != null)
-            {
-                Destroy(GO);
-            }
-            else
-            {
-                Debug.LogWarning("すでにnullになっています");
-            }
-        }
-
-        LvLog.Clear(); // リストもクリア
-    }
-    
-    public void StatusOver()//ステータスの更新処理******いずれ他の更新処理に変えたい
-    {
-        foreach(Player player in players)
-        {
-            foreach(Player player2 in oomoto)
-            {
-                if(player.pn == player2.pn)
-                {
-                    Debug.Log(player.pn);
-                    player2.health = player.health;
-                    player2.currentHealth = player.currentHealth;
-                    player2.maxHealth = player.maxHealth;
-                    player2.attack = player.attack;
-                    player2.defence = player.defence;
-                    player2.Speed = player.Speed;
-                    player2.Mp = player.Mp;
-                    player2.LV = player.LV;
-                    player2.XP = player.XP;
-                    player2.MaxXp = player.MaxXp;
-                    player2.gold = player.gold;
-                    player2.currentGauge = player.currentGauge;
-                    player2.job = player.job;
-                }
-            }
-        }
-    }
 
     public void EndBattle()//勝ったとき***************************************
     {
@@ -752,6 +827,7 @@ public class BattleManager : MonoBehaviour
         // フィールドシーンに戻る
         //SceneManager.LoadScene("SampleScene");
     }
+    #endregion
 
     // Update is called once per frame
     void Update()

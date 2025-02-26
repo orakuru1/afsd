@@ -35,10 +35,7 @@ public class HealthBarManager : MonoBehaviour
             UpdateHealth(player.currentHealth, player.maxHealth);
         }
 
-        if (hpBarInstance != null && player == null)
-        {
-            hpBarInstance.transform.localScale = new Vector3(0.07f,0.1f,0f);
-        }
+
 
         Characollider = GetComponent<Collider>();
         objectHeight = Characollider.bounds.size.y;

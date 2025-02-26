@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
         CDamage.Add(current);
     }
 
-    public void TakeDamage(float damage,Player player, Skill skill)
+    public IEnumerator TakeDamage(float damage,Player player, Skill skill)
     {
         damage -= DF;
 
@@ -64,6 +64,8 @@ public class Enemy : MonoBehaviour
         UpdateHealthBar();
 
         StartCoroutine("PlayDamageAnimation");
+        yield return new WaitForSeconds(1f);
+
         if (currentHealth <= 0)
         {
             Die(player);
@@ -89,7 +91,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void ContinueDamage(float damage)
+    public void ContinueDamage(float damage)//継続ダメージの処理
     {
         battleManager.AddLog($"{en}は{damage}の継続ダメージを受けた!");
 

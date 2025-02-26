@@ -15,10 +15,7 @@ public class BGController : MonoBehaviour
 
     void Start()
     {
-        if (BG != null && player == null)
-        {
-            BG.transform.localScale = new Vector3(0.075f,0.07f,0f);
-        }
+
 
         Characollider = GetComponent<Collider>();
         objectHeight = Characollider.bounds.size.y;

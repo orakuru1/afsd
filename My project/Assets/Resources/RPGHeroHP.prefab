@@ -1740,17 +1740,17 @@ MonoBehaviour:
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
   Race: "\u5263\u58EB"
-  health: 3920
-  maxHealth: 3920
-  attack: 0
-  defence: 520
+  health: 4900
+  maxHealth: 4900
+  attack: 7146
+  defence: 660
   Speed: 1111
   Mp: 0
-  LV: 64
-  XP: 211
-  MaxXp: 221.86111067404357
-  currentHealth: 3920
-  gold: 2880
+  LV: 78
+  XP: 23
+  MaxXp: 30
+  currentHealth: 4900
+  gold: 3050
   currentGauge: 100
   maxGauge: 100
   sharp: 100
