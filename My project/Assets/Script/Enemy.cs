@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
+    public List<Skill> skills = new List<Skill>();
+    
     private EnemyCounter enemyCounter;
     public Element element;
     public float health = 50; //HP
@@ -50,7 +52,7 @@ public class Enemy : MonoBehaviour
         CDamage.Add(current);
     }
 
-    public IEnumerator TakeDamage(float damage,Player player, Skill skill)
+    public IEnumerator TakeDamage(float damage,Player player)
     {
         damage -= DF;
 

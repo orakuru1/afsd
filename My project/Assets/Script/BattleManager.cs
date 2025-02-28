@@ -13,7 +13,6 @@ public class BattleManager : MonoBehaviour
 
     #region 変数の宣言
     public static List<Enemy> enemys = new List<Enemy>(); //エネミーのenemyスクリプト
-
     public List<object> AllCharacter = new List<object>();
 
     public Transform pointcamera; // 定点カメラ
@@ -24,8 +23,10 @@ public class BattleManager : MonoBehaviour
     [SerializeField]private Transform panerspawn; // ボタンを配置する親オブジェクト
     [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();
 
+
     public Text battleLog;           // バトルログを表示するUI
     [SerializeField]private Text SulidoText; //誰かのターンテキスト
+    [SerializeField]private List<Text> PAUINameText = new List<Text>();
 
     public TextMeshProUGUI gameOverText; // 対象のTextコンポーネント
 
@@ -36,6 +37,7 @@ public class BattleManager : MonoBehaviour
     private List<GameObject> Uis = new List<GameObject>(); //HPやゲージなどのUI
     private List<GameObject> PlayerUis = new List<GameObject>(); //PlayerのHPやゲージなどのUI
     private List<GameObject> EnemyUis = new List<GameObject>(); //EnemyのHPやゲージなどのUI
+    [SerializeField]private List<GameObject> PlayerAttackPanel = new List<GameObject>();//基本のUIパネル
     public GameObject hpBarPrefab; // HPバーのPrefab
     [SerializeField]private List<GameObject> LvLog = new List<GameObject>();
     private GameObject Instance;    //キャラクター生成用
@@ -54,6 +56,13 @@ public class BattleManager : MonoBehaviour
     [SerializeField]private GameObject transparentButton; //透明なボタン
     [SerializeField]private GameObject BrackGraund;//暗くなる画像
     [SerializeField]private GameObject EnemyTarget;//ターゲットUI
+    [SerializeField]private GameObject HPAttackPanel;
+    [SerializeField]private GameObject AttackHP;
+    [SerializeField]private GameObject AttackHPText;
+    [SerializeField]private GameObject AttackSP;
+    [SerializeField]private GameObject AttackSPText;
+    [SerializeField]private GameObject AttackMP;
+    [SerializeField]private GameObject AttackMPText;
 
     public static List<Player> players = new List<Player>(); //プレイヤーのplayerスクリプト
     public static Player LastAttackPlayer;
@@ -74,10 +83,17 @@ public class BattleManager : MonoBehaviour
     [SerializeField]private Animator SlidoAnimation;
 
     private CameraMove cameraMove;
+
+
+    private int PCO;
+    private int ECO;
     #endregion
     
+
     void Start()
     {
+        PlayerAttackUIFalse();//AttackUiを消してる
+
         BattleData.Instance.SetImage(fadeImage);
         StartCoroutine(BattleData.Instance.FadeOutBluck(1.5f));
 
@@ -104,7 +120,9 @@ public class BattleManager : MonoBehaviour
         {
             CreateGraund(player);
             CreateHealthBarFor(player);
+            CreateMPUI(player);
             CreateGuageBar(player);
+            PCO += 1;
         } 
 
         // 敵を探してHPバーを生成（複数の敵に対応）
@@ -114,6 +132,7 @@ public class BattleManager : MonoBehaviour
             CreateGraund(enemy);
             CreateHealthBarFor(enemy);    //ゲージ技の生成もここでやる。次回予定
             GenerateEnemyGuageButton(enemy);
+            ECO += 1;
         }
 
         //ScriptPlayer.OnStatsUpdated += SyncPlayerStats;
@@ -130,6 +149,7 @@ public class BattleManager : MonoBehaviour
 
     public void saisyonohyouzi()//最初の画面を見やすくするため
     {
+        HPAttackPanel.SetActive(!HPAttackPanel.activeSelf);
         EnemyTarget.SetActive(!EnemyTarget.activeSelf);
         BattleLog.SetActive(!BattleLog.activeSelf);
         attackbotton.SetActive(!attackbotton.activeSelf);
@@ -191,7 +211,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void PlayerObjectFalse(Player player)
+    public void PlayerObjectFalse(Player player)//プレイヤー自体を非表示
     {
         foreach(Player pl in players)
         {
@@ -206,16 +226,25 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void PlayerObjectTrue()
+    public void PlayerObjectTrue()//プレイヤー全体の表示
     {
         foreach(Player pl in players)
         {
             pl.gameObject.SetActive(true);
         }
     }
+
+    public void PlayerAttackUIFalse()
+    {
+        foreach(GameObject go in PlayerAttackPanel)
+        {
+            go.SetActive(false);
+        }
+    }
     
     public void BuckSpecial() //スペシャルボタンを押す前に非表示にする
     {
+        HPAttackPanel.SetActive(!HPAttackPanel.activeSelf);
         guagebutton.SetActive(!guagebutton.activeSelf);
         attackbotton.SetActive(!attackbotton.activeSelf);
         escapebotton.SetActive(!escapebotton.activeSelf);
@@ -305,10 +334,15 @@ public class BattleManager : MonoBehaviour
         GameObject hpBar = Instantiate(hpBarPrefab, hpBarParent);
         Uis.Add(hpBar);
 
+        GameObject PUP = Instantiate(AttackHP, PlayerAttackPanel[PCO].transform);//PlayerUiPanel
+        GameObject PUT = Instantiate(AttackHPText, PlayerAttackPanel[PCO].transform);//PlayerUiText
+
         // キャラクターの位置に応じたHPバーを管理するスクリプトを設定
         HealthBarManager healthBarManager = character.AddComponent<HealthBarManager>();
         healthBarManager.hpBarInstance = hpBar;
-
+        healthBarManager.PanelhpBar = PUP.GetComponent<Slider>();
+        healthBarManager.HPText = PUT.GetComponent<Text>();
+        
         Player playerComponent = character.GetComponent<Player>();
         if (playerComponent != null)
         {
@@ -320,6 +354,10 @@ public class BattleManager : MonoBehaviour
             hpBar.AddComponent<LookUI>();
             EnemyUis.Add(hpBar);
         }
+
+        
+
+        
     }
 
     void CreateGuageBar(GameObject character)//スペシャル技のゲージを生成
@@ -327,14 +365,35 @@ public class BattleManager : MonoBehaviour
         GameObject guagebar = Instantiate(GuageBar,hpBarParent);
         Uis.Add(guagebar);
 
+        GameObject PAUS = Instantiate(AttackSP, PlayerAttackPanel[PCO].transform);//PlayerAttackUiSpecial
+        GameObject PAUST = Instantiate(AttackSPText, PlayerAttackPanel[PCO].transform);
+
         GaugeManager gaugemanager = character.AddComponent<GaugeManager>();
         gaugemanager.gaugeInstance = guagebar;
+        gaugemanager.PAUS = PAUS.GetComponent<Slider>();
+        gaugemanager.SPText = PAUST.GetComponent<Text>();
 
         Player playerComponent = character.GetComponent<Player>();
         if (playerComponent != null)
         {
             gaugemanager.player = playerComponent;
             PlayerUis.Add(guagebar);
+        }
+    }
+
+    public void CreateMPUI(GameObject character)//MPBarの生成
+    {
+        GameObject MPBar = Instantiate(AttackMP,PlayerAttackPanel[PCO].transform);
+        GameObject MPText = Instantiate(AttackMPText, PlayerAttackPanel[PCO].transform);
+
+        MPBar mpbar = character.AddComponent<MPBar>();
+        mpbar.MPSlider = MPBar.GetComponent<Slider>();
+        mpbar.MpText = MPText.GetComponent<Text>();
+
+        Player playerComponent = character.GetComponent<Player>();
+        if (playerComponent != null)
+        {
+            mpbar.player = playerComponent;
         }
     }
 
@@ -351,6 +410,7 @@ public class BattleManager : MonoBehaviour
         EnemyUis.Add(gameObject);
     }
     #endregion
+
 
     #region Logの追加
     public void ClearBattleLog() // 空文字列でテキストをクリア
@@ -380,6 +440,7 @@ public class BattleManager : MonoBehaviour
         battleLog.text = "戦闘開始！";
         if(attackbotton.activeSelf == true)
         {
+            HPAttackPanel.SetActive(!HPAttackPanel.activeSelf);
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
         }
@@ -430,6 +491,7 @@ public class BattleManager : MonoBehaviour
                 // バトル終了条件を確認
                 if (IsBattleOver())
                 {
+                    StartCoroutine(EndBattleSequence());
                     yield break;
                 }
             }
@@ -458,7 +520,7 @@ public class BattleManager : MonoBehaviour
         }
         ActionPlayer = player;
         cameraMove.PlayerTurnCamera();
-        player.CameraToPlayer();
+        player.CameraToPlayer();//キャラとカメラの移動
 
         SlidoAnimation.SetBool("TurnBool", true);
 
@@ -468,10 +530,12 @@ public class BattleManager : MonoBehaviour
 
         GaugeManager gaugeManager = player.GetComponent<GaugeManager>();
         gaugeManager.FillGauge(10f); //ゲージを増やす
+        player.MPHeal();
         battleLog.text = $"{player.name} のターン！";
 
         if(attackbotton.activeSelf == false)
         {
+            HPAttackPanel.SetActive(!HPAttackPanel.activeSelf);
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
         }
@@ -544,6 +608,7 @@ public class BattleManager : MonoBehaviour
 
         if(attackbotton.activeSelf == true)
         {
+            HPAttackPanel.SetActive(!HPAttackPanel.activeSelf);
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
         }
@@ -602,6 +667,7 @@ public class BattleManager : MonoBehaviour
         attackakuction = true; // ボタンが押されたことを通知
         if(attackbotton.activeSelf == true)
         {
+            HPAttackPanel.SetActive(!HPAttackPanel.activeSelf);
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
             guagebutton.SetActive(!guagebutton.activeSelf);
@@ -661,9 +727,8 @@ public class BattleManager : MonoBehaviour
     {
         // バトル終了条件
         bool allPlayersDead = players.All(p => p.health <= 0);
-        bool allEnemiesDead = enemys.All(e => e.health <= 0);
 
-        return allPlayersDead || allEnemiesDead;
+        return allPlayersDead;
     }
 
     IEnumerator PlayAttackAnimation()
@@ -691,6 +756,7 @@ public class BattleManager : MonoBehaviour
                     player2.defence = player.defence;
                     player2.Speed = player.Speed;
                     player2.Mp = player.Mp;
+                    player2.MaxMp = player.Mp;
                     player2.LV = player.LV;
                     player2.XP = player.XP;
                     player2.MaxXp = player.MaxXp;
@@ -716,6 +782,8 @@ public class BattleManager : MonoBehaviour
                 ScriptPlayer = Instance.GetComponent<Player>();
                 players.Add(ScriptPlayer);
                 ScriptPlayer.SetUpBattleManager(this);
+                PlayerAttackPanel[i].SetActive(true);
+                PAUINameText[i].text = ScriptPlayer.pn;
             }
         }
 
@@ -758,6 +826,7 @@ public class BattleManager : MonoBehaviour
     }
     #endregion
 
+
     #region バトル終了処理
     private IEnumerator RastLog()//+************************************************
     {
@@ -797,18 +866,6 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    void EndBattle2(bool isPlayerWin)//死んだとき
-    {
-        if (isPlayerWin)
-        {
-            battleLog.text += "\nプレイヤーの勝利！";
-        }
-        else
-        {
-            StartCoroutine(EndBattleSequence());
-            battleLog.text += "\nプレイヤーの敗北...";
-        }
-    }
 
     private IEnumerator EndBattleSequence()//プレイヤーが死んだときの処理
     {
@@ -828,6 +885,7 @@ public class BattleManager : MonoBehaviour
         //SceneManager.LoadScene("SampleScene");
     }
     #endregion
+
 
     // Update is called once per frame
     void Update()

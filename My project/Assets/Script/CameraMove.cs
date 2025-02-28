@@ -7,7 +7,6 @@ public class CameraMove : MonoBehaviour
     public Transform target;       // 追従するキャラクター（例えばプレイヤー）のTransform
     [SerializeField]private Transform teiten;
     public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
-    private Vector3 SavePosition = new Vector3();
     public Vector3 DefaultPosition;
 
     public float smoothSpeed = 0.125f; // カメラ追従のスムーズさ

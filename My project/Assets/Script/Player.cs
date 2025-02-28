@@ -10,6 +10,7 @@ public class Skill //攻撃する表示のスキルたち、４個ぐらいか�
 {
     public string skillName; //スキルの名前
     public int damage; //ダメージ量
+    public float MPCost;//消費MP
     public string description; //説明
     public BuffType buffType; // 付与するバフの種類
     public int buffValue; // バフの上昇値
@@ -88,7 +89,8 @@ public class Player : MonoBehaviour
     public int attack; //攻撃力
     public int defence; //防御力
     public int Speed;
-    public int Mp;
+    public float Mp;
+    public float MaxMp;
     public int LV; //現在のレベル
     public double XP; //現在の経験値
     public double MaxXp; //次のレベルアップの値
@@ -126,6 +128,8 @@ public class Player : MonoBehaviour
     private BGController bGController;
 
     private GaugeManager gaugeManager;
+
+    private MPBar mpbar;
 
     private BattleManager battleManager; //ターン制バトルを管理するスクリプト
     
@@ -310,7 +314,7 @@ public class Player : MonoBehaviour
         int prevAttack = attack;
         int prevDefence = defence;
         int prevSpeed = Speed;
-        int prevMp = Mp;
+        float prevMp = Mp;
         int prevLV = LV;
         bool islevelup = false;
 
@@ -336,6 +340,8 @@ public class Player : MonoBehaviour
 
             attack += 20; //攻撃力アップ
             defence += 10; //防御力アップ
+            Mp += 30;
+            MaxMp += 30;
             double AfterXp = XP - MaxXp;
             XP = 0; //現在の経験値を０に更新　　　　(オーバーした経験値を引き継げるようにするかは考える)
             MaxXp *= 1.2; //次のレベルアップまでを更新する
@@ -358,6 +364,8 @@ public class Player : MonoBehaviour
                 case(Job.Seef):
                     Speed += 20;
                     attack += 10;
+                    break;
+                default:
                     break;
             }
 
@@ -441,6 +449,13 @@ public class Player : MonoBehaviour
         if (skill.buffType != BuffType.None) // バフがある場合
         {
             battleManager.ClearBattleLog();
+            CheckMpCost(skill);
+            mpbar.UpdateMPBar();//今のMPに合わせる
+            if(!healthCheck()) 
+            {
+                battleManager.stayturn = false;
+                yield break;
+            }
             player.ApplyBuff(skill.buffType, skill.buffValue, skill.buffDuration);
             battleManager.AddLog(skill.buffType+"で"+skill.buffValue+"の効果がアップした!");
             Instantiate(skill.particle, this.gameObject.transform);
@@ -450,6 +465,13 @@ public class Player : MonoBehaviour
         {
             battleManager.ClearBattleLog();
             battleManager.AddLog($"{target.gameObject.name}を攻撃!!");
+            CheckMpCost(skill);
+            mpbar.UpdateMPBar();//今のMPに合わせる
+            if(!healthCheck()) 
+            {
+                battleManager.stayturn = false;
+                yield break;
+            }
             Instantiate(skill.particle, target.transform);
 
             yield return new WaitForSeconds(1f); //アニメーションとか入れれるかも。
@@ -471,7 +493,7 @@ public class Player : MonoBehaviour
             float GetElement = BattleData.Instance.GetElementalMultiplier(skill.element, target.element);
             Debug.Log(Mathf.Floor(damage * GetElement));
 
-            yield return StartCoroutine(target.GetComponent<Enemy>()?.TakeDamage(Mathf.Floor(damage * GetElement),player,skill)); //敵に攻撃を送ってる
+            yield return StartCoroutine(target.GetComponent<Enemy>()?.TakeDamage(Mathf.Floor(damage * GetElement),player)); //敵に攻撃を送ってる
             //敵のダメージを受けるアニメーションが終わるまで、止まるようにする。
             
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
@@ -527,6 +549,7 @@ public class Player : MonoBehaviour
             Debug.Log("エネルギーが足りません");
         }
     }
+
     #endregion
 
     #region ダメージ処理
@@ -572,6 +595,40 @@ public class Player : MonoBehaviour
         if (currentHealth > maxHealth) currentHealth = maxHealth; //最大値を超えたとき最大値に合わせる
         if (health > maxHealth) health = maxHealth; //最大値を超えたとき最大値に合わせる
         UpdateHealthBar(); //ＨＰバーを更新
+    }
+
+    public void CheckMpCost(Skill skill)//MP消費を作った。消費MPが現在のMPを超えてたら、HPを使う。＊＊＊＊＊＊それで、HPが０になったら、今の攻撃を終わらせて、死ぬ処理かな。boolの値を返すのがよさそう
+    {
+        if(skill.MPCost > Mp)
+        {
+            Debug.Log("MPを超えてる");
+            float nokori = skill.MPCost - Mp;
+            Mp -= skill.MPCost - nokori;
+            TakeDamage(nokori);
+        }
+        else
+        {
+            Debug.Log("MPが足りてる");
+            Mp -= skill.MPCost;
+        }
+
+    }
+
+    public void MPHeal() //MPの回復までできた。UIの更新をできるようにしたい。MPの消費処理を作る。MPを超えてたら、HPを使う。
+    {
+        Mp += 20;
+        if(job == Job.Magic) Mp += 20;
+        if(Mp >= MaxMp) Mp = MaxMp;
+        mpbar.UpdateMPBar();
+    }
+
+    private bool healthCheck()
+    {
+        if(health <= 0)
+        {
+            return false;
+        }
+        return true;
     }
 
     private void UpdateHealthBar() //実際のＨＰに反映させる所(中間管理)
@@ -769,6 +826,7 @@ public class Player : MonoBehaviour
         healthBarManager = GetComponent<HealthBarManager>(); //自分に追加されてるはずのＨＰバーのスクリプトを使えるようにしてる
         bGController = GetComponent<BGController>();
         gaugeManager = GetComponent<GaugeManager>();
+        mpbar = GetComponent<MPBar>();
 
         UpdateHealthBar(); //現在のＨＰを反映(最初からＨＰが減ってるときのため)
         anim = GetComponent<Animator>();

@@ -928,6 +928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d34d6ad80f8d8e4885d1e9c24e11bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skills: []
   element: 4
   health: 50
   maxHealth: 50
