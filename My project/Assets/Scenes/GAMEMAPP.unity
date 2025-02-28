@@ -2757,7 +2757,7 @@ RectTransform:
   m_GameObject: {fileID: 414974270}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.56, y: 0.7, z: 1}
+  m_LocalScale: {x: 0.62994397, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 858836127}
@@ -2781,7 +2781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5849056, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.9629844, g: 1, b: 0.0603773, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2790,11 +2790,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 26
+    m_FontSize: 35
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 40
+    m_MaxSize: 61
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -3993,12 +3993,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: d213c012f7bf5394281f68bcd2665b88,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.31942
+      value: 0.1666478
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d213c012f7bf5394281f68bcd2665b88,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 288.73
+      value: 288.99
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d213c012f7bf5394281f68bcd2665b88,
         type: 3}

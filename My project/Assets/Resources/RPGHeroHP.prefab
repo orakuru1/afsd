@@ -1765,7 +1765,8 @@ MonoBehaviour:
   loadButton: {fileID: 0}
   healthSlider: {fileID: 9103103726191324020, guid: b3a3894aea2efd745a867b6074f71d0f,
     type: 3}
-  healthText: {fileID: 0}
+  healthText: {fileID: 3931447464136991950, guid: 4d9cd399033c88b42a3bc50c2aaf32be,
+    type: 3}
   offset: {x: 0, y: 0, z: 0}
 --- !u!114 &1253116640013937438
 MonoBehaviour:

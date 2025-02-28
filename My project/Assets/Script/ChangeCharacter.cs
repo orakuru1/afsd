@@ -179,6 +179,7 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
             hpSlider.maxValue = characterStatus.maxHP;
             hpSlider.value = characterStatus.currentHP;
             playerNameText.text = characterStatus.CharacterName;
+            Debug.Log("アタッチされてます");
         }
         else
         {
