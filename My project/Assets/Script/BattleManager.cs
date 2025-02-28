@@ -72,6 +72,7 @@ public class BattleManager : MonoBehaviour
 
     private bool actionSelected = false;
     private bool attackakuction = false;
+    private bool WinnerStop = false;//ゲームに勝ったときにこれ以上進まないようにする
     public bool stayturn = true;
     public bool LebelupStay = false;
 
@@ -491,7 +492,6 @@ public class BattleManager : MonoBehaviour
                 // バトル終了条件を確認
                 if (IsBattleOver())
                 {
-                    StartCoroutine(EndBattleSequence());
                     yield break;
                 }
             }
@@ -503,10 +503,12 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator PlayerTurn(Player player)
     {
-        while(stayturn == true || LebelupStay == true)//待機中
+        Debug.Log($"始まっちゃってるよー");
+        while(stayturn == true || LebelupStay == true || WinnerStop == true)//待機中
         {
             yield return null;
         }
+
 
         SulidoText.text = $"<color=#{blueColor}>{player.pn} のターン！</color>";
         yield return new WaitForSeconds(0.35f);
@@ -570,7 +572,7 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator EnemyTurn(Enemy enemy)//敵のターン
     {
-        while(stayturn == true || LebelupStay == true)
+        while(stayturn == true || LebelupStay == true || WinnerStop == true)
         {
             yield return null;
         }
@@ -849,7 +851,8 @@ public class BattleManager : MonoBehaviour
 
 
     public void EndBattle()//勝ったとき***************************************
-    {
+    {//プレイヤーの攻撃が終わるより敵が死ぬほうが早いから、staytrunが解除されて、誰かのターンって、出てきてしまう。何とかしないと。
+        WinnerStop = true;
         // BattleDataの情報をリセット（必要に応じて）
         BattleData.Instance.modorusyori();
 
