@@ -2350,7 +2350,7 @@ RectTransform:
   m_GameObject: {fileID: 1440860523}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.03, y: 2.239017, z: 1}
+  m_LocalScale: {x: 4.1418867, y: 3.3168797, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 147583136}
@@ -2358,8 +2358,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 15, y: 156}
-  m_SizeDelta: {x: 200, y: 30}
+  m_AnchoredPosition: {x: 189, y: 195}
+  m_SizeDelta: {x: 230.7444, y: 46.5373}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1440860525
 MonoBehaviour:
@@ -2374,7 +2374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.051479816, b: 1, a: 1}
+  m_Color: {r: 0.9056604, g: 0.071769245, b: 0.83694035, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2383,7 +2383,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 25
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -2394,7 +2394,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u30AB\u30ED\u30C3\u30AF\u306E\u5192\u967A"
+  m_Text: 'Ragicu
+
+'
 --- !u!222 &1440860526
 CanvasRenderer:
   m_ObjectHideFlags: 0

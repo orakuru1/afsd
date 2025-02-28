@@ -135,6 +135,8 @@ public class Player : MonoBehaviour
     
     private SpecialSkill specialSkill;
 
+    private chara playerMovement; //プレイヤーの移動スクリプト取得
+    private Rigidbody rb;
     private CameraMove cameraMove;
 
     public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
@@ -559,7 +561,7 @@ public class Player : MonoBehaviour
         StartCoroutine("MDamage");
         health -= damage; //HPにダメージを食らう
         if (health < 0) health = 0; //０より下になった時に０にする
-
+        
         currentHealth -= damage; //ＨＰばーも減らす
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // HPを範囲内に制限
 
@@ -583,7 +585,7 @@ public class Player : MonoBehaviour
             diemotion = true;
             Die(); //死んだときの処理
         }
-
+        
         Debug.Log("プレイヤーの体力: " + health);
         Invoke(nameof(StopDamage), 0.2f);
     }
@@ -673,7 +675,26 @@ public class Player : MonoBehaviour
         Debug.Log($"{gameObject.name} が倒されました！");
         isDead = true;
         anim.SetBool("die", true);
+        //プレイヤーの移動を無効か
+        if(playerMovement != null)
+        {
+            playerMovement.enabled = false;
+        }
+
+        //rigidbodyを使ってプレイヤーを完全に停止
+        if(rb != null)
+        {
+            rb.velocity = Vector3.zero;//移動を停止
+            rb.angularVelocity = Vector3.zero; //回転を停止
+        }
+        StartCoroutine(ReturnToTitle());
         //Destroy(gameObject);
+    }
+
+    IEnumerator ReturnToTitle()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("title");
     }
 
     void OnDestroy() //破壊されたときの処理   ※シーンが遷移された時にもされてしまう
@@ -689,11 +710,13 @@ public class Player : MonoBehaviour
     void StopDamage()
     {
         damagemotion = false;
+        anim.SetBool("gethit", damagemotion);
     }
 
     IEnumerator MDamage()
     {
         damagemotion = true;
+        anim.SetBool("gethit",damagemotion);
         yield return new WaitForSeconds(4f);
     }
 
@@ -830,6 +853,8 @@ public class Player : MonoBehaviour
 
         UpdateHealthBar(); //現在のＨＰを反映(最初からＨＰが減ってるときのため)
         anim = GetComponent<Animator>();
+        playerMovement = GetComponent<chara>(); //移動スクリプト取得
+        rb = GetComponent<Rigidbody>();
         //skills.Add(new Skill { skillName = "Fireball", damage = 30, description = "A ball of fire that burns enemies." });
         respawnPosition = transform.position; //初期位置をリスポーン位置として記録
     }              
@@ -837,7 +862,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
 
         //地面にいるときだけリスポーン位置を更新
         if(isGrounded && Vector3.Distance(respawnPosition, transform.position) >= respawnUpdateDistance)

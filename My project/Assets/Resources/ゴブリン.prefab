@@ -384,7 +384,7 @@ Transform:
   m_GameObject: {fileID: 8530660655577238377}
   m_LocalRotation: {x: -0, y: -0.010971969, z: -0, w: -0.9999398}
   m_LocalPosition: {x: 1748.5, y: -0.048, z: -712}
-  m_LocalScale: {x: 4.17, y: 4.17, z: 4.17}
+  m_LocalScale: {x: 1.9583154, y: 1.9583154, z: 1.9583154}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8532724269162309543}
@@ -492,11 +492,12 @@ MonoBehaviour:
   enemyname: "\u30B4\u30D6\u30EA\u30F3"
   en: "\u30B4\u30D6\u30EA\u30F3"
   Race: 
-  AT: 10
+  AT: 100
   DF: 100
   Speed: 0
   DropGorld: 10
   EXP: 50
+  AEfect: {fileID: 4836977668652918433, guid: 37a08757551a2a845bd969a3c59138cd, type: 3}
   currentHealth: 0
   player: {fileID: 0}
   isBurst: 0

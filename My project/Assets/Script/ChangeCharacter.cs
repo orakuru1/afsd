@@ -26,6 +26,9 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
 
     [SerializeField]private Vector3 spawnposition = new Vector3();
 
+    [SerializeField]private Slider hpSlider;
+    [SerializeField]private Text playerNameText;
+
     private CameraMove cameraMove;
 
     void Start()
@@ -51,6 +54,8 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
             ScriptPlayers.Add(instance.GetComponent<Player>());
             NowPlayer3.GetComponent<EnemyRangedAttack>().bbbb();
             SpawnCharaButton();
+
+            UpdateHPUI(NowPlayer); //HP.UIの更新
         }
         else
         {
@@ -75,6 +80,8 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
 
             BattleData.Instance.currentplayers(playernames);
             SpawnCharaButton();
+
+            UpdateHPUI(NowPlayer);
         }
         NowPlayer.name = "Player";
 
@@ -84,6 +91,16 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
     void Update()
     {
         NowPlayer.name = "Player";
+
+        //HPスライダーのリアルタイム更新
+        if(NowPlayer != null)
+        {
+            CharacterStatus status = NowPlayer.GetComponent<CharacterStatus>();
+            if(status != null)
+            {
+                hpSlider.value = status.currentHP;
+            }
+        }
     }
 
     public void PlayerNameAdd(string playername)
@@ -143,11 +160,29 @@ public class ChangeCharacter : MonoBehaviour //リストでバトルに行って
             cameraMove.SetUp(NowPlayer.transform);
 
             players.Add(newPlayer);
+            
+            UpdateHPUI(newPlayer);
         }
         else
         {
             Debug.LogWarning("プレイヤーリストが空です!");
         }
         SpawnCharaButton();
+    }
+    private void UpdateHPUI(GameObject player)
+    {
+        if(player == null) return;
+
+        CharacterStatus characterStatus = player.GetComponent<CharacterStatus>();
+        if(characterStatus != null)
+        {
+            hpSlider.maxValue = characterStatus.maxHP;
+            hpSlider.value = characterStatus.currentHP;
+            playerNameText.text = characterStatus.CharacterName;
+        }
+        else
+        {
+            Debug.Log("新しいプレイヤーにcharacterstatusがアタッチされていません");
+        }
     }
 }

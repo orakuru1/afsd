@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     [SerializeField]public int Speed;
     [SerializeField] int DropGorld;
     [SerializeField]private int EXP = 50; //経験値
+    public ParticleSystem AEfect;
     public float currentHealth;
 
     private HealthBarManager healthBarManager;

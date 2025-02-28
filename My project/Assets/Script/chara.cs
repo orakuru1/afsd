@@ -15,8 +15,8 @@ public class chara : MonoBehaviour
     [SerializeField] private float sprintSpeed = 6.0f;
 
     [Header("Jump Settings")]
-    [SerializeField] private float jumpForce = 8.0f;
-    [SerializeField] private float forwardJumpForce = 6.0f;
+    [SerializeField] private float jumpForce = 20.0f;
+    [SerializeField] private float forwardJumpForce = 8.0f;
     [SerializeField] private float backwardJumpForce = 3.0f;
 
     private float moveSpeed;
