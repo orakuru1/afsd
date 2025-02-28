@@ -7,7 +7,7 @@ public class CameraMove : MonoBehaviour
     public Transform target;       // 追従するキャラクター（例えばプレイヤー）のTransform
     [SerializeField]private Transform teiten;
     public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
-    private Vector3 SavePosition = new Vector3();
+    public Vector3 DefaultPosition;
 
     public float smoothSpeed = 0.125f; // カメラ追従のスムーズさ
     public float rotationSpeed = 2.5f;
@@ -34,17 +34,16 @@ public class CameraMove : MonoBehaviour
         target = transform;
     }
 
-    public void CharacterToEnemy(Vector3 PlayerPosition) //カメラの位置をキャラクターの上に変える。スムーズに動けるようにしたい
+    public void PlayerTurnCamera()
     {
-        SavePosition = transform.position;
-        transform.position = PlayerPosition + new Vector3(0f,2.5f,-3f);
+        transform.position = new Vector3(3,0,-14);
     }
-    public IEnumerator ComeBuckCamera() //位置を元に戻す
+
+    public void EnemyToCamera()
     {
-        yield return new WaitForSeconds(0.7f);
-        transform.position = SavePosition;
-        target = teiten;
+        transform.position = DefaultPosition;
     }
+
 
     public void rotationcamera(float duration)
     {
@@ -108,12 +107,13 @@ public class CameraMove : MonoBehaviour
         }
 
         offset = targetOffset; // 最終的なズームアウト位置を確定
+        DefaultPosition = transform.position;
 
         if(battleManager != null)
         {
             battleManager.stayturn = false;
             battleManager.setlog();
-            battleManager.CharaUitrue();
+            battleManager.EnemyUITrue();
         }
 
         isScene = true;
@@ -171,11 +171,6 @@ public class CameraMove : MonoBehaviour
 
     void LateUpdate()//*******プレイヤーが攻撃した後に２段階でカメラの視点が変わってる。どうしよう
     {
-        if(target == null)
-        {
-            //  カメラを元に戻す前に何かアニメーションを入れて違和感なくしたい。
-            StartCoroutine(ComeBuckCamera());
-        }
 
         if (Input.GetMouseButton(1)) // 右クリックで回転を有効にする場合
         {

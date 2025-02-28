@@ -27,7 +27,7 @@ public class EnemyDestroyGuage : MonoBehaviour
             slider = Guage.GetComponentInChildren<Slider>(); //スライダーをいじれるようにした
             slider.maxValue = maxGauge;
             slider.value = currentGauge;
-            Guage.transform.localScale = new Vector3(0.07f,0.07f,0f);
+
         }
 
         Characollider = GetComponent<Collider>();

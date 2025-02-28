@@ -1669,6 +1669,7 @@ MonoBehaviour:
   skills:
   - skillName: Fire
     damage: 30
+    MPCost: 20
     description: A ball of fire that burns enemies.
     buffType: 0
     buffValue: 0
@@ -1681,6 +1682,7 @@ MonoBehaviour:
       type: 3}
   - skillName: ice
     damage: 20
+    MPCost: 10
     description: A ball of fire that burns enemies.
     buffType: 0
     buffValue: 0
@@ -1692,7 +1694,8 @@ MonoBehaviour:
     particle: {fileID: 8371754213060712399, guid: 79982ac38eb1a044a83ced518865a3e2,
       type: 3}
   - skillName: attackbuff
-    damage: 20
+    damage: 0
+    MPCost: 30
     description: A ball of fire that burns enemies.
     buffType: 1
     buffValue: 30
@@ -1741,17 +1744,18 @@ MonoBehaviour:
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
   Race: "\u5263\u58EB"
-  health: 3920
-  maxHealth: 3920
-  attack: 0
-  defence: 520
+  health: 1000
+  maxHealth: 6020
+  attack: 7876
+  defence: 120
   Speed: 1111
   Mp: 0
-  LV: 64
-  XP: 211
-  MaxXp: 221.86111067404357
-  currentHealth: 3920
-  gold: 2880
+  MaxMp: 0
+  LV: 94
+  XP: 23
+  MaxXp: 51.59780351999998
+  currentHealth: 1000
+  gold: 3240
   currentGauge: 100
   maxGauge: 100
   sharp: 100

@@ -616,7 +616,7 @@ MonoBehaviour:
   AT: 100
   DF: 50
   Speed: 20
-  DropGorld: 0
+  DropGorld: 10
   EXP: 50
   AEfect: {fileID: 6832070047915410894, guid: 0f3fb1427af06fc468db378704ea1cd0, type: 3}
   currentHealth: 50

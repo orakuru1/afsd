@@ -7,6 +7,10 @@ public class HealthBarManager : MonoBehaviour
 {
 
     public GameObject hpBarInstance; // HPバーのインスタンス
+
+    public Text HPText;
+
+    public Slider PanelhpBar;
     
     private Slider hpSlider;
 
@@ -35,10 +39,7 @@ public class HealthBarManager : MonoBehaviour
             UpdateHealth(player.currentHealth, player.maxHealth);
         }
 
-        if (hpBarInstance != null && player == null)
-        {
-            hpBarInstance.transform.localScale = new Vector3(0.07f,0.1f,0f);
-        }
+
 
         Characollider = GetComponent<Collider>();
         objectHeight = Characollider.bounds.size.y;
@@ -64,10 +65,12 @@ public class HealthBarManager : MonoBehaviour
         if (hpSlider.value <= hpSlider.maxValue * 0.25f)//HPが２５％以下なら赤色にする
         {
             hpSlider.fillRect.GetComponent<Image>().color = Color.red;
+            PanelhpBar.fillRect.GetComponent<Image>().color = Color.red;
         }
         else
         {
             hpSlider.fillRect.GetComponent<Image>().color = Color.green; // 通常は緑
+            PanelhpBar.fillRect.GetComponent<Image>().color = Color.green; // 通常は緑
         }
     }
 
@@ -79,6 +82,8 @@ public class HealthBarManager : MonoBehaviour
         {
             Debug.Log($"{currentHealth}と{maxHealth}");
             hpSlider.value = currentHealth / maxHealth;
+            PanelhpBar.value = currentHealth / maxHealth;
+            HPText.text = currentHealth.ToString();
         }
     }
 

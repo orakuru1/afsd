@@ -928,6 +928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d34d6ad80f8d8e4885d1e9c24e11bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skills: []
   element: 4
   health: 50
   maxHealth: 50
@@ -937,7 +938,7 @@ MonoBehaviour:
   AT: 50
   DF: 100
   Speed: 19
-  DropGorld: 0
+  DropGorld: 30
   EXP: 50
   AEfect: {fileID: 4836977668652918433, guid: 37a08757551a2a845bd969a3c59138cd, type: 3}
   currentHealth: 50

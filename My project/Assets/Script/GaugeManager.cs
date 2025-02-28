@@ -7,6 +7,9 @@ public class GaugeManager : MonoBehaviour
     public GameObject gaugeInstance; // HPバーのインスタンス
 
     private Slider hpSlider;
+    public Slider PAUS;
+
+    public Text SPText;
 
     public Player player; // プレイヤーキャラクターを参照
 
@@ -25,6 +28,9 @@ public class GaugeManager : MonoBehaviour
             hpSlider = gaugeInstance.GetComponentInChildren<Slider>(); //スライダーをいじれるようにした
             hpSlider.maxValue = player.maxGauge;
             hpSlider.value = player.currentGauge;
+            PAUS.maxValue = player.maxGauge;
+            PAUS.value = player.currentGauge;
+            SPText.text = player.currentGauge.ToString();
         }
 
         Characollider = GetComponent<Collider>();
@@ -66,7 +72,9 @@ public class GaugeManager : MonoBehaviour
         // SliderのUIに反映
         if (hpSlider != null)
         {
+            PAUS.value = player.currentGauge;
             hpSlider.value = player.currentGauge;
+            SPText.text = player.currentGauge.ToString();
             Debug.Log(hpSlider.value);
         }
     }

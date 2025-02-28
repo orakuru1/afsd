@@ -10,6 +10,7 @@ public class Skill //攻撃する表示のスキルたち、４個ぐらいか�
 {
     public string skillName; //スキルの名前
     public int damage; //ダメージ量
+    public float MPCost;//消費MP
     public string description; //説明
     public BuffType buffType; // 付与するバフの種類
     public int buffValue; // バフの上昇値
@@ -68,6 +69,7 @@ public enum Element
 
 public class Player : MonoBehaviour
 {
+    #region 変数の宣言
     public List<Skill> skills = new List<Skill>(); //スキルが入ってるリスト
 
     public List<Weapon> weapon = new List<Weapon>(); //装備が入ってるリスト
@@ -87,7 +89,8 @@ public class Player : MonoBehaviour
     public int attack; //攻撃力
     public int defence; //防御力
     public int Speed;
-    public int Mp;
+    public float Mp;
+    public float MaxMp;
     public int LV; //現在のレベル
     public double XP; //現在の経験値
     public double MaxXp; //次のレベルアップの値
@@ -126,6 +129,8 @@ public class Player : MonoBehaviour
 
     private GaugeManager gaugeManager;
 
+    private MPBar mpbar;
+
     private BattleManager battleManager; //ターン制バトルを管理するスクリプト
     
     private SpecialSkill specialSkill;
@@ -137,12 +142,13 @@ public class Player : MonoBehaviour
     public Vector3 offset;         // カメラのオフセット（キャラクターからの位置）
     private Vector3 respawnPosition; //リスポーン位置を記録する変数
     private Vector3 battleStartPosition; //戦闘開始位置初め
-
+    private Vector3 DefaultPosition;
 
     //public event System.Action OnStatsUpdated; //オブサーバ、デザインパターン
     private Color color;
     private Dictionary<BuffType, int> ActiveBuffs = new Dictionary<BuffType, int>();
     private Dictionary<BuffType, int> ActiveBuffs2 = new Dictionary<BuffType, int>();//dictionaryとenumのコンビは相性がいいと思います
+    #endregion
 
     public void AddCProbalitiy(float current)//継続ダメージが発生
     {
@@ -175,6 +181,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    #region バフ管理
     public void ApplyBuff(BuffType buffType, int value, int duration)
     {
         if (buffType == BuffType.None) return; // バフなしなら処理しない
@@ -262,6 +269,9 @@ public class Player : MonoBehaviour
             }
         }
     }
+    #endregion 
+
+    #region セットアップ
     public void SetSpecialSkill(SpecialSkill skill) //継承元の親だけでいい************************スキルの属性や継続ダメージを作るためにスキルをいじる
     {
         specialSkill = skill;
@@ -280,7 +290,9 @@ public class Player : MonoBehaviour
     {
         gold += StealGorld; //お金の計算
     }
+    #endregion
 
+    #region 経験値、お金
     public bool SpendGold(int amount) //ショップで買う時の処理
     {
         if (gold >= amount) //お金が値段より持ってるかどうか
@@ -304,7 +316,7 @@ public class Player : MonoBehaviour
         int prevAttack = attack;
         int prevDefence = defence;
         int prevSpeed = Speed;
-        int prevMp = Mp;
+        float prevMp = Mp;
         int prevLV = LV;
         bool islevelup = false;
 
@@ -330,6 +342,8 @@ public class Player : MonoBehaviour
 
             attack += 20; //攻撃力アップ
             defence += 10; //防御力アップ
+            Mp += 30;
+            MaxMp += 30;
             double AfterXp = XP - MaxXp;
             XP = 0; //現在の経験値を０に更新　　　　(オーバーした経験値を引き継げるようにするかは考える)
             MaxXp *= 1.2; //次のレベルアップまでを更新する
@@ -352,6 +366,8 @@ public class Player : MonoBehaviour
                 case(Job.Seef):
                     Speed += 20;
                     attack += 10;
+                    break;
+                default:
                     break;
             }
 
@@ -382,7 +398,9 @@ public class Player : MonoBehaviour
 
         //BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);
     }
+    #endregion
 
+    #region 逃げる、攻撃
     public void escape() //逃げるボタンを押されたときの処理
     {
         double ran = Random.Range(1,10); //１～９までのランダム数字(多分)
@@ -433,17 +451,29 @@ public class Player : MonoBehaviour
         if (skill.buffType != BuffType.None) // バフがある場合
         {
             battleManager.ClearBattleLog();
+            CheckMpCost(skill);
+            mpbar.UpdateMPBar();//今のMPに合わせる
+            if(!healthCheck()) 
+            {
+                battleManager.stayturn = false;
+                yield break;
+            }
             player.ApplyBuff(skill.buffType, skill.buffValue, skill.buffDuration);
             battleManager.AddLog(skill.buffType+"で"+skill.buffValue+"の効果がアップした!");
             Instantiate(skill.particle, this.gameObject.transform);
+            yield return new WaitForSeconds(2f);
         }
         else
         {
-            battleManager.PlayerUIFalse();
-            cameraMove.CharacterToEnemy(this.transform.position);
-            cameraMove.SetUp(target.gameObject.transform); //カメラが敵を向くように
             battleManager.ClearBattleLog();
             battleManager.AddLog($"{target.gameObject.name}を攻撃!!");
+            CheckMpCost(skill);
+            mpbar.UpdateMPBar();//今のMPに合わせる
+            if(!healthCheck()) 
+            {
+                battleManager.stayturn = false;
+                yield break;
+            }
             Instantiate(skill.particle, target.transform);
 
             yield return new WaitForSeconds(1f); //アニメーションとか入れれるかも。
@@ -465,7 +495,8 @@ public class Player : MonoBehaviour
             float GetElement = BattleData.Instance.GetElementalMultiplier(skill.element, target.element);
             Debug.Log(Mathf.Floor(damage * GetElement));
 
-            target.GetComponent<Enemy>()?.TakeDamage(Mathf.Floor(damage * GetElement),player,skill); //敵に攻撃を送ってる
+            yield return StartCoroutine(target.GetComponent<Enemy>()?.TakeDamage(Mathf.Floor(damage * GetElement),player)); //敵に攻撃を送ってる
+            //敵のダメージを受けるアニメーションが終わるまで、止まるようにする。
             
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
             eneguage.FillGauge(sharp);
@@ -481,7 +512,7 @@ public class Player : MonoBehaviour
             
             yield return new WaitForSeconds(0.8f);
 
-            StartCoroutine(cameraMove.ComeBuckCamera());
+            //StartCoroutine(cameraMove.ComeBuckCamera());
 
             battleManager.ClearBattleLog();
             foreach(var type in ActiveBuffs.Keys)  //バフがたくさんあったらバトルログに入りきらない
@@ -521,6 +552,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region ダメージ処理
     public void TakeDamage(float damage) //自分のダメージを受ける処理
     {
         Debug.Log(this.gameObject);
@@ -565,6 +599,40 @@ public class Player : MonoBehaviour
         UpdateHealthBar(); //ＨＰバーを更新
     }
 
+    public void CheckMpCost(Skill skill)//MP消費を作った。消費MPが現在のMPを超えてたら、HPを使う。＊＊＊＊＊＊それで、HPが０になったら、今の攻撃を終わらせて、死ぬ処理かな。boolの値を返すのがよさそう
+    {
+        if(skill.MPCost > Mp)
+        {
+            Debug.Log("MPを超えてる");
+            float nokori = skill.MPCost - Mp;
+            Mp -= skill.MPCost - nokori;
+            TakeDamage(nokori);
+        }
+        else
+        {
+            Debug.Log("MPが足りてる");
+            Mp -= skill.MPCost;
+        }
+
+    }
+
+    public void MPHeal() //MPの回復までできた。UIの更新をできるようにしたい。MPの消費処理を作る。MPを超えてたら、HPを使う。
+    {
+        Mp += 20;
+        if(job == Job.Magic) Mp += 20;
+        if(Mp >= MaxMp) Mp = MaxMp;
+        mpbar.UpdateMPBar();
+    }
+
+    private bool healthCheck()
+    {
+        if(health <= 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
     private void UpdateHealthBar() //実際のＨＰに反映させる所(中間管理)
     {
         if (healthBarManager != null) //スクリプトがちゃんと存在するか
@@ -572,8 +640,19 @@ public class Player : MonoBehaviour
             healthBarManager.UpdateHealth(currentHealth, maxHealth); //違うスクリプトでHPバーを更新してる
         }
     }
+    #endregion
 
     
+    public void CameraToPlayer()
+    {
+        DefaultPosition = transform.position;
+        transform.position = new Vector3(0f, transform.position.y, transform.position.z); 
+    }
+
+    public void PlayerToCamera()
+    {
+        transform.position = DefaultPosition;
+    }
 
     void UpdateHealthUI(bool instant = false)
     {
@@ -770,6 +849,7 @@ public class Player : MonoBehaviour
         healthBarManager = GetComponent<HealthBarManager>(); //自分に追加されてるはずのＨＰバーのスクリプトを使えるようにしてる
         bGController = GetComponent<BGController>();
         gaugeManager = GetComponent<GaugeManager>();
+        mpbar = GetComponent<MPBar>();
 
         UpdateHealthBar(); //現在のＨＰを反映(最初からＨＰが減ってるときのため)
         anim = GetComponent<Animator>();
