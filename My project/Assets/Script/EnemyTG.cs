@@ -21,7 +21,16 @@ public class EnemyTG : MonoBehaviour
     // Start is called before the first frame update
     public void aaaa()
     {
-        player = ChangeCharacter.ScriptPlayers[0].gameObject.transform;
+       //プレイヤーをタグで自動取得
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        if(playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+        else
+        {
+            Debug.Log("見つかりません");
+        }
     }
     
     void Start()

@@ -14,6 +14,7 @@ public class EnemyRangedAttack : MonoBehaviour
     public float projectileSpeed = 10f; // 弾の速度
 
     private Animator anim; //アニメーション
+    private Player playerHealth; //プレイヤーのHP管理
 
     public GameObject hpBarCanvas; //HPバーのCanvas
     public Image hpFillImage; //前景のImage(緑部分)
@@ -28,6 +29,7 @@ public class EnemyRangedAttack : MonoBehaviour
         if(playerObject != null)
         {
             player = playerObject.transform;
+            playerHealth = player.GetComponent<Player>();
         }
         else
         {
@@ -39,8 +41,7 @@ public class EnemyRangedAttack : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-
-        //bbbb();
+        bbbb();
     }
 
     void Update()
@@ -56,6 +57,14 @@ public class EnemyRangedAttack : MonoBehaviour
 
         if(player!=null)
         {
+
+        //プレイヤーのHPが0なら攻撃を止める
+        if(playerHealth.currentHealth <= 0)
+        {
+            anim.SetBool("attack", false);
+            return;
+        }
+
         // プレイヤーとの距離を計算
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
@@ -94,6 +103,11 @@ public class EnemyRangedAttack : MonoBehaviour
 
     void AttackPlayer()
     {
+        //プレイヤーのHPが0なら攻撃しない
+        if(playerHealth.currentHealth <= 0)
+        {
+            return;
+        }
         // 弾を生成
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
 

@@ -1562,6 +1562,7 @@ GameObject:
   - component: {fileID: 3760287559151789196}
   - component: {fileID: 1253116640013937438}
   - component: {fileID: 2803325598252015711}
+  - component: {fileID: 7796481566948923434}
   m_Layer: 0
   m_Name: RPGHeroHP
   m_TagString: Player
@@ -1762,7 +1763,8 @@ MonoBehaviour:
   CDamage: []
   saveButton: {fileID: 0}
   loadButton: {fileID: 0}
-  healthSlider: {fileID: 0}
+  healthSlider: {fileID: 9103103726191324020, guid: b3a3894aea2efd745a867b6074f71d0f,
+    type: 3}
   healthText: {fileID: 0}
   offset: {x: 0, y: 0, z: 0}
 --- !u!114 &1253116640013937438
@@ -1799,6 +1801,20 @@ MonoBehaviour:
   forwardJumpForce: 6
   backwardJumpForce: 3
   prepar: {fileID: 6887158025349920571, guid: 0ef719ae23085394f8f2b6980fc44c28, type: 3}
+--- !u!136 &7796481566948923434
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556040939566342}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.64
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1613396906338018
 GameObject:
   m_ObjectHideFlags: 0
