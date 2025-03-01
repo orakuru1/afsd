@@ -10,6 +10,9 @@ public class EnemyTrigger : MonoBehaviour
     private int enemyHealth = 100; // 敵の体力
     private bool isstart = true;
     private CameraMove cameraMove;
+
+    [SerializeField]private AudioSource audioSource;
+    [SerializeField]private AudioClip StartBattle;
     public void SetCamera()
     {
         cameraMove.SetUp(this.gameObject.transform);
@@ -30,6 +33,10 @@ public class EnemyTrigger : MonoBehaviour
                 //SceneManager.LoadScene(battleSceneName);
                 
                 StartCoroutine(BattleData.Instance.LoadBattleScene()); // 非同期ロード
+                if(StartBattle != null)
+                {
+                    audioSource.PlayOneShot(StartBattle);
+                }
                 StartCoroutine(BattleData.Instance.FadeInBuluck(1.5f));
                 SetCamera();//プレイヤーに当たったのをターゲットしてる
                 cameraMove.zoingcamera(0f,2f,false);//カメラがズームする処理
