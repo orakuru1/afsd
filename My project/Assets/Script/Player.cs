@@ -20,7 +20,7 @@ public class Skill //攻撃する表示のスキルたち、４個ぐらいか�
     public float CDuration;//継続ダメージの継続数
     public float CProbability;//継続ダメージの確率
     public ParticleSystem particle;
-    public AudioClip audioClip;
+    public AudioClip audioClip;//スキルの音
 }
 
 [System.Serializable]
@@ -321,7 +321,7 @@ public class Player : MonoBehaviour
         int prevAttack = attack;
         int prevDefence = defence;
         int prevSpeed = Speed;
-        float prevMp = Mp;
+        float prevMp = MaxMp;
         int prevLV = LV;
         bool islevelup = false;
 
@@ -366,6 +366,7 @@ public class Player : MonoBehaviour
                     break;
                 case(Job.Magic):
                     Mp += 20;
+                    MaxMp += 20;
                     Speed += 20;
                     break;
                 case(Job.Seef):
@@ -388,10 +389,11 @@ public class Player : MonoBehaviour
             if (LV > prevLV) StartCoroutine(battleManager.LevelUp(prevLV.ToString(), LV.ToString(), $"{pn}のレベル"));
             if (health > prevHealth) StartCoroutine(battleManager.LevelUp(prevHealth.ToString(), health.ToString(), "体力"));
             if (maxHealth > prevMaxHealth) StartCoroutine(battleManager.LevelUp(prevMaxHealth.ToString(), maxHealth.ToString(), "最大値"));
+            if (MaxMp > prevMp) StartCoroutine(battleManager.LevelUp(prevMp.ToString(), MaxMp.ToString(), "最大魔力"));
             if (attack > prevAttack) StartCoroutine(battleManager.LevelUp(prevAttack.ToString(), attack.ToString(), "攻撃力"));
             if (defence > prevDefence) StartCoroutine(battleManager.LevelUp(prevDefence.ToString(), defence.ToString(), "防御力"));
             if (Speed > prevSpeed) StartCoroutine(battleManager.LevelUp(prevSpeed.ToString(), Speed.ToString(), "速度"));
-            if (Mp > prevMp) StartCoroutine(battleManager.LevelUp(prevMp.ToString(), Mp.ToString(), "魔力"));
+            
         }
 
         //OnStatsUpdated?.Invoke(); // 通知を送信
@@ -422,8 +424,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Attack(Skill skill,Player player,GameObject panel) //プレイヤーの攻撃処理
+    public void Attack(Skill skill,Player player) //プレイヤーの攻撃処理
     {
+        battleManager.SkilltoActive();
         attackmotion = true;
         // 選択された敵を攻撃
         Enemy targetEnemy = Enemy.selectedEnemy; //現在クリックされてる敵を習得
@@ -447,7 +450,6 @@ public class Player : MonoBehaviour
         // 攻撃後、選択状態をリセット
         //Enemy.selectedEnemy = null;
         Invoke(nameof(StopAttack), 0.1f);
-        Destroy(panel);
     }
 
     private IEnumerator ExecuteAttack(Enemy target,Skill skill,Player player) //実際に攻撃するところ

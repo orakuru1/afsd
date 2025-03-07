@@ -111,6 +111,7 @@ public class BattleData : MonoBehaviour
         PlayerPrefs.SetFloat("RespawnZ", respawnPosition.z);
         PlayerPrefs.Save();
 
+
         asyncLoad = SceneManager.LoadSceneAsync("BattleScene");
         
         asyncLoad.allowSceneActivation = false; // シーンの切り替えを一時停止

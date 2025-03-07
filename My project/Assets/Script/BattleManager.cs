@@ -20,23 +20,29 @@ public class BattleManager : MonoBehaviour
     public Transform enemySpawnPoint0; // 敵を生成する位置
     public Transform enemySpawnPoint1; // 敵を生成する位置
     public Transform hpBarParent; // HPバーの親（Canvas）
-    [SerializeField]private Transform panerspawn; // ボタンを配置する親オブジェクト
+    [SerializeField]private Transform panerspawn; // スペシャル技配置場所
     [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();
-
+    [SerializeField]private Transform ContentSkill;//スキルパネルの配置場所
+    [SerializeField]private Transform NextTurnPanel;//次のターンのパネル
 
     public Text battleLog;           // バトルログを表示するUI
     [SerializeField]private Text SulidoText; //誰かのターンテキスト
     [SerializeField]private List<Text> PAUINameText = new List<Text>();
+    [SerializeField]private Text PowerText;
+    [SerializeField]private Text MPCostText;
 
     public TextMeshProUGUI gameOverText; // 対象のTextコンポーネント
 
     public Image fadeImage; // フェード用のImage
+    [SerializeField]private Image NextTurnImage;//次のターンのキャラを表示
+
 
     private List<GameObject> PlayerObject = new List<GameObject>(); //プレイヤーのオブジェクトのほう
     private List<GameObject> insta = new List<GameObject>();
     private List<GameObject> Uis = new List<GameObject>(); //HPやゲージなどのUI
     private List<GameObject> PlayerUis = new List<GameObject>(); //PlayerのHPやゲージなどのUI
     private List<GameObject> EnemyUis = new List<GameObject>(); //EnemyのHPやゲージなどのUI
+    private List<GameObject> SkillPanels = new List<GameObject>();//生成されたスキルたち
     [SerializeField]private List<GameObject> PlayerAttackPanel = new List<GameObject>();//基本のUIパネル
     public GameObject hpBarPrefab; // HPバーのPrefab
     [SerializeField]private List<GameObject> LvLog = new List<GameObject>();
@@ -63,6 +69,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField]private GameObject AttackSPText;
     [SerializeField]private GameObject AttackMP;
     [SerializeField]private GameObject AttackMPText;
+    [SerializeField]private GameObject SkillScrolle;
+    [SerializeField]private GameObject BuckSkills;
 
     public static List<Player> players = new List<Player>(); //プレイヤーのplayerスクリプト
     public static Player LastAttackPlayer;
@@ -82,9 +90,10 @@ public class BattleManager : MonoBehaviour
     
     private Animator anim;
     [SerializeField]private Animator SlidoAnimation;
-
+    
     private CameraMove cameraMove;
 
+    private Dictionary<GameObject, Image> NI = new Dictionary<GameObject, Image>();
 
     private int PCO;
     private int ECO;
@@ -94,6 +103,7 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         PlayerAttackUIFalse();//AttackUiを消してる
+        SkilltoActive();
 
         BattleData.Instance.SetImage(fadeImage);
         StartCoroutine(BattleData.Instance.FadeOutBluck(1.5f));
@@ -155,6 +165,12 @@ public class BattleManager : MonoBehaviour
         BattleLog.SetActive(!BattleLog.activeSelf);
         attackbotton.SetActive(!attackbotton.activeSelf);
         escapebotton.SetActive(!escapebotton.activeSelf);
+    }
+
+    public void SkilltoActive()
+    {
+        SkillScrolle.SetActive(!SkillScrolle.activeSelf);
+        BuckSkills.SetActive(!BuckSkills.activeSelf);
     }
 
     public void LevelUpButton()//レベルアップ時にターンを止めて非表示
@@ -251,6 +267,16 @@ public class BattleManager : MonoBehaviour
         escapebotton.SetActive(!escapebotton.activeSelf);
     }
 
+    public void BuckButton()//一個前に戻るスキル選択
+    {
+        SkillScrolle.SetActive(false);
+        BuckSkills.SetActive(false);
+        HPAttackPanel.SetActive(true);
+        guagebutton.SetActive(true);
+        attackbotton.SetActive(true);
+        escapebotton.SetActive(true);
+    }
+
     private void ShowPlayerAndGameOver()
     {
         // "GAME OVER" テキストを表示
@@ -259,20 +285,69 @@ public class BattleManager : MonoBehaviour
     #endregion
 
     #region UIの生成・動き
+    public void GenerationNextTurn(GameObject chara, Sprite sprite)
+    {
+        Image TI = Instantiate(NextTurnImage,NextTurnPanel);
+        GameObject go = TI.gameObject;
+        NI.Add(chara,TI);
+        
+        TI.sprite = sprite;
+    }
+
+    public void DestroyNextTurn(GameObject chara)
+    {
+        if(NI[chara] != null)
+        {
+            Destroy(NI[chara].gameObject);
+        }
+    }
+
     public void GenerateSkillButtons(Player player)//プレイヤーのスキルを生成
     {
         //GameObject button = Instantiate(skillpanel)
-        panelTransform = Instantiate(skillpanel,panerspawn);
-        foreach (Skill skill in player.skills)
+        foreach(GameObject panel in SkillPanels)
         {
+            Destroy(panel);
+        }
+        SkillPanels.Clear();
+        
+        foreach (Skill skill in player.skills)//プレイヤーのスキルの数だけ生成
+        {
+            panelTransform = Instantiate(skillpanel,ContentSkill);
+            SkillPanels.Add(panelTransform.gameObject);
+
             GameObject button = Instantiate(skillButtonPrefab, panelTransform.transform);
             insta.Add(button);
             button.GetComponentInChildren<Text>().text = skill.skillName;
 
+            Text PText = Instantiate(PowerText,panelTransform.transform);
+            if(skill.damage == 0)//バフ系か攻撃系か
+            {
+                switch (skill.buffType)//バフの種類、複数あっても良いように
+                {
+                    case BuffType.AttackUp:
+                        PText.text = $"攻撃力UP　{skill.buffValue}";
+                        break;
+                    case BuffType.DefenseUp:
+                        PText.text = $"防御力UP　{skill.buffValue}";
+                        break;
+                    case BuffType.SpeedUp:
+                        PText.text = $"素早さUP　{skill.buffValue}";
+                        break;
+                }
+            }
+            else
+            {
+                PText.text = $"攻撃力　{skill.damage}";
+            }
+
+            Text MPCText = Instantiate(MPCostText,panelTransform.transform);
+            MPCText.text = $"消費MP　{skill.MPCost}";
+
             // ボタンが押されたときにスキルを実行
             Button btn = button.GetComponent<Button>();
-            btn.onClick.AddListener(() => player.Attack(skill,player,panelTransform));
-            btn.onClick.AddListener(() => OnActionSelected(skill.skillName));
+            btn.onClick.AddListener(() => player.Attack(skill,player));
+            btn.onClick.AddListener(() => OnActionSelected(skill.skillName));//スキルたちの破壊をするボタンを押された後に。テキストの生成はできるようになったから、テキストをスキルの効果に合わせて、変えてあげる。バフか、攻撃か、デバフの可能性も考慮。
         }
     }
 
@@ -355,9 +430,6 @@ public class BattleManager : MonoBehaviour
             hpBar.AddComponent<LookUI>();
             EnemyUis.Add(hpBar);
         }
-
-        
-
         
     }
 
@@ -467,10 +539,28 @@ public class BattleManager : MonoBehaviour
         }).ToList();
     }
 
+    public void GenerateCharaImage()
+    {
+        foreach (var character in AllCharacter.ToList()) // コピーを作成してループ
+        {
+            if (character is Player player && player.health > 0) // 生存している場合
+            {
+                GenerationNextTurn(player.gameObject,player.sprite);
+            }
+            else if (character is Enemy enemy && enemy.health > 0) // 生存している場合
+            {
+                GenerationNextTurn(enemy.gameObject,enemy.sprite);
+            }
+        }
+    }
+
     IEnumerator BattleLoop()//メインループ
     {
+        OtameshiUpdate();
+
         while (true)
         {
+            GenerateCharaImage();
             // スピード順に行動
             foreach (var character in AllCharacter.ToList()) // コピーを作成してループ
             {
@@ -509,7 +599,6 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
 
-
         SulidoText.text = $"<color=#{blueColor}>{player.pn} のターン！</color>";
         yield return new WaitForSeconds(0.35f);
         PlayerUIFalse();
@@ -541,6 +630,7 @@ public class BattleManager : MonoBehaviour
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
         }
+
         GenerateGuageButtons(player);
         StartCoroutine(gaugeManager.Animation());
 
@@ -561,6 +651,8 @@ public class BattleManager : MonoBehaviour
         {
             yield return null; // 1フレーム待機
         }
+
+        DestroyNextTurn(player.gameObject);
 
         Destroy(guagebutton);
 
@@ -618,6 +710,7 @@ public class BattleManager : MonoBehaviour
         if(enemy.isBurst == true) //敵のゲージがバーストしていないか
         {
             battleLog.text +=  $"\n<color=#{colorCode}>{enemy.name}は動けない！</color>";
+            DestroyNextTurn(enemy.gameObject);
             yield return new WaitForSeconds(2f); // 遅延
             enemy.GetComponent<EnemyDestroyGuage>().SetGuage();
             enemy.isBurst = false;
@@ -655,6 +748,8 @@ public class BattleManager : MonoBehaviour
             Debug.Log($"{targetPlayer.name} に {damage} のダメージ！");
             targetPlayer.TakeDamage(Mathf.Floor(damage * GetElement));
 
+            DestroyNextTurn(enemy.gameObject);
+
             yield return new WaitForSeconds(2f); // 遅延
         }
     }
@@ -670,10 +765,13 @@ public class BattleManager : MonoBehaviour
         attackakuction = true; // ボタンが押されたことを通知
         if(attackbotton.activeSelf == true)
         {
+            BuckSkills.SetActive(true);
+            SkillScrolle.SetActive(true);
             HPAttackPanel.SetActive(!HPAttackPanel.activeSelf);
             attackbotton.SetActive(!attackbotton.activeSelf);
             escapebotton.SetActive(!escapebotton.activeSelf);
             guagebutton.SetActive(!guagebutton.activeSelf);
+
         }
     }
 
@@ -759,7 +857,7 @@ public class BattleManager : MonoBehaviour
                     player2.defence = player.defence;
                     player2.Speed = player.Speed;
                     player2.Mp = player.Mp;
-                    player2.MaxMp = player.Mp;
+                    player2.MaxMp = player.MaxMp;
                     player2.LV = player.LV;
                     player2.XP = player.XP;
                     player2.MaxXp = player.MaxXp;
@@ -847,6 +945,8 @@ public class BattleManager : MonoBehaviour
 
         // フィールドシーンに戻る
         StartCoroutine(BattleData.Instance.LoadMap());
+        //ここに仕込む
+
         //SceneManager.LoadScene("GAMEMAPP");
     }
 

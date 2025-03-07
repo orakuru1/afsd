@@ -22,6 +22,7 @@ public class chara : MonoBehaviour
     private float moveSpeed;
     private bool isAttacking = false; // 攻撃状態を追跡
     private Transform cameraTransform; // カメラのTransformを取得
+    private bool isControll = true;
 
     public ParticleSystem prepar;
     void Start()
@@ -36,7 +37,7 @@ public class chara : MonoBehaviour
 
     void Update()
     {
-        if (!isAttacking) // 攻撃中は他の動作をブロック
+        if (!isAttacking && isControll) // 攻撃中は他の動作をブロック
         {
             HandleMovement();
             HandleJump();

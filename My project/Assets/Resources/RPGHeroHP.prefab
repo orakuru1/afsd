@@ -1670,7 +1670,7 @@ MonoBehaviour:
   skills:
   - skillName: Fire
     damage: 30
-    MPCost: 20
+    MPCost: 40
     description: A ball of fire that burns enemies.
     buffType: 0
     buffValue: 0
@@ -1748,18 +1748,18 @@ MonoBehaviour:
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
   Race: "\u5263\u58EB"
-  health: 1120
-  maxHealth: 6160
-  attack: 7956
-  defence: 140
+  health: 668
+  maxHealth: 800
+  attack: 430
+  defence: 120
   Speed: 1111
-  Mp: 20
-  MaxMp: 20
-  LV: 96
-  XP: 59
-  MaxXp: 74.30083706879996
-  currentHealth: 1120
-  gold: 3280
+  Mp: 120
+  MaxMp: 140
+  LV: 11
+  XP: 25
+  MaxXp: 86.39999999999999
+  currentHealth: 660
+  gold: 3680
   currentGauge: 100
   maxGauge: 100
   sharp: 100

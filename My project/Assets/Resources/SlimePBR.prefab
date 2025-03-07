@@ -499,6 +499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d34d6ad80f8d8e4885d1e9c24e11bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skills: []
   element: 0
   health: 50
   maxHealth: 50
@@ -512,6 +513,7 @@ MonoBehaviour:
   EXP: 50
   AEfect: {fileID: 6832070047915410894, guid: 0f3fb1427af06fc468db378704ea1cd0, type: 3}
   currentHealth: 50
+  sprite: {fileID: 21300000, guid: 4badf8cf39f29a448af1f6647861df3f, type: 3}
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
   isBurst: 0
   CDamage: []
@@ -528,6 +530,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyName: SlimePBR
+  audioSource: {fileID: 0}
+  StartBattle: {fileID: 0}
 --- !u!54 &4148027564549049612
 Rigidbody:
   m_ObjectHideFlags: 0

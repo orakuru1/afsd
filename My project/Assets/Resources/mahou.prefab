@@ -788,17 +788,17 @@ MonoBehaviour:
   Spn: "\u7BC4\u56F2\u56DE\u5FA9"
   pn: mahou
   Race: "\u9B54\u6CD5"
-  health: 1000
-  maxHealth: 3000
+  health: 5
+  maxHealth: 100
   attack: 50
-  defence: 0
+  defence: 30
   Speed: 180
-  Mp: 0
-  MaxMp: 0
-  LV: 57
-  XP: 54
-  MaxXp: 89.16100448255996
-  currentHealth: 1000
+  Mp: 100
+  MaxMp: 100
+  LV: 1
+  XP: 50
+  MaxXp: 100
+  currentHealth: 5
   gold: 0
   currentGauge: 100
   maxGauge: 100
@@ -830,8 +830,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onGround: 1
   inJumping: 0
-  speed: 3
-  sprintSpeed: 6
+  speed: 10
+  sprintSpeed: 20
   jumpForce: 8
   forwardJumpForce: 6
   backwardJumpForce: 3

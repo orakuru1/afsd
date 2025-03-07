@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     [SerializeField]private int EXP = 50; //経験値
     public ParticleSystem AEfect;
     public float currentHealth;
+    public Sprite sprite;
 
     private HealthBarManager healthBarManager;
 
@@ -72,7 +73,7 @@ public class Enemy : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Die(player);
+            Die(player);//ここで死んだスプライトを消す。子のキャラっていう判別はどこでしよう
         }
     }
 
