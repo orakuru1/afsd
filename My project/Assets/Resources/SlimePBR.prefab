@@ -429,8 +429,13 @@ GameObject:
   - component: {fileID: 4198137525506542743}
   - component: {fileID: 4148027564549049612}
   m_Layer: 0
+<<<<<<<< HEAD:My project/Assets/Charas/RPG Monster DUO PBR Polyart/Prefabs/ゴブリン.prefab
+  m_Name: "\u30B4\u30D6\u30EA\u30F3"
+  m_TagString: Untagged
+========
   m_Name: SlimePBR
   m_TagString: Enemy
+>>>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a:My project/Assets/Resources/SlimePBR.prefab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -443,7 +448,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1931298151966786}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.056, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -473,6 +478,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+<<<<<<<< HEAD:My project/Assets/Charas/RPG Monster DUO PBR Polyart/Prefabs/ゴブリン.prefab
+========
 --- !u!136 &1984278981321418307
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -483,10 +490,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.49
-  m_Height: 1.18
-  m_Direction: 2
-  m_Center: {x: 0, y: 0.48, z: 0}
+  m_Radius: 0.7
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!114 &8169121135567844313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,22 +506,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d34d6ad80f8d8e4885d1e9c24e11bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  element: 0
   health: 50
   maxHealth: 50
-  enemyname: SlimePBR
-  en: 
-  Race: 
   AT: 75
   DF: 50
   Speed: 10
-  DropGorld: 0
   EXP: 50
-  AEfect: {fileID: 6832070047915410894, guid: 0f3fb1427af06fc468db378704ea1cd0, type: 3}
   currentHealth: 50
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
-  isBurst: 0
-  CDamage: []
+  DropGorld: 0
 --- !u!114 &4198137525506542743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -544,3 +544,4 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+>>>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a:My project/Assets/Resources/SlimePBR.prefab

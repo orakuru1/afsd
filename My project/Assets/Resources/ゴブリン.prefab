@@ -367,7 +367,6 @@ GameObject:
   - component: {fileID: 8530981158749530106}
   - component: {fileID: 8530981158749530107}
   - component: {fileID: 8530981158749529605}
-  - component: {fileID: -2765727064167282361}
   m_Layer: 0
   m_Name: "\u30B4\u30D6\u30EA\u30F3"
   m_TagString: Enemy
@@ -384,7 +383,7 @@ Transform:
   m_GameObject: {fileID: 8530660655577238377}
   m_LocalRotation: {x: -0, y: -0.010971969, z: -0, w: -0.9999398}
   m_LocalPosition: {x: 1748.5, y: -0.048, z: -712}
-  m_LocalScale: {x: 1.9583154, y: 1.9583154, z: 1.9583154}
+  m_LocalScale: {x: 4.17, y: 4.17, z: 4.17}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8532724269162309543}
@@ -442,7 +441,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.58
-  m_Center: {x: 0, y: 0.38, z: 0}
+  m_Center: {x: 0, y: 0.53, z: 0}
 --- !u!114 &8530981158749530106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,8 +458,6 @@ MonoBehaviour:
   speed: 5
   stoppingDistance: 2
   detectionRange: 50
-  hpBarCanvas: {fileID: 0}
-  hpFillImage: {fileID: 0}
 --- !u!114 &8530981158749530107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,38 +483,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d34d6ad80f8d8e4885d1e9c24e11bf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  element: 2
   health: 50
   maxHealth: 50
-  enemyname: "\u30B4\u30D6\u30EA\u30F3"
-  en: "\u30B4\u30D6\u30EA\u30F3"
-  Race: 
-  AT: 100
-  DF: 100
-  Speed: 0
-  DropGorld: 10
+  AT: 10
+  DF: 0
   EXP: 50
-  AEfect: {fileID: 4836977668652918433, guid: 37a08757551a2a845bd969a3c59138cd, type: 3}
   currentHealth: 0
   player: {fileID: 0}
-  isBurst: 0
-  CDamage: []
---- !u!114 &-2765727064167282361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8530660655577238377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb0cf26eaf60088418e48c2afeaffa9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  speed: 3
-  stoppingDistance: 2
-  detectionRange: 10
 --- !u!1 &8530981159479529660
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,21 +534,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9eec18ed65f05d418f5294661a2af6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack: 0
-  defence: 0
-  Speed: 0
-  LV: 0
-  health: 0
-  enemyHealth: 0
-  mainplayers: []
   enemyName: 
-  playername: 
-  XP: 0
-  MaxXp: 0
-  maxHealth: 0
-  currentHealth: 0
-  spawnposition: {x: 0, y: 0, z: 0}
-  FadeImage: {fileID: 0}
+  enemyHealth: 0
 --- !u!1 &8531952689402511763
 GameObject:
   m_ObjectHideFlags: 0

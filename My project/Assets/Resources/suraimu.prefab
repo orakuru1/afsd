@@ -113,7 +113,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 30
   maxHealth: 30
-  enemyname: suraimu
+<<<<<<< HEAD
+  AT: 10
+  DF: 10
+  EXP: 50
+  currentHealth: 0
+  player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
+=======
   AT: 50
   DF: 10
   Speed: 10
@@ -121,6 +127,7 @@ MonoBehaviour:
   currentHealth: 0
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
   DropGorld: 50
+>>>>>>> e4185c69e74a8b4c45670246f29a6060cfb9d99a
 --- !u!114 &9000212554411052521
 MonoBehaviour:
   m_ObjectHideFlags: 0
