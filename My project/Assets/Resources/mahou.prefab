@@ -826,8 +826,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onGround: 1
   inJumping: 0
-  speed: 3
-  sprintSpeed: 6
+  speed: 10
+  sprintSpeed: 20
   jumpForce: 8
   forwardJumpForce: 6
   backwardJumpForce: 3
@@ -1127,6 +1127,7 @@ GameObject:
   - component: {fileID: 4891505152052632}
   - component: {fileID: 33623625814239126}
   - component: {fileID: 23612762932055372}
+  - component: {fileID: 8454898965281921910}
   m_Layer: 0
   m_Name: Staff01PolyArt
   m_TagString: Untagged
@@ -1199,6 +1200,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8454898965281921910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322346569522534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c1a37099823cb40aafc284694e3fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 814358144672151781}
 --- !u!1 &1324389400999014
 GameObject:
   m_ObjectHideFlags: 0

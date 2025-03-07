@@ -736,7 +736,7 @@ public class Player : MonoBehaviour
     void Respawn()
     {
         transform.position = respawnPosition;
-        Debug.Log("落下したのでリスポーンしました！");
+        Debug.Log("落下したのでリスポーンしました！落下するな");
     }
 
     //地面に触れた時の処理

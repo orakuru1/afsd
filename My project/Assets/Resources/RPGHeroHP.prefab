@@ -290,7 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c1a37099823cb40aafc284694e3fbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 150
+  player: {fileID: 3760287559151789196}
 --- !u!1 &1079146182250078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1744,7 +1744,7 @@ MonoBehaviour:
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
   Race: "\u5263\u58EB"
-  health: 1000
+  health: 10000
   maxHealth: 6020
   attack: 7876
   defence: 120
@@ -1754,7 +1754,7 @@ MonoBehaviour:
   LV: 94
   XP: 23
   MaxXp: 51.59780351999998
-  currentHealth: 1000
+  currentHealth: 10000
   gold: 3240
   currentGauge: 100
   maxGauge: 100

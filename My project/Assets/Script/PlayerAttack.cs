@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public int attackDamage = 10; // 基本ダメージ
+    [SerializeField]private Player player;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -29,7 +29,7 @@ public class PlayerAttack : MonoBehaviour
             EnemyHP enemy = hit.collider.GetComponent<EnemyHP>();
             if(enemy != null)
             {
-                enemy.TakeDamage(attackDamage);
+                enemy.TakeDamage(player.attack);
             }
         }
     }
