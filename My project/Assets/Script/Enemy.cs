@@ -41,6 +41,7 @@ public class Enemy : MonoBehaviour
 
     public List<float> CDamage = new List<float>();
 
+
     void OnMouseDown()
     {
         // 敵がクリックされたときに、この敵を選択状態にする

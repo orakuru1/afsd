@@ -20,6 +20,7 @@ public class Skill //攻撃する表示のスキルたち、４個ぐらいか�
     public float CDuration;//継続ダメージの継続数
     public float CProbability;//継続ダメージの確率
     public ParticleSystem particle;
+    public AudioClip audioClip;
 }
 
 [System.Serializable]
@@ -148,6 +149,10 @@ public class Player : MonoBehaviour
     private Color color;
     private Dictionary<BuffType, int> ActiveBuffs = new Dictionary<BuffType, int>();
     private Dictionary<BuffType, int> ActiveBuffs2 = new Dictionary<BuffType, int>();//dictionaryとenumのコンビは相性がいいと思います
+
+    [SerializeField]private AudioSource audioSource;
+    
+    [SerializeField]private AudioClip LEVELUPSE;
     #endregion
 
     public void AddCProbalitiy(float current)//継続ダメージが発生
@@ -377,6 +382,7 @@ public class Player : MonoBehaviour
 
         if(battleManager != null && islevelup == true)
         {
+            audioSource.PlayOneShot(LEVELUPSE);
             battleManager.ItaDeret();
             Debug.Log("afewdfa");
             if (LV > prevLV) StartCoroutine(battleManager.LevelUp(prevLV.ToString(), LV.ToString(), $"{pn}のレベル"));
@@ -395,6 +401,7 @@ public class Player : MonoBehaviour
         }
 
         UpdateHealthBar();
+        mpbar.UpdateMPBar();
 
         //BattleData.Instance.SetPlayerStatus(pn,health,maxHealth,attack,defence,Speed,LV,XP,MaxXp,currentHealth);
     }
@@ -447,6 +454,7 @@ public class Player : MonoBehaviour
     {
         battleManager.stayturn = true;
         Debug.Log($"{this.name} は {skill.skillName} を使用！");
+        audioSource.PlayOneShot(skill.audioClip);
 
         if (skill.buffType != BuffType.None) // バフがある場合
         {
@@ -475,6 +483,7 @@ public class Player : MonoBehaviour
                 yield break;
             }
             Instantiate(skill.particle, target.transform);
+            audioSource.PlayOneShot(skill.audioClip);
 
             yield return new WaitForSeconds(1f); //アニメーションとか入れれるかも。
 
@@ -491,6 +500,7 @@ public class Player : MonoBehaviour
             }
 
             //yield return new WaitForSeconds(skill.duration); *****************スキルにアニメーションの時間を入れて、その分だけ止める処理
+            
             Debug.Log(damage);
             float GetElement = BattleData.Instance.GetElementalMultiplier(skill.element, target.element);
             Debug.Log(Mathf.Floor(damage * GetElement));
