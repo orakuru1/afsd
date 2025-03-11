@@ -931,6 +931,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skills: []
   element: 4
+  colorcode: '#00FF00'
   health: 50
   maxHealth: 50
   enemyname: GruntHP

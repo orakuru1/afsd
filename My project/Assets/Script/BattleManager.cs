@@ -21,7 +21,7 @@ public class BattleManager : MonoBehaviour
     public Transform enemySpawnPoint1; // 敵を生成する位置
     public Transform hpBarParent; // HPバーの親（Canvas）
     [SerializeField]private Transform panerspawn; // スペシャル技配置場所
-    [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();
+    [SerializeField]private List<Transform> SpawnPoint = new List<Transform>();//味方の生成位置
     [SerializeField]private Transform ContentSkill;//スキルパネルの配置場所
     [SerializeField]private Transform NextTurnPanel;//次のターンのパネル
 
@@ -93,7 +93,7 @@ public class BattleManager : MonoBehaviour
     
     private CameraMove cameraMove;
 
-    private Dictionary<GameObject, Image> NI = new Dictionary<GameObject, Image>();
+    [SerializeField]private Dictionary<GameObject, Image> NI = new Dictionary<GameObject, Image>();//次が誰のターンかを示すimage
 
     private int PCO;
     private int ECO;
@@ -296,10 +296,21 @@ public class BattleManager : MonoBehaviour
 
     public void DestroyNextTurn(GameObject chara)
     {
-        if(NI[chara] != null)
+        if(NI.ContainsKey(chara))//存在しているか
         {
-            Destroy(NI[chara].gameObject);
+            if (NI[chara] != null)//値がnullじゃないか
+            {
+                Destroy(NI[chara].gameObject);
+            }
+
+            NI.Remove(chara);
+            Debug.Log("次のターンのデータを削除しました: " + chara.name);
         }
+        else
+        {
+            Debug.Log("そのキャラに次のターンはない");
+        }
+
     }
 
     public void GenerateSkillButtons(Player player)//プレイヤーのスキルを生成
@@ -393,11 +404,17 @@ public class BattleManager : MonoBehaviour
         {
             bgc.player = playerComponent;
             ElementText.text = ConvertToVertical(playerComponent.Race);
+            Color newColor;
+            ColorUtility.TryParseHtmlString(playerComponent.colorcode, out newColor);
+            ElementText.color = newColor;
             PlayerUis.Add(bg);
         }
         else
         {
             ElementText.text = ConvertToVertical(enemyComponent.Race);
+            Color newColor;
+            ColorUtility.TryParseHtmlString(enemyComponent.colorcode, out newColor);
+            ElementText.color = newColor;
             bg.AddComponent<LookUI>();
             EnemyUis.Add(bg);
         }

@@ -85,6 +85,7 @@ public class Player : MonoBehaviour
     [SerializeField]private string Spn;
     public string pn;
     public string Race;
+    public string colorcode;
     public float health; //死んだ処理のHP
     public float maxHealth;//一緒になってる
     public int attack; //攻撃力
@@ -684,6 +685,7 @@ public class Player : MonoBehaviour
 
     private void Die() //HPが０になった時の処理
     {
+        battleManager.DestroyNextTurn(this.gameObject);
         Debug.Log($"{gameObject.name} が倒されました！");
         isDead = true;
         anim.SetBool("die", true);

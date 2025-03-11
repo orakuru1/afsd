@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     
     private EnemyCounter enemyCounter;
     public Element element;
+    public string colorcode;
     public float health = 50; //HP
     public float maxHealth = 50f; //UIのHP
     [SerializeField]private string enemyname;
@@ -164,6 +165,7 @@ public class Enemy : MonoBehaviour
         // 敵が死亡する処理（例: エフェクトやスコアの増加など）
         player.GetGolrd(DropGorld);
         player.LevelUp(EXP);
+        battleManager.DestroyNextTurn(this.gameObject);
         Destroy(this.gameObject);
     }
     // Start is called before the first frame update

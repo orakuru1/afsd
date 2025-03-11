@@ -609,11 +609,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skills: []
   element: 3
+  colorcode: '#0000FF'
   health: 50
   maxHealth: 50
   enemyname: TurtleShellPBR
   en: "\u4E80"
-  Race: 
+  Race: "\u7532\u7363"
   AT: 100
   DF: 50
   Speed: 20

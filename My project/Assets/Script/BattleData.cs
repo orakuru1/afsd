@@ -184,7 +184,7 @@ public class BattleData : MonoBehaviour
         FadeImage.color = new Color(0, 0, 0, 0); // 完全に見えるようにする
     }
 
-    public float GetElementalMultiplier(Element attack, Element defender)
+    public float GetElementalMultiplier(Element attack, Element defender)//相性を見る
     {
         if(attack == Element.Fire && defender == Element.Grass) return 1.2f;
         if(attack == Element.Water && defender == Element.Fire) return 1.2f;
@@ -195,15 +195,6 @@ public class BattleData : MonoBehaviour
         if(attack == Element.Grass && defender == Element.Fire) return 0.8f;
 
         return 1f;
-    }
-
-    public void GetCurentDamage(Dictionary<Element, float> damageD, Dictionary<Element, float> DurationD, Element Type, float Damage, float duratin, float probability)
-    {
-        if(Type == Element.None) return;
-
-        float ran = Random.Range(0,100); //0～99
-        if(probability <= ran) return;
-        
     }
 
     public bool IsCurentDamage(float probability)

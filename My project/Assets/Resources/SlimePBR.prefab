@@ -500,12 +500,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skills: []
-  element: 0
+  element: 2
+  colorcode: '#FF0000'
   health: 50
   maxHealth: 50
   enemyname: SlimePBR
   en: 
-  Race: 
+  Race: "\u7C98\u7269"
   AT: 75
   DF: 50
   Speed: 10

@@ -1748,6 +1748,7 @@ MonoBehaviour:
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
   Race: "\u5263\u58EB"
+  colorcode: '#0000FF'
   health: 668
   maxHealth: 800
   attack: 430
