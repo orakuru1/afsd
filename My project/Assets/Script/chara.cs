@@ -23,7 +23,7 @@ public class chara : MonoBehaviour
     private bool isAttacking = false; // 攻撃状態を追跡
     private Transform cameraTransform; // カメラのTransformを取得
 
-    public ParticleSystem prepar;
+    public ParticleSystem prepar, attack;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -140,15 +140,29 @@ public class chara : MonoBehaviour
 
     private void HandleAttack()
     {
+        // キャラクターの位置を取得
+        Vector3 characterPosition = this.gameObject.transform.position;
+        Vector3 characterForward = this.gameObject.transform.forward;
+        float heightOffset = 3f;
+        // 高さを加えた新しい位置
+        Vector3 spawnPosition = characterPosition + new Vector3(0, heightOffset, 0);
+        string player = GetComponent<Player>().pn;
         if (Input.GetMouseButtonDown(0) )
         {
             
             anim.SetBool("attack",true);
-
+            if(player == "mahou")
+            {
+                Instantiate(attack, spawnPosition, Quaternion.LookRotation(characterForward));
+            }
             StartCoroutine(ResetAttack());
+            
+
+            // 親を設定しない場合、そのまま親なしでインスタンス化されたオブジェクトはシーンに追加されます
+
         }
 
-        
+
     }
 
     private IEnumerator ResetAttack()
