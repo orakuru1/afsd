@@ -836,6 +836,7 @@ MonoBehaviour:
   forwardJumpForce: 6
   backwardJumpForce: 3
   prepar: {fileID: 6887158025349920571, guid: 0ef719ae23085394f8f2b6980fc44c28, type: 3}
+  attack: {fileID: 5538835825087650741, guid: a9dbd343529325b4a815ef2720d2907d, type: 3}
 --- !u!114 &-4017391346922140141
 MonoBehaviour:
   m_ObjectHideFlags: 0
