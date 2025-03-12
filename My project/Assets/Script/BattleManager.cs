@@ -78,8 +78,9 @@ public class BattleManager : MonoBehaviour
     [SerializeField]private List<Player> oomoto = new List<Player>(); //プレイヤーの大本のスクリプトプレイヤーが増えるたびに増やす。名前で今誰のがあるのか判断しよう
     [SerializeField]private Player ScriptPlayer;      //プレイヤー自体のスクリプト //これを参照してEXPを送るようにすれば何とかなるかも、倒したときの処理
 
-    private bool actionSelected = false;
-    private bool attackakuction = false;
+    private bool actionSelected = false;//スキルボタンを押したとき
+    private bool attackakuction = false;//攻撃ボタンを押したとき
+    private bool escapeaction = false;//逃げるを押したとき
     private bool WinnerStop = false;//ゲームに勝ったときにこれ以上進まないようにする
     public bool stayturn = true;
     public bool LebelupStay = false;
@@ -93,10 +94,14 @@ public class BattleManager : MonoBehaviour
     
     private CameraMove cameraMove;
 
+    private GaugeManager GM;
+
     [SerializeField]private Dictionary<GameObject, Image> NI = new Dictionary<GameObject, Image>();//次が誰のターンかを示すimage
 
     private int PCO;
     private int ECO;
+
+    private Coroutine coroutine;
     #endregion
     
 
@@ -269,6 +274,7 @@ public class BattleManager : MonoBehaviour
 
     public void BuckButton()//一個前に戻るスキル選択
     {
+        coroutine = StartCoroutine(GM.Animation());
         SkillScrolle.SetActive(false);
         BuckSkills.SetActive(false);
         HPAttackPanel.SetActive(true);
@@ -562,11 +568,11 @@ public class BattleManager : MonoBehaviour
         {
             if (character is Player player && player.health > 0) // 生存している場合
             {
-                GenerationNextTurn(player.gameObject,player.sprite);
+                GenerationNextTurn(player.gameObject,player.TurnSprite);
             }
             else if (character is Enemy enemy && enemy.health > 0) // 生存している場合
             {
-                GenerationNextTurn(enemy.gameObject,enemy.sprite);
+                GenerationNextTurn(enemy.gameObject,enemy.TurnSprite);
             }
         }
     }
@@ -636,8 +642,8 @@ public class BattleManager : MonoBehaviour
 
         SlidoAnimation.SetBool("TurnBool", false);
 
-        GaugeManager gaugeManager = player.GetComponent<GaugeManager>();
-        gaugeManager.FillGauge(10f); //ゲージを増やす
+        GM = player.GetComponent<GaugeManager>();
+        GM.FillGauge(10f); //ゲージを増やす
         player.MPHeal();
         battleLog.text = $"{player.name} のターン！";
 
@@ -649,16 +655,23 @@ public class BattleManager : MonoBehaviour
         }
 
         GenerateGuageButtons(player);
-        StartCoroutine(gaugeManager.Animation());
+        coroutine = StartCoroutine(GM.Animation());
 
         attackakuction = false;
 
         while (!attackakuction)
         {
+            if(escapeaction == true)
+            {
+                escapeaction = false;
+                DestroyNextTurn(player.gameObject);
+                Destroy(guagebutton);
+                yield break;
+            }
             yield return null;
         }
 
-        StopCoroutine(gaugeManager.Animation());
+        //StopCoroutine(GM.Animation());
         GenerateSkillButtons(player);
 
         // ボタンが押されるまで待機
@@ -666,6 +679,13 @@ public class BattleManager : MonoBehaviour
 
         while (!actionSelected)
         {
+            if(escapeaction == true)
+            {
+                escapeaction = false;
+                DestroyNextTurn(player.gameObject);
+                Destroy(guagebutton);
+                yield break;
+            }
             yield return null; // 1フレーム待機
         }
 
@@ -677,6 +697,30 @@ public class BattleManager : MonoBehaviour
 
         //cameraMove.SetUp(enemySpawnPoint);
         //cameraMove.ComeBuckCamera();
+    }
+
+    void escape() //逃げるボタンを押されたときの処理
+    {
+
+        HPAttackPanel.SetActive(!HPAttackPanel.activeSelf);
+        attackbotton.SetActive(!attackbotton.activeSelf);
+        escapebotton.SetActive(!escapebotton.activeSelf);
+        guagebutton.SetActive(!guagebutton.activeSelf);
+
+        double ran = Random.Range(1,10); //１～９までのランダム数字(多分)　逃げる時のランダム数値はそのプレイヤーのスピード値を参照できるようにしたらいいかも（今はできていない）
+        if(ran > 4)
+        {
+            BattleData.Instance.modorusyori();
+            StartCoroutine(EscapeLog());
+            //SceneManager.LoadScene("GAMEMAPP"); //元のシーンに戻る
+            //StartCoroutine(RastLog());
+        }
+        else
+        {
+            escapeaction = true;
+            battleLog.text +=  $"\n<color=#{colorCode}>逃げられなかった！</color>";
+            Debug.Log("逃げられなかった!");
+        }
     }
 
     IEnumerator EnemyTurn(Enemy enemy)//敵のターン
@@ -771,10 +815,12 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+
     void OnActionSelected(string action)//ボタンを押されるまでターンを止める
     {
         Debug.Log($"選択されたアクション: {action}");
         actionSelected = true; // ボタンが押されたことを通知
+        StopCoroutine(coroutine);
     }
 
     public void OnActionSelected()//ボタンが押されるまでターンを止める
@@ -946,6 +992,13 @@ public class BattleManager : MonoBehaviour
 
 
     #region バトル終了処理
+
+    private IEnumerator EscapeLog()
+    {
+        battleLog.text = $"\n逃げきれた！";
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene("GAMEMAPP");
+    }
     private IEnumerator RastLog()//+************************************************
     {
         while(stayturn == true || LebelupStay == true)

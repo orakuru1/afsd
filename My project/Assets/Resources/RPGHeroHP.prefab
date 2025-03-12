@@ -1744,7 +1744,7 @@ MonoBehaviour:
     BuckSprite: {fileID: 0}
   Continue: []
   job: 1
-  element: 3
+  element: 2
   Spn: "\u4E0A\u6BB5\u5207\u308A"
   pn: RPGHeroHP
   Race: "\u5263\u58EB"

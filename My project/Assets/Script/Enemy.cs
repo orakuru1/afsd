@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour
     public ParticleSystem AEfect;
     public float currentHealth;
     public Sprite sprite;
+    public Sprite TurnSprite;
 
     private HealthBarManager healthBarManager;
 

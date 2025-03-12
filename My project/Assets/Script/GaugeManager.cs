@@ -80,7 +80,6 @@ public class GaugeManager : MonoBehaviour
     }
     public IEnumerator Animation()
     {
-
         if (player.currentGauge >= player.maxGauge)
         {
             yield return new WaitForSeconds(0.5f);

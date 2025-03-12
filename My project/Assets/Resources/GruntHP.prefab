@@ -945,6 +945,7 @@ MonoBehaviour:
   AEfect: {fileID: 4836977668652918433, guid: 37a08757551a2a845bd969a3c59138cd, type: 3}
   currentHealth: 50
   sprite: {fileID: 21300000, guid: 4badf8cf39f29a448af1f6647861df3f, type: 3}
+  TurnSprite: {fileID: 21300000, guid: 536662b33a62cbc43902d3e1b6e4a55f, type: 3}
   player: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764, type: 3}
   isBurst: 0
   CDamage: []

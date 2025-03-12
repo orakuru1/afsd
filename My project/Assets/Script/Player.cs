@@ -102,6 +102,7 @@ public class Player : MonoBehaviour
     public float maxGauge;
     public float sharp;
     public Sprite sprite;
+    public Sprite TurnSprite;
 
     //*************************ここまでプレイヤーのステータス
 
@@ -411,19 +412,6 @@ public class Player : MonoBehaviour
     #endregion
 
     #region 逃げる、攻撃
-    public void escape() //逃げるボタンを押されたときの処理
-    {
-        double ran = Random.Range(1,10); //１～９までのランダム数字(多分)
-        if(ran < 4)
-        {
-            BattleData.Instance.modorusyori();
-            SceneManager.LoadScene("SampleScene"); //元のシーンに戻る
-        }
-        else
-        {
-            Debug.Log("逃げられなかった!");
-        }
-    }
 
     public void Attack(Skill skill,Player player) //プレイヤーの攻撃処理
     {
@@ -505,14 +493,21 @@ public class Player : MonoBehaviour
             //yield return new WaitForSeconds(skill.duration); *****************スキルにアニメーションの時間を入れて、その分だけ止める処理
             
             Debug.Log(damage);
-            float GetElement = BattleData.Instance.GetElementalMultiplier(skill.element, target.element);
-            Debug.Log(Mathf.Floor(damage * GetElement));
+            float ImElement = 1f;
+            if(skill.element == player.element)
+            {
+                ImElement = 1.2f;
+            }
+            Debug.Log(Mathf.Floor(damage * ImElement));
 
-            yield return StartCoroutine(target.GetComponent<Enemy>()?.TakeDamage(Mathf.Floor(damage * GetElement),player)); //敵に攻撃を送ってる
+            float GetElement = BattleData.Instance.GetElementalMultiplier(skill.element, target.element);
+            Debug.Log(Mathf.Floor(damage * GetElement * ImElement));
+
+            yield return StartCoroutine(target.GetComponent<Enemy>()?.TakeDamage(Mathf.Floor(damage * GetElement * ImElement),player)); //敵に攻撃を送ってる
             //敵のダメージを受けるアニメーションが終わるまで、止まるようにする。
             
             EnemyDestroyGuage eneguage = target.GetComponent<EnemyDestroyGuage>();
-            eneguage.FillGauge(sharp);
+            eneguage.FillGauge(sharp);//敵のゲージを削ってる
 
             if(BattleData.Instance.IsCurentDamage(skill.CProbability) && skill.element != Element.None)//確率で継続ダメージ
             {
@@ -701,14 +696,7 @@ public class Player : MonoBehaviour
             rb.velocity = Vector3.zero;//移動を停止
             rb.angularVelocity = Vector3.zero; //回転を停止
         }
-        StartCoroutine(ReturnToTitle());
         //Destroy(gameObject);
-    }
-
-    IEnumerator ReturnToTitle()
-    {
-        yield return new WaitForSeconds(3f);
-        SceneManager.LoadScene("title");
     }
 
     void OnDestroy() //破壊されたときの処理   ※シーンが遷移された時にもされてしまう

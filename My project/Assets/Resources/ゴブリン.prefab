@@ -504,6 +504,7 @@ MonoBehaviour:
   AEfect: {fileID: 4836977668652918433, guid: 37a08757551a2a845bd969a3c59138cd, type: 3}
   currentHealth: 0
   sprite: {fileID: 21300000, guid: 4badf8cf39f29a448af1f6647861df3f, type: 3}
+  TurnSprite: {fileID: 21300000, guid: 57e2b438e202c4648b544ce11805bb89, type: 3}
   player: {fileID: 0}
   isBurst: 0
   CDamage: []

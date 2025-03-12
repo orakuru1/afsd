@@ -322,9 +322,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3760287559151789196, guid: 1125b9f9224e7ca4da913be8a4360764,
-          type: 3}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+      - m_Target: {fileID: 1148973462}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
         m_MethodName: escape
         m_Mode: 1
         m_Arguments:
@@ -2761,7 +2760,6 @@ MonoBehaviour:
   hpBarPrefab: {fileID: 9103103726191324022, guid: b3a3894aea2efd745a867b6074f71d0f,
     type: 3}
   LvLog: []
-  NextGameobject: []
   BattleLog: {fileID: 574905792}
   EnemyGuage: {fileID: 3562792113239884545, guid: 30fc4be9e8c3d92439541600325a4c9e,
     type: 3}
@@ -2805,7 +2803,6 @@ MonoBehaviour:
   stayturn: 1
   LebelupStay: 0
   SlidoAnimation: {fileID: 314728591}
-  NextSprites: []
 --- !u!4 &1148973463
 Transform:
   m_ObjectHideFlags: 0

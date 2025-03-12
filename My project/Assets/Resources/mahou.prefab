@@ -789,7 +789,7 @@ MonoBehaviour:
   pn: mahou
   Race: "\u9B54\u6CD5"
   colorcode: '#0000FF'
-  health: 5
+  health: 10
   maxHealth: 100
   attack: 50
   defence: 30
@@ -799,12 +799,13 @@ MonoBehaviour:
   LV: 1
   XP: 50
   MaxXp: 100
-  currentHealth: 5
+  currentHealth: 10
   gold: 0
   currentGauge: 100
   maxGauge: 100
   sharp: 10
   sprite: {fileID: 21300000, guid: 8417ff651ef929f4da545267e0ac155e, type: 3}
+  TurnSprite: {fileID: 21300000, guid: 3a03e91739960494e8fedf27b94d7742, type: 3}
   fallThreshold: -30
   respawnUpdateDistance: 1
   smoothSpeed: 0.5

@@ -37,16 +37,20 @@ public class chara : MonoBehaviour
 
     void Update()
     {
-        if (!isAttacking && isControll) // 攻撃中は他の動作をブロック
+        if(BattleData.Instance.isconhurikut())
         {
-            HandleMovement();
-            HandleJump();
-            if (!run)
+            if (!isAttacking && isControll) // 攻撃中は他の動作をブロック
             {
-                RunEffect();
+                HandleMovement();
+                HandleJump();
+                if (!run)
+                {
+                    RunEffect();
+                }
             }
+            HandleAttack(); // 攻撃処理は常に確認
         }
-        HandleAttack(); // 攻撃処理は常に確認
+
     }
 
     private void HandleMovement()
